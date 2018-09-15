@@ -12,4 +12,5 @@ predictions
 # Ignore local file
 README.txt
 
-
+# Need to ignore this mac-specific file as well
+.DS_Store
