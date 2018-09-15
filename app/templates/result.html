@@ -1,0 +1,61 @@
+<!-- about.html-->
+
+{% extends "base.html" %}
+{% block title %}Prediction Result{% endblock %}
+{% block body %}
+
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/result.css') }}">
+<script src="{{ url_for('static', filename='js/result.js') }}"></script>
+
+<div class="modal-body row">
+  <script>
+    // need to call this from html so Flask variable can be passed
+    $(function() {
+      inputProgress('{{ stats_url }}','{{ parents|safe }}'); // safe -> needed to process json
+      getInputParam('{{ stats_url }}');
+    });
+  </script>
+  <div class = "col-md-2">
+    <div class="sticky-top left-content" style="top: 56px;" id="inputpanel">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">Selected TFs
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu" id="genes-dropdown">
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class = "col-md-10">
+    <div class="progress" style="display: none;"></div>
+    <div id="status" style="display: none;"></div>
+    <!-- Search form -->
+    <div id="tablewrap"  style="display: none;">
+      <table class="table table-bordered table-hover table-striped" id="restbl">
+        <thead>
+          <tr>
+           <th></th>
+           <th></th>
+           <th></th>
+           <th></th>
+           <th></th>
+           <th></th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="csv-download" style="display: none;"></div>
+  </div>
+</div>
+
+{% endblock %}

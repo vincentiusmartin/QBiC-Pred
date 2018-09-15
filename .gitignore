@@ -1,0 +1,15 @@
+# Ignore build and env files
+__pycache__
+venv
+
+app/*.pyc
+app/__pycache__
+
+# Ignore resource directory for now
+resource
+predictions
+
+# Ignore local file
+README.txt
+
+

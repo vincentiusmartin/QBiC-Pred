@@ -1,0 +1,21 @@
+#ressearch {
+  float:right;
+}
+
+.bolded-red {
+  color: red;
+  font-weight: bold;
+}
+
+.left-content {
+  //border-right: 3px solid;
+  //border-color:  #D3D3D3;
+}
+
+.indata-text{
+  margin:0;
+}
+
+/*.form-inline .form-group {
+  margin-right:40px;
+}*/

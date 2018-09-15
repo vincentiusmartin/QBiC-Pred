@@ -1,0 +1,56 @@
+#left-col-main {
+  border-right: 2px solid;
+}
+
+#upload-form{
+  display: inline-block;
+}
+
+#upload-msg{
+  padding-left:10px;
+}
+
+.help-icon {
+  background-color:transparent;
+}
+
+.help-icon:hover {
+  color: blue;
+}
+
+.divider-line {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 10px 0px 10px -15px;
+}
+
+.popover { 
+  background: #e8f6f3  ;
+}
+
+.popover.left .arrow:after {
+  border-left-color: #e8f6f3  ;
+}
+
+.form-title {
+  width: 100%; 
+  text-align: left; 
+  border-bottom: 2px solid #e6e6e6; 
+  line-height: 0.1em;
+  margin: 10px 0 20px; 
+  padding-top: 30px;
+}
+
+.form-title span {
+  background:#fff; 
+  padding-right:10px;
+  font-weight: bold;
+}
+
+.form-elm {
+  padding:20px 0 20px 0px;
+  page-break-after: always;
+}
+
