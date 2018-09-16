@@ -4,9 +4,12 @@ from flask import Flask
 from celery import Celery
 import redis
 
+from datetime import timedelta
+
 # Initialize the app
 app = Flask(__name__, instance_relative_config=True)
 app.secret_key = "super secret key"
+app.permanent_session_lifetime = timedelta(minutes=3600)
 
 # Load the config file
 app.config.from_object('config')

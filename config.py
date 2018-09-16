@@ -12,7 +12,7 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0' # important to track result
 MAX_CONTENT_LENGTH = 32 * 1024 * 1024 # max upload size
 
 PCOUNT = 1 #os.cpu_count()
-PREDDIR = "/Users/vincentiusmartin/Research/MutationPredictor/tfbc-website/preddir" #"/usr/project/xtmp/vmartin/pred"
+PREDDIR = "/Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/preddir" #"/usr/project/xtmp/vmartin/pred"
 UPLOAD_FOLDER = '/tmp/'
-CHRDIR = "/Users/vincentiusmartin/Research/MutationPredictor/tfbc-website/chromosomes"
+CHRDIR = "/Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/chromosomes"
 MAPPING_FILE = "resource/tf-mapping.txt"

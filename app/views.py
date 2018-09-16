@@ -17,6 +17,7 @@ import config
 import app.celerytask as celerytask
 
 ALLOWED_EXTENSIONS = set(['csv','tsv'])
+SESSION_TIMEOUT = 3600  # TODO: move this to a temp file
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # view specific utils
@@ -193,9 +194,16 @@ def handle_upload():
                         app.config['CHRDIR'] +"/"+chrver),
                         celerytask.do_prediction.s(expanded_select,filteropt,filterval)).apply_async()
 
+            if 'task_ids' not in session:
+                session['task_ids'] = {}
             #parents = {'parent-0':task.parent.id,'parent-1':task.id}
-            session['%s_p0'%task.id] = task.parent.id
-            session['%s_p1'%task.id] = task.id
+            session['task_ids']['%s_p0'%task.id] = task.parent.id
+            session['task_ids']['%s_p1'%task.id] = task.id
+
+            if 'recents' not in session:
+                session['recents'] = {}
+            job_name = request.form.get("job-name") if request.form.get("job-name") else task.id
+            session['recents'][task.id] = job_name # len to keep its order
 
             # ==== STORING IN REDIS PART ====
             session_info = {"filename":msg,
@@ -206,7 +214,7 @@ def handle_upload():
             if db.exists(task.id):
                 db.delete(task.id)
             db.hmset(task.id,session_info)
-            db.expire(task.id, 3600) # now just 60 seconds for testing TODO
+            db.expire(task.id, SESSION_TIMEOUT) # now just 60 seconds for testing TODO
             # ================================
 
             task.forget() # not sure if needed???
@@ -215,13 +223,14 @@ def handle_upload():
             #cookie_expiry = datetime.datetime.now() + datetime.timedelta(hours=2)
 
             # save cookie for the recent jobs
-            job_name = request.form.get("job-name") if request.form.get("job-name") else task.id
+            '''job_name = request.form.get("job-name") if request.form.get("job-name") else task.id
             cookie_name = job_name + ":" + task.id
             if 'recent_jobs' in request.cookies:
                 rj = request.cookies.get('recent_jobs')
+                # APPENDING HERE
                 resp.set_cookie('recent_jobs', cookie_name + "," + rj,max_age=60*60) # just an hour for now
             else:
-                resp.set_cookie('recent_jobs', cookie_name,max_age=60*60)
+                resp.set_cookie('recent_jobs', cookie_name,max_age=60*60)'''
             return  resp # {'Location': url_for('task_status',task_id=task.id)
 
             #return redirect(url_for('process_request'),code=202)'''
@@ -240,9 +249,8 @@ def get_predlist():
 
 @app.route('/recent', methods=['GET'])
 def get_recent_jobs():
-    if 'recent_jobs' in request.cookies:
-        recent_jobs = request.cookies.get('recent_jobs').split(",")
-        rj_urls = [[j[0],url_for('process_request',job_id=j[1])] for j in (job.split(":") for job in recent_jobs)]
+    if 'recents' in session:
+        rj_urls = [[job_name,url_for('process_request',job_id=job_id)] for job_id,job_name in session['recents'].items()]
         return json.dumps(rj_urls)
     else:
         return json.dumps({})
@@ -261,8 +269,8 @@ job_id: from last task in the pipeline
 @app.route('/process/<job_id>', methods=['GET'])
 def process_request(job_id):
     # get the information saved by handle_upload
-    p0 = session['%s_p0'%job_id]
-    p1 = session['%s_p1'%job_id]
+    p0 = session['task_ids']['%s_p0'%job_id]
+    p1 = session['task_ids']['%s_p1'%job_id]
     parents = json.dumps({'parent-0':p0,'parent-1':p1})
     #session.clear() # clear the session given from index
     return render_template("result.html",stats_url=url_for('task_status',task_id=job_id),parents=parents)
