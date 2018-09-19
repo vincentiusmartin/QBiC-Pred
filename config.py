@@ -15,4 +15,8 @@ PCOUNT = 1 #os.cpu_count()
 PREDDIR = "/Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/preddir" #"/usr/project/xtmp/vmartin/pred"
 UPLOAD_FOLDER = '/tmp/'
 CHRDIR = "/Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/chromosomes"
-MAPPING_FILE = "resource/tf-mapping.txt"
+ESCORE_DIR = "/Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/escore/escore"
+PBM_HUGO_MAPPING = "resource/pbmtohugo.txt"
+HUGO_PBM_MAPPING = "resource/hugotopbm.txt"
+
+USER_DATA_EXPIRY = 3600

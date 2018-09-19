@@ -12,6 +12,7 @@ function displayResult(status_url){
         $('#tablewrap').css('display','block');
         var restbl = $('#restbl').DataTable({
             dom: 'lr<"#ressearch">tip',
+            scrollX: true,
             searching: false,
             serverSide: true,
             orderMulti: false,
@@ -29,8 +30,10 @@ function displayResult(status_url){
                { title: cols[3] },
                { title: cols[4] },
                { title: cols[5] },
+               { title: cols[6] },
             ]
         });
+        $('#restbl').css({"width":"100%"}); // need to set this to align the header
         // This is used to replace the search bar from DataTable so we can have
         // our custom. Search bar itself is inactivated.
         // https://stackoverflow.com/questions/43454575/call-datatable-ajax-call-on-custom-button
@@ -118,7 +121,7 @@ function getInputParam(status_url){
 
         /* parse the returned list  */
         var $genesDropdown = $("#genes-dropdown");
-        $.each(data['pbmselected'],function(idx,val){
+        $.each(data['genes_selected'],function(idx,val){
             $genesDropdown.append("<a class=\"dropdown-item\" href=\"#\">"+val+"</a>");
         });
         $('.selectpicker').selectpicker('refresh');

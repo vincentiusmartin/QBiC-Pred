@@ -11,13 +11,13 @@ from app import app,celery,db
 from werkzeug.utils import secure_filename
 
 import json,ast
+import pandas as pd
 
 import config
 
 import app.celerytask as celerytask
 
 ALLOWED_EXTENSIONS = set(['csv','tsv'])
-SESSION_TIMEOUT = 3600  # TODO: move this to a temp file
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # view specific utils
@@ -38,12 +38,12 @@ def get_res_col(task_id):
     return jsonify(cols)
 
 def filter_search(infields,keyword,type):
+    print(infields)
     if type == "All":
-        for i in range(0,len(infields)):
-            if any(keyword in field for field in infields):
-                return True
-            else:
-                return False
+        if any(keyword in str(field) for field in infields):
+            return True
+        else:
+            return False
     return True
 
 @app.route('/getrestbl/<task_id>',methods=['GET'])
@@ -54,18 +54,17 @@ def get_res_tbl(task_id):
     start = int(request.args['start'])
     length = int(request.args['length'])
 
+    # cs is custom search
     csKey = request.args['csKey']
     csField = request.args['csOpt']
     retlist = []
-    with open("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)) as f:
-        next(f)
-        for line in f:
-            row = line.strip().split(",")
-            if not filter_search(row,csKey,csField):
-                continue
-            wild = row[1][:5] + '<span class="bolded-red">' + row[1][5] + '</span>' + row[1][6:]
-            mut = row[2][:5] + '<span class="bolded-red">' + row[2][5] + '</span>' + row[2][6:]
-            retlist.append([int(row[0]),wild,mut,float(row[3]),float(row[4]),row[5]])
+    res_csv = pd.read_csv("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)).values.tolist()
+    for row in res_csv:
+        if not filter_search(row,csKey,csField):
+            continue
+        wild = row[1][:5] + '<span class="bolded-red">' + row[1][5] + '</span>' + row[1][6:]
+        mut = row[2][:5] + '<span class="bolded-red">' + row[2][5] + '</span>' + row[2][6:]
+        retlist.append([int(row[0]),wild,mut,"%.4f"%float(row[3]),"%.4f"%float(row[4]),row[5],row[6]])
 
     # check orderable -- we disable orderMulti in result.js so we can assume
     # one column ordering.
@@ -126,7 +125,7 @@ def task_status(task_id):
 def get_input_param(job_id):
     # key: filename,pbmselected,filteropt,filterval,chrver
     indict = db.hgetall(job_id)
-    indict["pbmselected"] = ast.literal_eval(indict["pbmselected"])
+    indict["genes_selected"] = ast.literal_eval(indict["genes_selected"])
     return json.dumps(indict) # must return a json
 
 # ==========================
@@ -178,9 +177,11 @@ def handle_upload():
         if status=='error':
             return jsonify({'Message':msg}), 500
         else:
-            select_list = [elm.split(":")[1] for elm in request.form.getlist('pred-select')]
+            # request.form.getlist('pred-select'):['Arid3a:Arid3a_3875.1_v1_deBruijn', 'Bhlhb2:Bhlhb2_4971.1_v1_deBruijn']
             genes_selected = [elm.split(":")[0] for elm in request.form.getlist('pred-select')]
-            expanded_select = list({tfpref+x+tfext for pbm in select_list for x in pbm.split(',')})
+
+            select_list = [elm.split(":")[1] for elm in request.form.getlist('pred-select')]
+            unique_pbms = list({tfpref+x+tfext for pbm in select_list for x in pbm.split(',')})
 
             chrver = request.form.get('genome-select')
 
@@ -192,45 +193,30 @@ def handle_upload():
 
             task = chain(celerytask.inittbl.s(app.config['UPLOAD_FOLDER'] + msg,
                         app.config['CHRDIR'] +"/"+chrver),
-                        celerytask.do_prediction.s(expanded_select,filteropt,filterval)).apply_async()
+                        celerytask.do_prediction.s(unique_pbms,genes_selected,filteropt,filterval)).apply_async() # put genes_selected here
 
-            if 'task_ids' not in session:
-                session['task_ids'] = {}
-            #parents = {'parent-0':task.parent.id,'parent-1':task.id}
-            session['task_ids']['%s_p0'%task.id] = task.parent.id
-            session['task_ids']['%s_p1'%task.id] = task.id
-
-            if 'recents' not in session:
-                session['recents'] = {}
-            job_name = request.form.get("job-name") if request.form.get("job-name") else task.id
-            session['recents'][task.id] = job_name # len to keep its order
+            # better to not use nested dict as Flask use CallbackDict to track modification
+            session['%s_p0'%task.id] = task.parent.id
+            session['%s_p1'%task.id] = task.id
 
             # ==== STORING IN REDIS PART ====
             session_info = {"filename":msg,
-                            "pbmselected":genes_selected,
+                            "genes_selected":genes_selected,
                             "filteropt":filteropt,
                             "filterval":filterval,
                             "chrver":request.form.get('genome-select')}
             if db.exists(task.id):
                 db.delete(task.id)
             db.hmset(task.id,session_info)
-            db.expire(task.id, SESSION_TIMEOUT) # now just 60 seconds for testing TODO
+            db.expire(task.id, app.config['USER_DATA_EXPIRY'])
             # ================================
 
             task.forget() # not sure if needed???
 
             resp = make_response(jsonify({}), 202, {'Location': url_for('process_request',job_id=task.id)})
-            #cookie_expiry = datetime.datetime.now() + datetime.timedelta(hours=2)
 
-            # save cookie for the recent jobs
-            '''job_name = request.form.get("job-name") if request.form.get("job-name") else task.id
-            cookie_name = job_name + ":" + task.id
-            if 'recent_jobs' in request.cookies:
-                rj = request.cookies.get('recent_jobs')
-                # APPENDING HERE
-                resp.set_cookie('recent_jobs', cookie_name + "," + rj,max_age=60*60) # just an hour for now
-            else:
-                resp.set_cookie('recent_jobs', cookie_name,max_age=60*60)'''
+            job_name = request.form.get("job-name") if request.form.get("job-name") else task.id
+            resp.set_cookie("qbic_recents:%s"%task.id, job_name, max_age=app.config['USER_DATA_EXPIRY'])
             return  resp # {'Location': url_for('task_status',task_id=task.id)
 
             #return redirect(url_for('process_request'),code=202)'''
@@ -239,7 +225,7 @@ def handle_upload():
 
 @app.route('/predlist', methods=['GET'])
 def get_predlist():
-    with open(app.config['MAPPING_FILE'],'r') as f:
+    with open(app.config['HUGO_PBM_MAPPING'],'r') as f:
         family_map = {}
         for line in f:
             key,val = line.strip().split("->")
@@ -249,8 +235,9 @@ def get_predlist():
 
 @app.route('/recent', methods=['GET'])
 def get_recent_jobs():
-    if 'recents' in session:
-        rj_urls = [[job_name,url_for('process_request',job_id=job_id)] for job_id,job_name in session['recents'].items()]
+    recents = [key for key in request.cookies.keys() if key.startswith("qbic_recents:")]
+    if recents:
+        rj_urls = [[request.cookies.get(job_key),url_for('process_request',job_id=job_key.split(":",1)[1])] for job_key in recents]
         return json.dumps(rj_urls)
     else:
         return json.dumps({})
@@ -260,7 +247,7 @@ def get_recent_jobs():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    #if request.method == 'GET':
+    #session.permanent = True
     return render_template("index.html")
 
 '''
@@ -269,8 +256,8 @@ job_id: from last task in the pipeline
 @app.route('/process/<job_id>', methods=['GET'])
 def process_request(job_id):
     # get the information saved by handle_upload
-    p0 = session['task_ids']['%s_p0'%job_id]
-    p1 = session['task_ids']['%s_p1'%job_id]
+    p0 = session['%s_p0'%job_id]
+    p1 = session['%s_p1'%job_id]
     parents = json.dumps({'parent-0':p0,'parent-1':p1})
     #session.clear() # clear the session given from index
     return render_template("result.html",stats_url=url_for('task_status',task_id=job_id),parents=parents)

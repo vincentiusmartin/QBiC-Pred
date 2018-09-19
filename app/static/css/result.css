@@ -8,7 +8,8 @@
 }
 
 .left-content {
-  //border-right: 3px solid;
+  border: 1px solid;
+  padding:4px;
   //border-color:  #D3D3D3;
 }
 
