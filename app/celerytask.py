@@ -80,7 +80,7 @@ def isbound_escore_18mer(seq18mer,pbm_name):
     wild = seq18mer[:-1]
     mut = seq18mer[:8] + seq18mer[-1] + seq18mer[9:-1]
 
-    return "\"%s,%s\"" % (isbound_escore(wild,elong),isbound_escore(mut,elong))
+    return "%s>%s" % (isbound_escore(wild,elong),isbound_escore(mut,elong))
 
 # https://stackoverflow.com/questions/2130016/splitting-a-list-into-n-parts-of-approximately-equal-length
 def chunkify(lst,n):
@@ -194,7 +194,7 @@ def format2tbl(tbl,gene_names,filteropt=1):
         csv_ret = "rowidx,wild,mutant,diff,z-score,genes,pbmname\n"
         metrics = 'z-score'
     else: #filteropt == 1:
-        csv_ret = "rowidx,wild,mutant,diff,p-value,isbound,genes,pbmname\n"
+        csv_ret = "rowidx,wild,mutant,diff,p-value,significant,pbmname,genes\n"
         metrics = 'p-value'
 
     with open(app.config['PBM_HUGO_MAPPING']) as f:
@@ -222,9 +222,9 @@ def format2tbl(tbl,gene_names,filteropt=1):
             else:
                 ingenes_str = "\"" + ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names]) + "\""
             if filteropt == 1:
-                csv_ret+=("{},{},{},{},{:.3f},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],ingenes_str,pbmname))
+                csv_ret+=("{},{},{},{},{:.3f},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],pbmname,ingenes_str))
             else:
-                csv_ret+=("{},{},{},{},{:.3f},{},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],row_val[2],ingenes_str,pbmname))
+                csv_ret+=("{},{},{},{},{:.3f},{},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],row_val[2],pbmname,ingenes_str))
     return csv_ret
 
 '''

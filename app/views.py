@@ -31,20 +31,19 @@ def get_file(filename):
     """Download a file."""
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename,as_attachment=True)
 
-@app.route('/getrescol/<task_id>',methods=['GET'])
-def get_res_col(task_id):
-    with open("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)) as f:
-        cols = f.readline().strip().split(",")
-    return jsonify(cols)
-
 def filter_search(infields,keyword,type):
-    print(infields)
     if type == "All":
         if any(keyword in str(field) for field in infields):
             return True
         else:
             return False
     return True
+
+@app.route('/getrescol/<task_id>',methods=['GET'])
+def get_res_col(task_id):
+    with open("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)) as f:
+        cols = [{"title":title} for title in f.readline().strip().split(",")]
+    return jsonify(cols)
 
 @app.route('/getrestbl/<task_id>',methods=['GET'])
 def get_res_tbl(task_id):
@@ -62,9 +61,10 @@ def get_res_tbl(task_id):
     for row in res_csv:
         if not filter_search(row,csKey,csField):
             continue
+        print(row)
         wild = row[1][:5] + '<span class="bolded-red">' + row[1][5] + '</span>' + row[1][6:]
         mut = row[2][:5] + '<span class="bolded-red">' + row[2][5] + '</span>' + row[2][6:]
-        retlist.append([int(row[0]),wild,mut,"%.4f"%float(row[3]),"%.4f"%float(row[4]),row[5],row[6]])
+        retlist.append([int(row[0]),wild,mut,"%.4f"%float(row[3]),"%.4f"%float(row[4])] + row[5:])
 
     # check orderable -- we disable orderMulti in result.js so we can assume
     # one column ordering.

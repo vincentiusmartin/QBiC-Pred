@@ -23,15 +23,7 @@ function displayResult(status_url){
                  d.csOpt = searchOpt;
               }
             },
-            columns: [
-               { title: cols[0] },
-               { title: cols[1] },
-               { title: cols[2] },
-               { title: cols[3] },
-               { title: cols[4] },
-               { title: cols[5] },
-               { title: cols[6] },
-            ]
+            columns: cols
         });
         $('#restbl').css({"width":"100%"}); // need to set this to align the header
         // This is used to replace the search bar from DataTable so we can have
