@@ -1,22 +1,32 @@
-# config.py
+import configparser
 
+config = configparser.ConfigParser()
+config.read('qbic-conf.ini')
+
+''' [Debug] '''
 # Enable Flask's debugging features. Should be False in production
-DEBUG = True
+DEBUG = config["Debug"]["DEBUG"]
 
+''' [Celery Conf] '''
 # Celery related configurations
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0' # important to track result
-#CELERYD_TASK_SOFT_TIME_LIMIT = 60
+CELERY_BROKER_URL = config["Celery Conf"]["CELERY_BROKER_URL"]
+CELERY_RESULT_BACKEND = config["Celery Conf"]["CELERY_RESULT_BACKEND"]
 
-# Flask configs
-MAX_CONTENT_LENGTH = 32 * 1024 * 1024 # max upload size
+''' [Flask Conf] '''
+MAX_CONTENT_LENGTH =  int(config["Flask Conf"]["MAX_CONTENT_LENGTH"])
 
-PCOUNT = 1 #os.cpu_count()
-PREDDIR = "/Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/preddir" #"/usr/project/xtmp/vmartin/pred"
-UPLOAD_FOLDER = '/tmp/'
-CHRDIR = "/Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/chromosomes"
-ESCORE_DIR = "/Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/escore/escore"
-PBM_HUGO_MAPPING = "resource/pbmtohugo.txt"
-HUGO_PBM_MAPPING = "resource/hugotopbm.txt"
+if config["Flask Conf"]["PCOUNT"] == "cpu.count":
+    PCOUNT = os.cpu_count()
+else:
+    PCOUNT = int(config["Flask Conf"]["PCOUNT"])
 
-USER_DATA_EXPIRY = 3600
+''' [Directory Setting] '''
+PREDDIR = config["Directory Setting"]["PREDDIR"]
+UPLOAD_FOLDER = config["Directory Setting"]["UPLOAD_FOLDER"]
+CHRDIR = config["Directory Setting"]["CHRDIR"]
+ESCORE_DIR = config["Directory Setting"]["ESCORE_DIR"]
+PBM_HUGO_MAPPING = config["Directory Setting"]["PBM_HUGO_MAPPING"]
+HUGO_PBM_MAPPING = config["Directory Setting"]["HUGO_PBM_MAPPING"]
+
+''' [User Session] '''
+USER_DATA_EXPIRY = int(config["User Session"]["USER_DATA_EXPIRY"])

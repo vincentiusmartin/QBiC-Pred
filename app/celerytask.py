@@ -2,6 +2,8 @@
 from celery import Celery,chain
 from app import app,celery
 
+from decimal import Decimal
+
 import time,sys,gzip
 import pandas as pd
 import billiard as mp #multiprocessing substitute to enable daemon
@@ -62,7 +64,7 @@ def isbound_escore(seq,etable,kmer=8):
         return "ambiguous"
 
 """
-return: \"is bound wild, is bound mut\"
+return: "is bound wild > is bound mut"
 """
 def isbound_escore_18mer(seq18mer,pbm_name):
     eshort_path = "%s/%s_escore.txt" % (app.config['ESCORE_DIR'],pbm_name)
@@ -191,7 +193,7 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
 
 def format2tbl(tbl,gene_names,filteropt=1):
     if filteropt == 1:
-        csv_ret = "rowidx,wild,mutant,diff,z-score,genes,pbmname\n"
+        csv_ret = "rowidx,wild,mutant,diff,z-score,pbmname,genes\n"
         metrics = 'z-score'
     else: #filteropt == 1:
         csv_ret = "rowidx,wild,mutant,diff,p-value,significant,pbmname,genes\n"
@@ -224,7 +226,7 @@ def format2tbl(tbl,gene_names,filteropt=1):
             if filteropt == 1:
                 csv_ret+=("{},{},{},{},{:.3f},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],pbmname,ingenes_str))
             else:
-                csv_ret+=("{},{},{},{},{:.3f},{},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],row_val[2],pbmname,ingenes_str))
+                csv_ret+=("{},{},{},{},{:.3e},{},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],Decimal(row_val[1]),row_val[2],pbmname,ingenes_str))
     return csv_ret
 
 '''

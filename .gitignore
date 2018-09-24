@@ -11,6 +11,7 @@ predictions
 
 # Ignore local file
 README.txt
+qbic-conf.ini
 
 # Need to ignore this mac-specific file as well
 .DS_Store

@@ -9,6 +9,7 @@ from celery.task.control import revoke
 from app import app,celery,db
 
 from werkzeug.utils import secure_filename
+from decimal import Decimal
 
 import json,ast
 import pandas as pd
@@ -58,13 +59,14 @@ def get_res_tbl(task_id):
     csField = request.args['csOpt']
     retlist = []
     res_csv = pd.read_csv("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)).values.tolist()
-    for row in res_csv:
+    for i in range(start,start+length):
+        row = res_csv[i]
         if not filter_search(row,csKey,csField):
             continue
-        print(row)
         wild = row[1][:5] + '<span class="bolded-red">' + row[1][5] + '</span>' + row[1][6:]
         mut = row[2][:5] + '<span class="bolded-red">' + row[2][5] + '</span>' + row[2][6:]
-        retlist.append([int(row[0]),wild,mut,"%.4f"%float(row[3]),"%.4f"%float(row[4])] + row[5:])
+        p_or_z_score = "%.3e"%row[4] if abs(row[4]) < 0.0001 else "%.4f"%row[4]
+        retlist.append([int(row[0]),wild,mut,"%.4f"%row[3],p_or_z_score] + row[5:])
 
     # check orderable -- we disable orderMulti in result.js so we can assume
     # one column ordering.
@@ -76,7 +78,7 @@ def get_res_tbl(task_id):
         "draw": draw,
         "recordsTotal": len(retlist),
         "recordsFiltered": len(retlist),
-        "data": retlist[start:start+length]
+        "data": retlist
     })
 
 
