@@ -9,17 +9,17 @@ function listPreddir(){
       dataType: 'json',
       success: function(data){
           // parse the resulting json
-          $.each(data, function(k1, v1) {
+          $.each(data, function(family, gene_pbm) {
             // Fill #predlist
-              var $group = $('<optgroup label="' + k1 + '" />');
-              $.each(v1, function(k2, v2) {
+              var $group = $('<optgroup label="' + family + '" />');
+              $.each(gene_pbm, function(gene, pbmnames) {
                   // should be searchable by family and by TF-name
-                  $group.append($('<option />').val(k2+":"+v2).text(k2).attr("data-tokens",k1+","+k2));  // family,tf name
+                  $group.append($('<option />').val(gene+":"+pbmnames).text(gene).attr("data-tokens",family+","+gene));  // family,gene
               })
               $predDropdown.append($group);
 
               // Fill #familylist
-              $famDropdown.append($('<option />').val(k1).text(k1));
+              $famDropdown.append($('<option />').val(family).text(family));
           });
           $('.selectpicker').selectpicker('refresh'); // needed to refresh optionlist
       },
@@ -30,23 +30,38 @@ function listPreddir(){
 }
 
 function updateFromFamilies(){
-    var selected = new Array();
-    $("#familylist option:selected").each(function(){
-        selected.push(this.value);
+    /* Token: {family:genename}*/
+    /* When family list is closed */
+    $('#familylist').on('hide.bs.select', function () {
+        var selected = new Array();
+        $("#familylist option:selected").each(function(){
+            selected.push(this.value);
+        });
+
+        $('#predlist').selectpicker('deselectAll');
+        toselect = [];
+        for(var i = 0; i < selected.length; i++) {
+            $('#predlist option').each(function() {
+                if($(this).attr("data-tokens").split(",")[0] == selected[i]) {
+                    toselect.push($(this).val());
+                }
+            });
+        }
+        $('#predlist').selectpicker('val',toselect);
     });
 
-    $('#familylist').selectpicker('deselectAll');
-    $('#predlist').selectpicker('deselectAll');
-
-    toselect = [];
-    for(var i = 0; i < selected.length; i++) {
-        $('#predlist option').each(function() {
-            if($(this).attr("data-tokens").split(",")[0] == selected[i]) {
-                toselect.push($(this).val());
+    /* When pred list is closed */
+    $('#predlist').on('hide.bs.select', function () {
+        var famSelectedArr = new Array();
+        $("#predlist option:selected").each(function(){
+            fam = $(this).attr("data-tokens").split(",")[0];
+            if(!famSelectedArr.includes(fam)){
+                famSelectedArr.push(fam);
             }
         });
-    }
-    $('#predlist').selectpicker('val',toselect);
+        $('#familylist').selectpicker('deselectAll');
+        $('#familylist').selectpicker('val',famSelectedArr);
+    });
 }
 
 function updateOutlabel(){
@@ -161,9 +176,9 @@ function testing(){
 $(function() {
     listPreddir(); // list all TFs from our list in the dropdowns
     updateOutlabel(); // check change on output options
+    updateFromFamilies();
     $('#submit-job').click(uploadFile);
     $('#submit-tf').click(uploadTFFomFile);
-    $('#submit-fam').click(updateFromFamilies);
     //testing();
 
     $('[data-toggle="popover"]').popover();

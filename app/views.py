@@ -172,7 +172,7 @@ def prepare_request(request):
 
 @app.route('/upload', methods=['POST'])
 def handle_upload():
-    tfpref = "prediction6mer."
+    tfpref = "prediction6mer." # for rapid, need to be empty for now
     tfext = ".csv"
     if request.method == 'POST':
         status,msg = prepare_request(request)
@@ -250,6 +250,7 @@ def get_recent_jobs():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     #session.permanent = True
+    #session.clear() -- need to limit the amount of session somewhere
     return render_template("index.html")
 
 '''

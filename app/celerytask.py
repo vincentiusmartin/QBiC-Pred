@@ -202,8 +202,7 @@ def format2tbl(tbl,gene_names,filteropt=1):
     with open(app.config['PBM_HUGO_MAPPING']) as f:
         pbmtohugo = {}
         for line in f:
-            withoutfam = line.split("->")[1].strip()
-            linemap = withoutfam.split(":")
+            linemap = line.strip().split(":")
             pbmtohugo[linemap[0]] = linemap[1].split(",")
 
     sorted_key = sorted(tbl.keys())
