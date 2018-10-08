@@ -68,12 +68,13 @@ return: "is bound wild > is bound mut"
 """
 def isbound_escore_18mer(seq18mer,pbm_name):
     eshort_path = "%s/%s_escore.txt" % (app.config['ESCORE_DIR'],pbm_name)
-    emap_path = "%s/%s_idx.csv" % (app.config['ESCORE_DIR'],pbm_name)
+    # TODO: avoid IO, maybe using global var?
+    short2long_map = "%s/index_short_to_long.csv" % (app.config['ESCORE_DIR'])
 
     #  -- this definitely needs to go to a database
     with open(eshort_path) as f:
         eshort = [float(line) for line in f]
-    with open(emap_path) as f:
+    with open(short2long_map) as f:
         next(f)
         emap = [int(line.split(",")[1])-1 for line in f]
 
