@@ -59,25 +59,30 @@ def get_res_tbl(task_id):
     csField = request.args['csOpt']
     retlist = []
     res_csv = pd.read_csv("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)).values.tolist()
-    for i in range(start,start+length):
-        row = res_csv[i]
-        if not filter_search(row,csKey,csField):
-            continue
+
+    filtered_tbl = [row for row in res_csv if filter_search(row,csKey,csField)]
+
+    for i in range(start,min(len(filtered_tbl),start+length)):
+        row = filtered_tbl[i]
+        #if not filter_search(row,csKey,csField):
+        #    continue
         wild = row[1][:5] + '<span class="bolded-red">' + row[1][5] + '</span>' + row[1][6:]
         mut = row[2][:5] + '<span class="bolded-red">' + row[2][5] + '</span>' + row[2][6:]
-        p_or_z_score = "%.3e"%row[4] if abs(row[4]) < 0.0001 else "%.4f"%row[4]
-        retlist.append([int(row[0]),wild,mut,"%.4f"%row[3],p_or_z_score] + row[5:])
-
+        p_or_z_score = "%.3e"%row[4] if abs(row[4]) < 10**(-4) and abs(row[4]) > 10**(-10) else "%.4f"%row[4]
+        # str(elm) for elm in row[5:] -> used to fix nan
+        retlist.append([int(row[0]),wild,mut,"%.4f"%row[3],p_or_z_score] + [str(elm) for elm in row[5:]])
     # check orderable -- we disable orderMulti in result.js so we can assume
     # one column ordering.
     order_col = int(request.args["order[0][column]"])
     order_reverse = False if request.args["order[0][dir]"] == "asc" else True
     retlist = sorted(retlist, key = lambda x: x[order_col],reverse=order_reverse)
 
+    print(retlist)
+
     return jsonify({
         "draw": draw,
-        "recordsTotal": len(retlist),
-        "recordsFiltered": len(retlist),
+        "recordsTotal": len(res_csv),
+        "recordsFiltered": len(filtered_tbl),
         "data": retlist
     })
 
