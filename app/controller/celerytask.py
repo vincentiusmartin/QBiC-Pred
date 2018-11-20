@@ -1,95 +1,18 @@
 
 from celery import Celery,chain
-from app import app,celery
+from app import app,celery,db
 
 from decimal import Decimal
 
-import time,sys,gzip
+import time,sys
 import pandas as pd
 import billiard as mp #multiprocessing substitute to enable daemon
 import scipy.stats
 
 import os
 
-def get_chrom(cfile):
-    with gzip.open(cfile,'rb') as f:
-        next(f)
-        chrom = f.read().decode('utf-8').replace('\n','')
-    return chrom
-
-def itoseq(seqint,kmer):
-    nucleotides = {0:'A',1:'C',2:'G',3:'T'}
-    binrep = 0
-    seq = ""
-    while(seqint > 0):
-        seq = nucleotides[seqint & 3] + seq
-        seqint >>= 2
-    while len(seq) < kmer:
-        seq = 'A' + seq
-    return seq
-
-'''
-does not append 1, used for integer indexing
-'''
-def seqtoi(seq):
-    nucleotides = {'A':0,'C':1,'G':2,'T':3}
-    binrep = 0
-    for i in range(0,len(seq)):
-        binrep <<= 2
-        binrep |= nucleotides[seq[i]]
-    return binrep
-
-def isbound_escore(seq,etable,kmer=8):
-    bsite_cutoff = 0.4
-    nbsite_cutoff = 0.3
-    nucleotides = {'A':0,'C':1,'G':2,'T':3}
-    grapper = (2<<(8*2-1))-1
-    binrep = seqtoi(seq[0:kmer])
-    elist = [etable[binrep]]
-    for i in range(kmer,len(seq)):
-        binrep = ((binrep << 2) | seqtoi(seq[i])) & grapper
-        elist.append(etable[binrep])
-    if max(elist) < nbsite_cutoff:
-        return "unbound"
-    else:
-        isbound = False
-        for i in range(0,len(elist)):
-            if elist[i] > bsite_cutoff:
-                if isbound:
-                    return "bound"
-                else:
-                    isbound = True
-            else:
-                isbound = False
-        return "ambiguous"
-
-"""
-return: "is bound wild > is bound mut"
-"""
-def isbound_escore_18mer(seq18mer,pbm_name):
-    eshort_path = "%s/%s_escore.txt" % (app.config['ESCORE_DIR'],pbm_name)
-    # TODO: avoid IO, maybe using global var?
-    short2long_map = "%s/index_short_to_long.csv" % (app.config['ESCORE_DIR'])
-
-    #  -- this definitely needs to go to a database
-    with open(eshort_path) as f:
-        eshort = [float(line) for line in f]
-    with open(short2long_map) as f:
-        next(f)
-        emap = [int(line.split(",")[1])-1 for line in f]
-
-    elong = [eshort[idx] for idx in emap]
-
-    wild = seq18mer[:-1]
-    mut = seq18mer[:8] + seq18mer[-1] + seq18mer[9:-1]
-
-    return "%s>%s" % (isbound_escore(wild,elong),isbound_escore(mut,elong))
-
-# https://stackoverflow.com/questions/2130016/splitting-a-list-into-n-parts-of-approximately-equal-length
-def chunkify(lst,n):
-    return [lst[i::n] for i in range(n)]
-
-# =====================================================
+sys.path.insert(0, 'app')
+import controller.utils as utils
 
 # input: table
 @celery.task(bind=True)
@@ -117,7 +40,7 @@ def inittbl(self,filename,cpath):
         if cidx not in dataset:
             continue
         print("Iterating dataset for chromosome {}...".format(cidx))
-        chromosome = get_chrom(cpath + "/chr." + str(cidx) + '.fa.gz')
+        chromosome = utils.get_chrom(cpath + "/chr." + str(cidx) + '.fa.gz')
         for idx,row in dataset[cidx].iterrows():
             pos = row['chromosome_start'] - 1
             if row['mutated_from_allele'] != chromosome[pos]:
@@ -125,10 +48,11 @@ def inittbl(self,filename,cpath):
             seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to_allele'] #-5,+6
             # for escore, just use 8?
             esccore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to_allele']
-            result.append([idx,seq,esccore_seq,seqtoi(seq),0,0,"-"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
+            result.append([idx,seq,esccore_seq,utils.seqtoi(seq),0,0,"-"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
 
     result = sorted(result,key=lambda result:result[0])
     print("Time to preprocess: {:.2f}secs".format(time.time()-start))
+    delete_file(filename)
     return result
 
 #==================================== Prediction Part ====================================
@@ -179,7 +103,7 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
                 pval = scipy.stats.norm.sf(abs(zscore))*2
                 # if z-score is chosen then filterval is the p-vap threshold
                 if pval <= filterval:
-                    isbound = isbound_escore_18mer(row_key[2],pbmname)
+                    isbound = utils.isbound_escore_18mer(row_key[2],pbmname)
                     # tflist[seqidx][:-1] -> just diff
                     container[row_key].append(tflist[seqidx][:-1] + [pval,isbound,pbmname])
         sharedlist.append(pbmname) # TODO: delete this
@@ -197,7 +121,7 @@ def format2tbl(tbl,gene_names,filteropt=1):
         csv_ret = "rowidx,wild,mutant,diff,z-score,pbmname,genes\n"
         metrics = 'z-score'
     else: #filteropt == 1:
-        csv_ret = "rowidx,wild,mutant,diff,p-value,significant,pbmname,genes\n"
+        csv_ret = "rowidx,wild,mutant,diff,p-value,status,pbmname,genes\n"
         metrics = 'p-value'
 
     with open(app.config['PBM_HUGO_MAPPING']) as f:
@@ -250,6 +174,17 @@ def postprocess(datalist,gene_names,filteropt=1,filterval=1):
                     maintbl[row_key].extend(ddict[row_key])
     return format2tbl(maintbl,gene_names,filteropt)
 
+@celery.task()
+def delete_file(filename):
+    '''
+    this simple function is used to delete user file after USER_DATA_EXPIRY
+    seconds
+    '''
+    if os.path.exists(filename):
+        os.remove(filename)
+        print("Deleted: %s"%filename)
+    else:
+        print("%s doesn't exist for deletion"%filename)
 
 #==========================================================
 
@@ -270,7 +205,7 @@ def do_prediction(self,intbl,selections,gene_names,filteropt=1,filterval=1):
     # move the comment here for testing
     pool = mp.Pool(processes=app.config['PCOUNT'])
     predfiles = [app.config['PREDDIR'] + "/" + s for s in selections] # os.listdir(preddir)
-    preds = chunkify(predfiles,app.config['PCOUNT']) # chunks the predfiles for each process
+    preds = utils.chunkify(predfiles,app.config['PCOUNT']) # chunks the predfiles for each process
 
     sharedlist = mp.Manager().list()
     async_pools = [pool.apply_async(predict, (preds[i],intbl,sharedlist,filteropt,filterval)) for i in range(0,len(preds))]

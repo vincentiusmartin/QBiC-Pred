@@ -16,10 +16,10 @@ app.permanent_session_lifetime = timedelta(minutes=3600)
 # Load the config file
 app.config.from_object('config')
 
+db = redis.Redis('localhost', decode_responses=True) # decode->make it in utf8,TODO
+
 celery = Celery(app.name, backend=app.config['CELERY_RESULT_BACKEND'], broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
-
-db = redis.Redis('localhost', decode_responses=True) # decode->make it in utf8,TODO
 
 # Load the views
 from app import views
