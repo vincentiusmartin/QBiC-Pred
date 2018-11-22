@@ -1,4 +1,6 @@
-
+/**
+  This function parse result from datatable and display it to the user.
+**/
 function displayResult(status_url){
     var keys = [];
     // show result
@@ -36,7 +38,7 @@ function displayResult(status_url){
           <div class="form-grup" style="margin-right:5px;">
             <select id="ressearch-select" name="ressearch-select" class="selectpicker" data-width="fit">
               <option selected>All</option>
-              <option>Opt-233</option>
+              <option>Dummy option</option>
             </select>
           </div>
           <div class="form-grup">
