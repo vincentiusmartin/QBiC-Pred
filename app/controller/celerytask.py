@@ -34,6 +34,7 @@ def inittbl(self,filename,cpath):
     dataset = {key:item for key,item in grouped}
 
     result = list()
+    error = ""
     for cidx in [str(a) for a in range(1,23)] + ['X','Y']:
         self.update_state(state='PROGRESS',
                   meta={'current': 0, 'total': 1, 'status': 'Preprocessing input for chromosome {}...'.format(cidx)})
@@ -44,16 +45,22 @@ def inittbl(self,filename,cpath):
         for idx,row in dataset[cidx].iterrows():
             pos = row['chromosome_start'] - 1
             if row['mutated_from_allele'] != chromosome[pos]:
-                sys.exit("Found mismatch in the mutation: \n{}".format(row))
+                error = "Found mismatch in the mutation: \n{}".format(row)
+                break
             seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to_allele'] #-5,+6
             # for escore, just use 8?
             esccore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to_allele']
             result.append([idx,seq,esccore_seq,utils.seqtoi(seq),0,0,"-"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
+        if error:
+            break
 
-    result = sorted(result,key=lambda result:result[0])
-    print("Time to preprocess: {:.2f}secs".format(time.time()-start))
     delete_file(filename)
-    return result
+    if error:
+        return error
+    else:
+        result = sorted(result,key=lambda result:result[0])
+        print("Time to preprocess: {:.2f}secs".format(time.time()-start))
+        return result
 
 #==================================== Prediction Part ====================================
 
@@ -118,10 +125,10 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
 
 def format2tbl(tbl,gene_names,filteropt=1):
     if filteropt == 1:
-        csv_ret = "rowidx,wild,mutant,diff,z-score,pbmname,genes\n"
+        csv_ret = "rowidx,wild,mutant,diff,z-score,pbmname,TF_gene\n"
         metrics = 'z-score'
     else: #filteropt == 1:
-        csv_ret = "rowidx,wild,mutant,diff,p-value,status,pbmname,genes\n"
+        csv_ret = "rowidx,wild,mutant,diff,p-value,binding_status,pbmname,TF_gene\n"
         metrics = 'p-value'
 
     with open(app.config['PBM_HUGO_MAPPING']) as f:
@@ -195,6 +202,9 @@ filterval: # TFs for opt 1 and p-val cutoff for opt 2
 '''
 @celery.task(bind=True)
 def do_prediction(self,intbl,selections,gene_names,filteropt=1,filterval=1):
+    if type(intbl) is str: # got an error in the pipeline from inittbl
+        return {'current': 1, 'total': 1, 'error': intbl}
+
     # intbl: #rowidx,seq,val,diff,t,pbmname,escore_seq
     start_time = time.time()
 

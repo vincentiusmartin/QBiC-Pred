@@ -72,7 +72,10 @@ function displayResult(status_url){
                    displayResult(status_url);
                    $('#csv-download').css('display','block').html("<a href=\"/files/" + data['csvlink'] + "\" download=\"result.csv\">Download CSV</a>");
                }
-               else {
+               else if ('error' in data) {
+                   // found an error
+                   $('#status').html('Error: ' + data['error']);
+               }else{
                    // something unexpected happened
                    $('#status').html('Result: ' + data['state']);
                }

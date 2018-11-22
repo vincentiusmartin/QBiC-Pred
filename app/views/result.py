@@ -98,6 +98,8 @@ def task_status(task_id):
             'total': task.info.get('total', 1),
             'status': task.info.get('status', '')
         }
+        if 'error' in task.info:
+            response['error'] = task.info['error']
         if 'result' in task.info:
             response['result'] = task.info['result']
             response['csvlink'] = task.info['csvlink']
