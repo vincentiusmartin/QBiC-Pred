@@ -65,18 +65,17 @@ def inittbl(self,filename,cpath):
 #==================================== Prediction Part ====================================
 
 # TODO: remove sharedlist if not needed anymore
-'''
-for the container list, key is a tuple of: (rowidx,sequence,seqidx)
-and each element in value is a list if: [diff,z-score,pbmname]
-
-return:
- filteropt=1: diff,zscore,tfname
- filteropt=2: diff,p-val,escore,tfname
-'''
 def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
+    '''
+    for the container list, key is a tuple of: (rowidx,sequence,seqidx)
+    and each element in value is a list if: [diff,z-score,pbmname]
+
+    return:
+     filteropt=1: diff,zscore,tfname
+     filteropt=2: diff,p-val,escore,tfname
+    '''
     buggedtf = 0
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
-    # HERE
     if filteropt == 1: #t-value
         container = {tuple(row[:4]):[[0,0,"None"]] for row in dataset} # rowidx,12mer,18mer,seqidx : 0,0,"-"
     else: #p-value
@@ -110,7 +109,7 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
                 pval = scipy.stats.norm.sf(abs(zscore))*2
                 # if z-score is chosen then filterval is the p-vap threshold
                 if pval <= filterval:
-                    isbound = utils.isbound_escore_18mer(row_key[2],pbmname)
+                    isbound = utils.isbound_escore_18mer(row_key[2],pbmname,app.config['ESCORE_DIR'])
                     # tflist[seqidx][:-1] -> just diff
                     container[row_key].append(tflist[seqidx][:-1] + [pval,isbound,pbmname])
         sharedlist.append(pbmname) # TODO: delete this
@@ -120,7 +119,7 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
     newcontainer = {}
     for row_key in container:
         newcontainer[row_key[:-2]] = container[row_key]
-
+    print("newcontainer ",newcontainer)
     return newcontainer
 
 def format2tbl(tbl,gene_names,filteropt=1):

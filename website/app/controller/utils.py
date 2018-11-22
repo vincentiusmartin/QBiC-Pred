@@ -55,10 +55,10 @@ def isbound_escore(seq,etable,kmer=8):
 """
 return: "is bound wild > is bound mut"
 """
-def isbound_escore_18mer(seq18mer,pbm_name):
-    eshort_path = "%s/%s_escore.txt" % (app.config['ESCORE_DIR'],pbm_name)
+def isbound_escore_18mer(seq18mer,pbm_name,escore_dir):
+    eshort_path = "%s/%s_escore.txt" % (escore_dir,pbm_name)
     # TODO: avoid IO, maybe using global var?
-    short2long_map = "%s/index_short_to_long.csv" % (app.config['ESCORE_DIR'])
+    short2long_map = "%s/index_short_to_long.csv" % (escore_dir)
 
     #  -- this definitely needs to go to a database
     with open(eshort_path) as f:
