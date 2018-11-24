@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.insert(0, '..')
 
-from flask import request,render_template,session,make_response,jsonify,url_for
+from flask import request,render_template,make_response,jsonify,url_for
 from werkzeug.utils import secure_filename
 
 from celery import Celery,chain
@@ -84,11 +84,15 @@ def handle_upload():
                         celerytask.do_prediction.s(unique_pbms,genes_selected,filteropt,filterval)).apply_async() # put genes_selected here
 
             # better to not use nested dict as Flask use CallbackDict to track modification
-            session['%s_p0'%task.id] = task.parent.id
-            session['%s_p1'%task.id] = task.id
+            #session['%s_p0'%task.id] = task.parent.id
+            #session['%s_p1'%task.id] = task.id
 
             # ==== STORING IN REDIS PART ====
-            session_info = {"filename":msg,
+            # it is important to store these in redis so information can be
+            # passed to different browsers/machines.
+            session_info = {"parent_id":task.parent.id,
+                            "task_id":task.id,
+                            "filename":msg,
                             "genes_selected":genes_selected,
                             "filteropt":filteropt,
                             "filterval":filterval,
@@ -108,6 +112,7 @@ def handle_upload():
             resp = make_response(jsonify({}), 202, {'Location': url_for('process_request',job_id=task.id)})
 
             job_name = request.form.get("job-name") if request.form.get("job-name") else task.id
+            # we can put this in cookie to let browser save the recent jobs
             resp.set_cookie("qbic_recents:%s"%task.id, job_name, max_age=app.config['USER_DATA_EXPIRY'])
             return  resp # {'Location': url_for('task_status',task_id=task.id)
 

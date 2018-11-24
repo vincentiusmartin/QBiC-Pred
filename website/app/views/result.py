@@ -1,7 +1,7 @@
 import sys
 sys.path.insert(0, '..')
 
-from flask import send_from_directory,jsonify,request,session,render_template,url_for
+from flask import send_from_directory,jsonify,request,render_template,url_for
 from app import app,db,celery
 
 import json,ast
@@ -21,10 +21,10 @@ job_id: from last task in the pipeline
 '''
 @app.route('/process/<job_id>', methods=['GET'])
 def process_request(job_id):
-    # get the information saved by handle_upload, this process is handled
-    # internally from page to page, so need to save information in session
-    p0 = session['%s_p0'%job_id]
-    p1 = session['%s_p1'%job_id]
+    # get the task data from redis
+    taskdata = db.hgetall(job_id)
+    p0 = taskdata["parent_id"]
+    p1 = taskdata["task_id"]
     parents = json.dumps({'parent-0':p0,'parent-1':p1})
     #session.clear() # clear the session given from index
     return render_template("result.html",stats_url=url_for('task_status',task_id=job_id),parents=parents)
