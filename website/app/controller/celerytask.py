@@ -152,7 +152,6 @@ def format2tbl(tbl,gene_names,filteropt=1):
             if pbmname == 'None':
                 ingenes_str = ""
             else:
-                print(pbmtohugo)
                 ingenes_str = "\"" + ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names]) + "\""
             if filteropt == 1:
                 csv_ret+=("{},{},{},{},{:.3f},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],pbmname,ingenes_str))
