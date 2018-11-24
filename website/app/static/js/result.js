@@ -52,43 +52,43 @@ function displayResult(status_url){
          });
          $("#ressearch-select").selectpicker(); // to show the dropdownn options
     });
-  }
+}
 
   /*
    * status_url:
    * parents: denotes the ids of the parent functions in the chain/pipeline
    */
-   function updateProgress(status_url,parents){
-       $.getJSON(status_url,parents).done(function(data) {
-           // update UI
-           percent = parseInt(data['current'] * 100 / data['total']);
+function updateProgress(status_url,parents){
+   $.getJSON(status_url,parents).done(function(data) {
+       // update UI
+       percent = parseInt(data['current'] * 100 / data['total']);
 
-           $(".progress-bar").attr('aria-valuenow', percent).css('width',percent+"%").html(percent+"%"); // .attr('aria-valuenow', percent)
-           $('#status').html(data['status']);
+       $(".progress-bar").attr('aria-valuenow', percent).css('width',percent+"%").html(percent+"%"); // .attr('aria-valuenow', percent)
+       $('#status').html(data['status']);
 
-           if (data['state'] != 'PENDING' && data['state'] != 'PROGRESS') { // it's finish
-               if ('result' in data) {
-                   //var res = data['result'];
-                   $('#status').hide();
-                   $(".progress").hide();
-                   displayResult(status_url);
-                   $('#csv-download').css('display','block').html("<a href=\"/files/" + data['csvlink'] + "\" download=\"result.csv\">Download CSV</a>");
-               }
-               else if ('error' in data) {
-                   // found an error
-                   $('#status').html('Error: ' + data['error']);
-               }else{
-                   // something unexpected happened
-                   $('#status').html('Result: ' + data['state']);
-               }
+       if (data['state'] != 'PENDING' && data['state'] != 'PROGRESS') { // it's finish
+           if ('result' in data) {
+               //var res = data['result'];
+               $('#status').hide();
+               $(".progress").hide();
+               displayResult(status_url);
+               $('#csv-download').css('display','block').html("<a href=\"/files/" + data['csvlink'] + "\" download=\"result.csv\">Download CSV</a>");
            }
-           else {
-               // rerun in 2 seconds
-               setTimeout(function() {
-                   updateProgress(status_url,parents);
-               }, 2000);
+           else if ('error' in data) {
+               // found an error
+               $('#status').html('Error: ' + data['error']);
+           }else{
+               // something unexpected happened
+               $('#status').html('Result: ' + data['state']);
            }
-     });
+       }
+       else {
+           // rerun in 2 seconds
+           setTimeout(function() {
+               updateProgress(status_url,parents);
+           }, 2000);
+       }
+    });
  }
 
 function inputProgress(status_url,parents){

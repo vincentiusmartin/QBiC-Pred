@@ -59,7 +59,7 @@ def prepare_request(request):
 @app.route('/upload', methods=['POST'])
 def handle_upload():
     tfpref = "prediction6mer." # for rapid, need to be empty for now
-    tfext = ".csv"
+    tfext = ""
     if request.method == 'POST':
         status,msg = prepare_request(request)
         if status=='error':
