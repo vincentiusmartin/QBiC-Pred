@@ -13,7 +13,7 @@ CELERY_BROKER_URL = config["Celery Conf"]["CELERY_BROKER_URL"]
 CELERY_RESULT_BACKEND = config["Celery Conf"]["CELERY_RESULT_BACKEND"]
 
 ''' [Flask Conf] '''
-MAX_CONTENT_LENGTH =  int(config["Flask Conf"]["MAX_CONTENT_LENGTH"])
+MAX_FILE_LENGTH =  int(config["Flask Conf"]["MAX_FILE_LENGTH"]) # CONTENT
 
 if config["Flask Conf"]["PCOUNT"] == "cpu.count":
     PCOUNT = os.cpu_count()

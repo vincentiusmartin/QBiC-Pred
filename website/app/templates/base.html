@@ -9,13 +9,15 @@
     <link rel= "stylesheet" type= "text/css" href= "https://cdn.datatables.net/1.10.18/css/jquery.dataTables.min.css">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/bootstrap-select.min.css') }}">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/base.css') }}">
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     <!-- script from static folder -->
     <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
     <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
     <script src="https://unpkg.com/popper.js@1.14.3/dist/umd/popper.min.js"></script> <!-- required for bootstrap drop-down -->
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap-select.min.js') }}"></script>
-
+    <!-- internal js script -->
     <script src="{{ url_for('static', filename='js/base.js') }}"></script>
   </head>
   <body>
@@ -25,10 +27,10 @@
           <!-- Links -->
           <ul class="navbar-nav"> <!-- ml-auto  -->
             <li class="nav-item">
-              <a class="nav-link" href="/">Home</a>
+              <a class="nav-link" href="{{ url_for('makepred') }}">Make Prediction</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Data Sources</a>
+              <a class="nav-link" href="#">Upload Result</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('about') }}">About</a>

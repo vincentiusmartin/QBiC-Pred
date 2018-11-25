@@ -17,6 +17,7 @@
   margin:0;
 }
 
-/*.form-inline .form-group {
-  margin-right:40px;
-}*/
+.dataTables_wrapper .dataTables_processing {
+  top:40%;
+  z-index: 1;
+}

@@ -10,14 +10,29 @@ function displayResult(status_url){
     $.getJSON('/getrescol/'+job_id,function(cols) {
         searchKey = "";
         searchOpt = "All";
-
         $('#tablewrap').css('display','block');
         var restbl = $('#restbl').DataTable({
             dom: 'lr<"#ressearch">tip',
             scrollX: true,
             searching: false,
+            processing: true, // Enable the display of 'processing' when the table is being processed
             serverSide: true,
             orderMulti: false,
+            language: {
+                processing: "<i class=\"fas fa-circle-notch fa-spin fa-5x\" style=\"color: gray;\"></i>"
+            }, // $("#tableid").addClass("disabled");
+            preDrawCallback: function( settings ) {
+                /* disable some elments before draw */
+                $('.dataTables_paginate').hide();
+                $('.dataTables_length').hide();
+                $('#ressearch-btn').prop('disabled', true);
+            },
+            drawCallback: function(settings, json) {
+                /* reenable elments after draw */
+                $('.dataTables_paginate').show();
+                $('.dataTables_length').show();
+                $('#ressearch-btn').prop('disabled', false);
+            },
             ajax: {
               url: '/getrestbl/'+job_id,
               data:function(d){
@@ -46,6 +61,7 @@ function displayResult(status_url){
           </div>
           `);
          $("#ressearch-btn").click(function() {
+             // set search field for getrestbl
             searchKey = $("#ressearch-text").val();
             searchOpt = $("#ressearch-select option:selected").text();
             restbl.ajax.reload();
@@ -72,7 +88,7 @@ function updateProgress(status_url,parents){
                $('#status').hide();
                $(".progress").hide();
                displayResult(status_url);
-               $('#csv-download').css('display','block').html("<a href=\"/files/" + data['csvlink'] + "\" download=\"result.csv\">Download CSV</a>");
+               $('#csv-download').css('display','block').html("<a href=\"/files/" + data['taskid'] + "\" download=\"result.csv\">Download CSV</a>");
            }
            else if ('error' in data) {
                // found an error

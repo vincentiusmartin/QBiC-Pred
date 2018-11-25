@@ -54,6 +54,7 @@ def inittbl(self,filename,cpath):
         if error:
             break
 
+    # we finish parsing the file, delete it
     delete_file(filename)
     if error:
         return error
@@ -107,7 +108,7 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
             else: # filteropt == 2
                 zscore = tflist[seqidx][1]
                 pval = scipy.stats.norm.sf(abs(zscore))*2
-                # if z-score is chosen then filterval is the p-vap threshold
+                # if z-score is chosen then filterval is the p-val threshold
                 if pval <= filterval:
                     isbound = utils.isbound_escore_18mer(row_key[2],pbmname,app.config['ESCORE_DIR'])
                     # tflist[seqidx][:-1] -> just diff
@@ -119,15 +120,21 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
     newcontainer = {}
     for row_key in container:
         newcontainer[row_key[:-2]] = container[row_key]
-    print("newcontainer ",newcontainer)
     return newcontainer
 
 def format2tbl(tbl,gene_names,filteropt=1):
+    '''
+    This function saves tbl as csvstring
+
+    Input:
+      tbl is a dictionary of (rowidx,seq):[diff,zscore,tfname] or [diff,p-val,escore,tfname]
+    '''
+
     if filteropt == 1:
-        csv_ret = "rowidx,wild,mutant,diff,z-score,pbmname,TF_gene\n"
+        colnames = ["rowidx","wild,mutant","diff","z-score","pbmname","TF_gene"]
         metrics = 'z-score'
     else: #filteropt == 1:
-        csv_ret = "rowidx,wild,mutant,diff,p-value,binding_status,pbmname,TF_gene\n"
+        colnames = ["rowidx","wild,mutant","diff","p-value","binding_status","pbmname","TF_gene"]
         metrics = 'p-value'
 
     with open(app.config['PBM_HUGO_MAPPING']) as f:
@@ -137,6 +144,7 @@ def format2tbl(tbl,gene_names,filteropt=1):
             pbmtohugo[linemap[0]] = linemap[1].split(",")
 
     sorted_key = sorted(tbl.keys())
+    datavalues = []
     for row_key in sorted_key:
         if not tbl[row_key]: # probably empty row
             continue
@@ -154,15 +162,17 @@ def format2tbl(tbl,gene_names,filteropt=1):
             else:
                 ingenes_str = "\"" + ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names]) + "\""
             if filteropt == 1:
-                csv_ret+=("{},{},{},{},{:.3f},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],pbmname,ingenes_str))
+                datavalues.append([row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],pbmname,ingenes_str])
+                #csv_ret+=("{},{},{},{},{:.3f},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],pbmname,ingenes_str))
             else:
-                csv_ret+=("{},{},{},{},{:.3e},{},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],Decimal(row_val[1]),row_val[2],pbmname,ingenes_str))
-    return csv_ret
+                datavalues.append([row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],Decimal(row_val[1]),row_val[2],pbmname,ingenes_str])
+                #csv_ret+=("{},{},{},{},{:.3e},{},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],Decimal(row_val[1]),row_val[2],pbmname,ingenes_str))
+    return colnames,datavalues
 
-'''
-aggregate the result from the different processes
-'''
 def postprocess(datalist,gene_names,filteropt=1,filterval=1):
+    '''
+    Aggregate the result from the different processes.
+    '''
     maintbl = {}
     for ddict in datalist:
         if not maintbl:
@@ -233,13 +243,24 @@ def do_prediction(self,intbl,selections,gene_names,filteropt=1,filterval=1):
     print("Terminate all children process..")
     pool.terminate() # terminate to kill all child processes !!! Like.. super important,
                      # to avoid memory leak, seriously...
-    csv_ret = postprocess(res,gene_names,filteropt,filterval)
+    colnames,datavalues = postprocess(res,gene_names,filteropt,filterval)
 
-    csv_path = "%s.csv"%self.request.id
-    with open(app.config['UPLOAD_FOLDER'] + csv_path,'w') as f:
-        f.write(csv_ret)
+    if db.exists(self.request.id):
+        reqdict = db.hgetall(self.request.id)
+    else: # not likely to happen though
+        reqdict = {}
+    reqdict['rescol'] = colnames
+    reqdict['resval'] = datavalues
+    if db.exists(self.request.id):
+        db.delete(self.request.id)
+    db.hmset(self.request.id,reqdict)
+    db.expire(self.request.id, app.config['USER_DATA_EXPIRY'])
+
+    csv_path = "%s.csv"%self.request.id # delete this
+    #with open(app.config['UPLOAD_FOLDER'] + csv_path,'w') as f:
+    #    f.write(csv_ret)
 
     # https://stackoverflow.com/questions/24577349/flask-download-a-file
     return {'current': len(sharedlist), 'total': len(predfiles), 'status': 'Task completed!',
-            'result': 'done','csvlink':csv_path,
+            'result': 'done', 'taskid': self.request.id,
             'time':(time.time()-start_time)} # -- somehow cannot do jsonify(postproc)

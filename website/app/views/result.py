@@ -1,9 +1,11 @@
 import sys
 sys.path.insert(0, '..')
 
-from flask import send_from_directory,jsonify,request,render_template,url_for
+from flask import send_from_directory,jsonify,request,render_template,url_for,Response
 from app import app,db,celery
 
+# ast is used to convert string literal representation of list to a list,
+# this is needed since redis stores list as string
 import json,ast
 
 import pandas as pd
@@ -29,15 +31,28 @@ def process_request(job_id):
     #session.clear() # clear the session given from index
     return render_template("result.html",stats_url=url_for('task_status',task_id=job_id),parents=parents)
 
-@app.route('/files/<path:filename>')
-def get_file(filename):
+@app.route('/files/<taskid>')
+def get_file(taskid):
     """Download a file."""
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename,as_attachment=True)
+    task = db.hgetall(taskid)
+    csv = "%s\n" % ",".join(ast.literal_eval(task['rescol']))
+    for row in ast.literal_eval(task['resval']):
+        strrow = [str(x) for x in row]
+        csv += "%s\n" % ",".join(strrow)
+    return Response(
+        csv,
+        mimetype="text/csv",
+        headers={"Content-disposition":
+                 "attachment; filename=prediction_result.csv"})
 
 @app.route('/getrescol/<task_id>',methods=['GET'])
 def get_res_col(task_id):
-    with open("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)) as f:
-        cols = [{"title":title} for title in f.readline().strip().split(",")]
+    cols = []
+    if db.exists(task_id):
+        cols_fromdb = ast.literal_eval(db.hgetall(task_id)['rescol'])
+        #with open("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)) as f:
+        cols = [{"title":title} for title in cols_fromdb]
+    # else just return an empty list
     return jsonify(cols)
 
 @app.route('/getrestbl/<task_id>',methods=['GET'])
@@ -52,9 +67,13 @@ def get_res_tbl(task_id):
     csKey = request.args['csKey']
     csField = request.args['csOpt']
     retlist = []
-    res_csv = pd.read_csv("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)).values.tolist()
+    #res_csv = pd.read_csv("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)).values.tolist()
 
-    filtered_tbl = [row for row in res_csv if filter_search(row,csKey,csField)]
+    vals_fromdb = []
+    filtered_tbl = []
+    if db.exists(task_id):
+        vals_fromdb = ast.literal_eval(db.hgetall(task_id)['resval'])
+        filtered_tbl = [row for row in vals_fromdb if filter_search(row,csKey,csField)]
 
     for i in range(start,min(len(filtered_tbl),start+length)):
         row = filtered_tbl[i]
@@ -71,11 +90,9 @@ def get_res_tbl(task_id):
     order_reverse = False if request.args["order[0][dir]"] == "asc" else True
     retlist = sorted(retlist, key = lambda x: x[order_col],reverse=order_reverse)
 
-    print(retlist)
-
     return jsonify({
         "draw": draw,
-        "recordsTotal": len(res_csv),
+        "recordsTotal": len(vals_fromdb),
         "recordsFiltered": len(filtered_tbl),
         "data": retlist
     })
@@ -113,7 +130,7 @@ def task_status(task_id):
             response['error'] = task.info['error']
         if 'result' in task.info:
             response['result'] = task.info['result']
-            response['csvlink'] = task.info['csvlink']
+            response['taskid'] = task.info['taskid']
         # TODO: need to forget task
 
     #task.forget() #??? not sure if needed
