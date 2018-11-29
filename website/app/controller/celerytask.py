@@ -4,6 +4,7 @@ from app import app,celery,db
 
 from decimal import Decimal
 
+import redisearch
 import time,sys
 import pandas as pd
 import billiard as mp #multiprocessing substitute to enable daemon
@@ -72,8 +73,8 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
     and each element in value is a list if: [diff,z-score,pbmname]
 
     return:
-     filteropt=1: diff,zscore,tfname
-     filteropt=2: diff,p-val,escore,tfname
+     filteropt=1: diff,z_score,tfname
+     filteropt=2: diff,p_val,escore,tfname
     '''
     buggedtf = 0
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
@@ -131,11 +132,9 @@ def format2tbl(tbl,gene_names,filteropt=1):
     '''
 
     if filteropt == 1:
-        colnames = ["rowidx","wild,mutant","diff","z-score","pbmname","TF_gene"]
-        metrics = 'z-score'
+        colnames = ["row","wild","mutant","diff","z_score","pbmname","TF_gene"]
     else: #filteropt == 1:
-        colnames = ["rowidx","wild,mutant","diff","p-value","binding_status","pbmname","TF_gene"]
-        metrics = 'p-value'
+        colnames = ["row","wild","mutant","diff","p_value","binding_status","pbmname","TF_gene"]
 
     with open(app.config['PBM_HUGO_MAPPING']) as f:
         pbmtohugo = {}
@@ -160,7 +159,7 @@ def format2tbl(tbl,gene_names,filteropt=1):
             if pbmname == 'None':
                 ingenes_str = ""
             else:
-                ingenes_str = "\"" + ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names]) + "\""
+                ingenes_str = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
             if filteropt == 1:
                 datavalues.append([row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],pbmname,ingenes_str])
                 #csv_ret+=("{},{},{},{},{:.3f},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],pbmname,ingenes_str))
@@ -204,13 +203,15 @@ def delete_file(filename):
 
 #==========================================================
 
-'''
-intbl: preprocessed table
-filteropt: 1 for highest t-val, 2 for p-val cutoff
-filterval: # TFs for opt 1 and p-val cutoff for opt 2
-'''
+#https://github.com/MehmetKaplan/Redis_Table
 @celery.task(bind=True)
 def do_prediction(self,intbl,selections,gene_names,filteropt=1,filterval=1):
+    '''
+    intbl: preprocessed table
+    filteropt: 1 for highest t-val, 2 for p-val cutoff
+    filterval: # TFs for opt 1 and p-val cutoff for opt 2
+    '''
+
     if type(intbl) is str: # got an error in the pipeline from inittbl
         return {'current': 1, 'total': 1, 'error': intbl}
 
@@ -245,18 +246,26 @@ def do_prediction(self,intbl,selections,gene_names,filteropt=1,filterval=1):
                      # to avoid memory leak, seriously...
     colnames,datavalues = postprocess(res,gene_names,filteropt,filterval)
 
-    if db.exists(self.request.id):
-        reqdict = db.hgetall(self.request.id)
-    else: # not likely to happen though
-        reqdict = {}
-    reqdict['rescol'] = colnames
-    reqdict['resval'] = datavalues
-    if db.exists(self.request.id):
-        db.delete(self.request.id)
-    db.hmset(self.request.id,reqdict)
-    db.expire(self.request.id, app.config['USER_DATA_EXPIRY'])
+    ''' SET the values in redis '''
+    # significance_score can be z-score or p-value depending on the out_type
+    db.hmset("%s:cols"%self.request.id,{'cols':colnames})
+    db.expire("%s:cols"%self,app.config['USER_DATA_EXPIRY'])
+    client = redisearch.Client(self.request.id)
+    indexes = []
+    for col in colnames:
+        if "score" in col or "diff" in col or "row" in col:
+            indexes.append(redisearch.NumericField(col,sortable=True))
+        else:
+            indexes.append(redisearch.TextField(col,sortable=True))
+    client.create_index(indexes)
+    for i in range(0,len(datavalues)):
+        fields = {colnames[j]:datavalues[i][j] for j in range(0,len(colnames))}
+        client.add_document(i, **fields)
+    # TODO: need to run task to delete documents after expiration
+    # set all keys/rows to expire after USER_DATA_EXPIRY
+    #db.expire("%s:vals:*" % self.request.id, app.config['USER_DATA_EXPIRY'])
 
-    csv_path = "%s.csv"%self.request.id # delete this
+    #csv_path = "%s.csv"%self.request.id # delete this
     #with open(app.config['UPLOAD_FOLDER'] + csv_path,'w') as f:
     #    f.write(csv_ret)
 

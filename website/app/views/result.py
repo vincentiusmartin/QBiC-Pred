@@ -4,19 +4,13 @@ sys.path.insert(0, '..')
 from flask import send_from_directory,jsonify,request,render_template,url_for,Response
 from app import app,db,celery
 
+import redisearch
+
 # ast is used to convert string literal representation of list to a list,
 # this is needed since redis stores list as string
 import json,ast
 
 import pandas as pd
-
-def filter_search(infields,keyword,type):
-    if type == "All":
-        if any(keyword in str(field) for field in infields):
-            return True
-        else:
-            return False
-    return True
 
 '''
 job_id: from last task in the pipeline
@@ -39,6 +33,7 @@ def get_file(taskid):
     for row in ast.literal_eval(task['resval']):
         strrow = [str(x) for x in row]
         csv += "%s\n" % ",".join(strrow)
+    ''' return the csv file without having to save it '''
     return Response(
         csv,
         mimetype="text/csv",
@@ -48,17 +43,39 @@ def get_file(taskid):
 @app.route('/getrescol/<task_id>',methods=['GET'])
 def get_res_col(task_id):
     cols = []
-    if db.exists(task_id):
-        cols_fromdb = ast.literal_eval(db.hgetall(task_id)['rescol'])
+    col_id = "%s:cols"%task_id
+    if db.exists(col_id):
+        cols_fromdb = ast.literal_eval(db.hgetall(col_id)['cols'])
         #with open("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)) as f:
         cols = [{"title":title} for title in cols_fromdb]
     # else just return an empty list
     return jsonify(cols)
 
+def filter_fromdb(task_id,start,length,searchquery,searchtype,order_col="row",order_asc=True):
+    # https://oss.redislabs.com/redisearch/Query_Syntax/
+    result = {}
+    client = redisearch.Client(task_id)
+    if searchtype == "All": # no search key and not ordered
+        querystr = "%s*" % searchquery
+        # bad to sort every time TODO: fix later
+        query = redisearch.Query(querystr).sort_by(order_col,order_asc).paging(start,length)
+        docs = []
+        #for i in range(start,min(result['recordsTotal'],start+length)):
+        #    docs.append(client.load_document(i))
+        res = client.search(query)
+        result['recordsTotal'] = int(client.info()['num_docs'])
+        result['recordsFiltered'] = res.total
+        result['data'] = res.docs
+    return result
+
+def customround(num):
+    fl = float(num) # so it can accept string
+    return "%.3e"%fl if abs(fl) < 10**(-4) or abs(fl) > 10**(4) else "%.4f"%fl
+
 @app.route('/getrestbl/<task_id>',methods=['GET'])
 def get_res_tbl(task_id):
-    # {\"0\":\"rowidx\",\"1\":\"wild-type\",\"2\":\"mutant\",\"3\":\"diff\",\"4\":\"z-score\",\"5\":\"pbmname\"},
     # Get all mandatory informations we need
+    # Info about params: https://datatables.net/manual/server-side#DataTables_Table_1
     draw = int(request.args['draw']) # not secure # TODO: make it secure?
     start = int(request.args['start'])
     length = int(request.args['length'])
@@ -66,34 +83,38 @@ def get_res_tbl(task_id):
     # cs is custom search
     csKey = request.args['csKey']
     csField = request.args['csOpt']
+
+    # check orderable -- orderMulti is disabled in result.js so we can assume
+    # one column ordering.
+    order_col = int(request.args["order[0][column]"])
+    order_asc = True if request.args["order[0][dir]"] == "asc" else False
+
     retlist = []
     #res_csv = pd.read_csv("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)).values.tolist()
 
-    vals_fromdb = []
-    filtered_tbl = []
-    if db.exists(task_id):
-        vals_fromdb = ast.literal_eval(db.hgetall(task_id)['resval'])
-        filtered_tbl = [row for row in vals_fromdb if filter_search(row,csKey,csField)]
+    cols = ast.literal_eval(db.hgetall("%s:cols"%task_id)['cols'])
 
-    for i in range(start,min(len(filtered_tbl),start+length)):
-        row = filtered_tbl[i]
+    filtered_db = filter_fromdb(task_id,start,length,csKey,csField,cols[order_col],order_asc)
+
+    retlist = []
+    filteropt = 1 if 'z_score' in cols else 2
+
+    for doc in filtered_db['data']:
         #if not filter_search(row,csKey,csField):
         #    continue
-        wild = row[1][:5] + '<span class="bolded-red">' + row[1][5] + '</span>' + row[1][6:]
-        mut = row[2][:5] + '<span class="bolded-red">' + row[2][5] + '</span>' + row[2][6:]
-        p_or_z_score = "%.3e"%row[4] if abs(row[4]) < 10**(-4) and abs(row[4]) > 10**(-10) else "%.4f"%row[4]
-        # str(elm) for elm in row[5:] -> used to fix nan
-        retlist.append([int(row[0]),wild,mut,"%.4f"%row[3],p_or_z_score] + [str(elm) for elm in row[5:]])
-    # check orderable -- we disable orderMulti in result.js so we can assume
-    # one column ordering.
-    order_col = int(request.args["order[0][column]"])
-    order_reverse = False if request.args["order[0][dir]"] == "asc" else True
-    retlist = sorted(retlist, key = lambda x: x[order_col],reverse=order_reverse)
+        wild = doc.wild[:5] + '<span class="bolded-red">' + doc.wild[5] + '</span>' + doc.wild[6:]
+        mut = doc.mutant[:5] + '<span class="bolded-red">' + doc.mutant[5] + '</span>' + doc.mutant[6:]
+        if filteropt == 1:
+            zscore = customround(doc.z_score)
+            retlist.append([int(doc.row),wild,mut,float(doc.diff),zscore,doc.pbmname,doc.TF_gene])
+        else:
+            pval = customround(doc.p_value)
+            retlist.append([int(doc.row),wild,mut,float(doc.diff),pval,doc.binding_status,doc.pbmname,doc.TF_gene])
 
     return jsonify({
         "draw": draw,
-        "recordsTotal": len(vals_fromdb),
-        "recordsFiltered": len(filtered_tbl),
+        "recordsTotal": filtered_db['recordsTotal'],
+        "recordsFiltered": filtered_db['recordsFiltered'],
         "data": retlist
     })
 
