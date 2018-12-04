@@ -1,5 +1,5 @@
 body{
-  padding-top: 50px; /* need to do this to avoid overlap with navbar */
+  padding-top: 60px; /* need to do this to avoid overlap with navbar */
 }
 
 @font-face {
