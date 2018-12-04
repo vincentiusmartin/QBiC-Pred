@@ -1,4 +1,5 @@
 import gzip
+import os
 
 def get_chrom(cfile):
     with gzip.open(cfile,'rb') as f:
@@ -73,6 +74,17 @@ def isbound_escore_18mer(seq18mer,pbm_name,escore_dir):
     mut = seq18mer[:8] + seq18mer[-1] + seq18mer[9:-1]
 
     return "%s>%s" % (isbound_escore(wild,elong),isbound_escore(mut,elong))
+
+def delete_file(filename):
+    '''
+    this simple function is used to delete user file after USER_DATA_EXPIRY
+    seconds
+    '''
+    if os.path.exists(filename):
+        os.remove(filename)
+        print("Deleted: %s"%filename)
+    else:
+        print("%s doesn't exist for deletion"%filename)
 
 # https://stackoverflow.com/questions/2130016/splitting-a-list-into-n-parts-of-approximately-equal-length
 def chunkify(lst,n):

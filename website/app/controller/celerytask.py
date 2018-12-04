@@ -56,7 +56,7 @@ def inittbl(self,filename,cpath):
             break
 
     # we finish parsing the file, delete it
-    delete_file(filename)
+    utils.delete_file(filename)
     if error:
         return error
     else:
@@ -189,19 +189,15 @@ def postprocess(datalist,gene_names,filteropt=1,filterval=1):
                     maintbl[row_key].extend(ddict[row_key])
     return format2tbl(maintbl,gene_names,filteropt)
 
-@celery.task()
-def delete_file(filename):
-    '''
-    this simple function is used to delete user file after USER_DATA_EXPIRY
-    seconds
-    '''
-    if os.path.exists(filename):
-        os.remove(filename)
-        print("Deleted: %s"%filename)
-    else:
-        print("%s doesn't exist for deletion"%filename)
-
 #==========================================================
+@celery.task()
+def drop_index(task_id):
+    '''
+    Make this a celery task so we can schedule it
+    '''
+    print("Remove index for %s from redis"%task_id)
+    client = redisearch.Client(task_id)
+    client.drop_index()
 
 #https://github.com/MehmetKaplan/Redis_Table
 @celery.task(bind=True)
@@ -249,7 +245,6 @@ def do_prediction(self,intbl,selections,gene_names,filteropt=1,filterval=1):
     ''' SET the values in redis '''
     # significance_score can be z-score or p-value depending on the out_type
     db.hmset("%s:cols"%self.request.id,{'cols':colnames})
-    db.expire("%s:cols"%self,app.config['USER_DATA_EXPIRY'])
     client = redisearch.Client(self.request.id)
     indexes = []
     for col in colnames:
@@ -261,15 +256,12 @@ def do_prediction(self,intbl,selections,gene_names,filteropt=1,filterval=1):
     for i in range(0,len(datavalues)):
         fields = {colnames[j]:datavalues[i][j] for j in range(0,len(colnames))}
         client.add_document(i, **fields)
-    # TODO: need to run task to delete documents after expiration
-    # set all keys/rows to expire after USER_DATA_EXPIRY
+    # ---- set expiry for columns and documents ----
+    db.expire("%s:cols"%self,app.config['USER_DATA_EXPIRY'])
+    drop_index.apply_async((self.request.id,), countdown=app.config['USER_DATA_EXPIRY'])
+    # TODO: need to run task to delete documents after expiration -- FLAG NEXT TODO
     #db.expire("%s:vals:*" % self.request.id, app.config['USER_DATA_EXPIRY'])
 
-    #csv_path = "%s.csv"%self.request.id # delete this
-    #with open(app.config['UPLOAD_FOLDER'] + csv_path,'w') as f:
-    #    f.write(csv_ret)
-
-    # https://stackoverflow.com/questions/24577349/flask-download-a-file
     return {'current': len(sharedlist), 'total': len(predfiles), 'status': 'Task completed!',
             'result': 'done', 'taskid': self.request.id,
             'time':(time.time()-start_time)} # -- somehow cannot do jsonify(postproc)
