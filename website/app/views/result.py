@@ -28,11 +28,22 @@ def process_request(job_id):
 @app.route('/files/<taskid>')
 def get_file(taskid):
     """Download a file."""
-    task = db.hgetall(taskid)
-    csv = "%s\n" % ",".join(ast.literal_eval(task['rescol']))
-    for row in ast.literal_eval(task['resval']):
-        strrow = [str(x) for x in row]
-        csv += "%s\n" % ",".join(strrow)
+    task = db.hgetall("%s:cols"%taskid)
+    cols = ast.literal_eval(task['cols'])
+    csv = "%s\n" % ",".join(cols)
+
+    client = redisearch.Client(taskid)
+    num_docs = int(client.info()['num_docs'])
+
+    for i in range(0,num_docs):
+        doc = client.load_document(i)
+        listparam = []
+        for col in cols:
+            listparam.append(eval("doc.%s"%col))
+        csv += ",".join(listparam)
+        if i != num_docs-1:
+            csv += "\n"
+
     ''' return the csv file without having to save it '''
     return Response(
         csv,
