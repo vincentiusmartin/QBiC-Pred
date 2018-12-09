@@ -13,5 +13,8 @@ predictions
 README.txt
 qbic-conf.ini
 
+# anything testfiles
+generate_prediction/test*
+
 # Need to ignore this mac-specific file as well
 .DS_Store
