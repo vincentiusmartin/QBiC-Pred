@@ -1,9 +1,7 @@
 # Ignore build and env files
 __pycache__
 venv
-
-app/*.pyc
-app/__pycache__
+*.pyc
 
 # Ignore resource directory for now
 resource
