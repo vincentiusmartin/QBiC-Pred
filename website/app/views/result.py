@@ -113,14 +113,16 @@ def get_res_tbl(task_id):
     for doc in filtered_db['data']:
         #if not filter_search(row,csKey,csField):
         #    continue
-        wild = doc.wild[:5] + '<span class="bolded-red">' + doc.wild[5] + '</span>' + doc.wild[6:]
-        mut = doc.mutant[:5] + '<span class="bolded-red">' + doc.mutant[5] + '</span>' + doc.mutant[6:]
+        rowdict = {col:getattr(doc,col) for col in cols}
+        print(rowdict)
+        rowdict['wild'] = doc.wild[:5] + '<span class="bolded-red">' + doc.wild[5] + '</span>' + doc.wild[6:]
+        rowdict['mutant'] = doc.mutant[:5] + '<span class="bolded-red">' + doc.mutant[5] + '</span>' + doc.mutant[6:]
         if filteropt == 1:
-            zscore = customround(doc.z_score)
-            retlist.append([int(doc.row),wild,mut,float(doc.diff),zscore,doc.pbmname,doc.TF_gene])
+            rowdict['z_score'] = customround(doc.z_score)
         else:
-            pval = customround(doc.p_value)
-            retlist.append([int(doc.row),wild,mut,float(doc.diff),pval,doc.binding_status,doc.pbmname,doc.TF_gene])
+            rowdict['p_value'] = customround(doc.p_value)
+            rowdict['binding_status'] = doc.binding_status
+        retlist.append([rowdict[col] for col in cols])
 
     return jsonify({
         "draw": draw,

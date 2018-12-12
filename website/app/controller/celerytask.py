@@ -123,6 +123,10 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
         newcontainer[row_key[:-2]] = container[row_key]
     return newcontainer
 
+def read_gapfile(gapfile):
+    df = pd.read_csv('resource/test/gap-test.txt')
+    return dict(zip(df.upbm_filenames, df.gapmodel))
+
 def format2tbl(tbl,gene_names,filteropt=1):
     '''
     This function saves tbl as csvstring
@@ -131,41 +135,45 @@ def format2tbl(tbl,gene_names,filteropt=1):
       tbl is a dictionary of (rowidx,seq):[diff,zscore,tfname] or [diff,p-val,escore,tfname]
     '''
 
-    if filteropt == 1:
-        colnames = ["row","wild","mutant","diff","z_score","pbmname","TF_gene"]
-    else: #filteropt == 1:
-        colnames = ["row","wild","mutant","diff","p_value","binding_status","pbmname","TF_gene"]
-
     with open(app.config['PBM_HUGO_MAPPING']) as f:
         pbmtohugo = {}
         for line in f:
             linemap = line.strip().split(":")
             pbmtohugo[linemap[0]] = linemap[1].split(",")
 
+    gapdata = read_gapfile(app.config['PBM_HUGO_MAPPING'])
+
     sorted_key = sorted(tbl.keys())
     datavalues = []
     for row_key in sorted_key:
         if not tbl[row_key]: # probably empty row
             continue
+        row = row_key[0]
         seq = row_key[1]
-        wild = seq[0:5] + '<span class="bolded-red">' + seq[5] + '</span>' + seq[6:11]
-        mut = seq[0:5] + '<span class="bolded-red">' + seq[11] + '</span>' + seq[6:11]
+        wild = seq[0:5] + seq[5] + seq[6:11]
+        mut = seq[0:5] + seq[11] + seq[6:11]
         sorted_val = sorted(tbl[row_key],reverse=True,key=lambda x:abs(x[1]))
         for row_val in sorted_val:
+            rowdict = {'row':row,'wild':wild,'mutant':mut,'diff':row_val[0]}
             if filteropt == 1:
                 pbmname = row_val[2]
+                rowdict['z_score'] =  row_val[1]
             else:
                 pbmname = row_val[3]
-            if pbmname == 'None':
-                ingenes_str = ""
+                rowdict['p_value'] =  Decimal(row_val[1])
+                rowdict['binding_status'] = row_val[2]
+            rowdict['pbmname'] = pbmname
+            rowdict['gapmodel'] = gapdata[pbmname]
+            if pbmname  == 'None':
+                rowdict['TF_gene'] = ""
             else:
-                ingenes_str = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
-            if filteropt == 1:
-                datavalues.append([row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],pbmname,ingenes_str])
-                #csv_ret+=("{},{},{},{},{:.3f},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],row_val[1],pbmname,ingenes_str))
-            else:
-                datavalues.append([row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],Decimal(row_val[1]),row_val[2],pbmname,ingenes_str])
-                #csv_ret+=("{},{},{},{},{:.3e},{},{},{}\n".format(row_key[0],seq[0:11],(seq[0:5] + seq[11] + seq[6:11]),row_val[0],Decimal(row_val[1]),row_val[2],pbmname,ingenes_str))
+                rowdict['TF_gene'] = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
+            datavalues.append(rowdict)
+
+    if filteropt == 1:
+        colnames = ["row","wild","mutant","diff","z_score","TF_gene","gapmodel","pbmname"]
+    else: #filteropt == 1:
+        colnames = ["row","wild","mutant","diff","p_value","TF_gene","binding_status","gapmodel","pbmname"]
     return colnames,datavalues
 
 def postprocess(datalist,gene_names,filteropt=1,filterval=1):
@@ -254,7 +262,7 @@ def do_prediction(self,intbl,selections,gene_names,filteropt=1,filterval=1):
             indexes.append(redisearch.TextField(col,sortable=True))
     client.create_index(indexes)
     for i in range(0,len(datavalues)):
-        fields = {colnames[j]:datavalues[i][j] for j in range(0,len(colnames))}
+        fields = {colnames[j]:datavalues[i][colnames[j]] for j in range(0,len(colnames))}
         client.add_document(i, **fields)
     # ---- set expiry for columns and documents ----
     db.expire("%s:cols"%self,app.config['USER_DATA_EXPIRY'])
