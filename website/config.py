@@ -27,6 +27,7 @@ CHRDIR = config["Directory Setting"]["CHRDIR"]
 ESCORE_DIR = config["Directory Setting"]["ESCORE_DIR"]
 PBM_HUGO_MAPPING = config["Directory Setting"]["PBM_HUGO_MAPPING"]
 HUGO_PBM_MAPPING = config["Directory Setting"]["HUGO_PBM_MAPPING"]
+GAP_FILE = config["Directory Setting"]["GAP_FILE"]
 
 ''' [User Session] '''
 USER_DATA_EXPIRY = int(config["User Session"]["USER_DATA_EXPIRY"])
