@@ -207,6 +207,23 @@ def drop_index(task_id):
     client = redisearch.Client(task_id)
     client.drop_index()
 
+def savetoredis(req_id,colnames,datavalues,expired_time):
+    db.hmset("%s:cols"%req_id,{'cols':colnames})
+    client = redisearch.Client(req_id)
+    indexes = []
+    for col in colnames:
+        if "score" in col or "diff" in col or "row" in col:
+            indexes.append(redisearch.NumericField(col,sortable=True))
+        else:
+            indexes.append(redisearch.TextField(col,sortable=True))
+    client.create_index(indexes)
+    for i in range(0,len(datavalues)):
+        fields = {colnames[j]:datavalues[i][colnames[j]] for j in range(0,len(colnames))}
+        client.add_document(i, **fields)
+    # ---- set expiry for columns and documents ----
+    db.expire("%s:cols"%req_id,expired_time)
+    drop_index.apply_async((req_id,), countdown=expired_time)
+
 #https://github.com/MehmetKaplan/Redis_Table
 @celery.task(bind=True)
 def do_prediction(self,intbl,selections,gene_names,filteropt=1,filterval=1):
@@ -251,23 +268,9 @@ def do_prediction(self,intbl,selections,gene_names,filteropt=1,filterval=1):
     colnames,datavalues = postprocess(res,gene_names,filteropt,filterval)
 
     ''' SET the values in redis '''
+    savetoredis(self.request.id,colnames,datavalues,app.config['USER_DATA_EXPIRY'])
     # significance_score can be z-score or p-value depending on the out_type
-    db.hmset("%s:cols"%self.request.id,{'cols':colnames})
-    client = redisearch.Client(self.request.id)
-    indexes = []
-    for col in colnames:
-        if "score" in col or "diff" in col or "row" in col:
-            indexes.append(redisearch.NumericField(col,sortable=True))
-        else:
-            indexes.append(redisearch.TextField(col,sortable=True))
-    client.create_index(indexes)
-    for i in range(0,len(datavalues)):
-        fields = {colnames[j]:datavalues[i][colnames[j]] for j in range(0,len(colnames))}
-        client.add_document(i, **fields)
-    # ---- set expiry for columns and documents ----
-    db.expire("%s:cols"%self,app.config['USER_DATA_EXPIRY'])
-    drop_index.apply_async((self.request.id,), countdown=app.config['USER_DATA_EXPIRY'])
-    # TODO: need to run task to delete documents after expiration -- FLAG NEXT TODO
+
     #db.expire("%s:vals:*" % self.request.id, app.config['USER_DATA_EXPIRY'])
 
     return {'current': len(sharedlist), 'total': len(predfiles), 'status': 'Task completed!',

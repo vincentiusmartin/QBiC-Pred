@@ -6,19 +6,27 @@ def get_gapdata(pbmpath):
     '''
     print gappos and then gapsize for shell script to parse
     '''
-    pbmname = os.path.basename(pbmpath)
+    pbmname = os.path.splitext(os.path.basename(pbmpath))[0]
     db = "resource/upbm_gap_params.csv"
     df = pd.read_csv(db)
     row = df.loc[df['upbm_filenames'] == pbmname]
     print(row['gappos'].item())
     print(row['gapsize'].item())
 
+#python3 predutils.py -p resource/data_upbm_selected_good_quality_final.csv
 def gapparams_from_csv(csvpath):
     df = pd.read_csv(csvpath)
     datacsv = []
+    processed = []
     for idx,row in df.iterrows():
+        upbmname = os.path.splitext(row['upbm_filenames'])[0]
+        if row['upbm_filenames'] in processed:
+            continue
+        else:
+            processed.append(upbmname)
         rowdict = {}
-        rowdict['upbm_filenames'] = row['upbm_filenames']
+        rowdict['upbm_filenames'] = upbmname
+        rowdict['gapmodel'] = row['best']
         if row['best'] == "ungapped":
             rowdict['gapsize'] = 0
             rowdict['gappos'] = 0
@@ -27,9 +35,8 @@ def gapparams_from_csv(csvpath):
             rowdict['gapsize'] = gaps[0]
             rowdict['gappos'] = gaps[1]
         datacsv.append(rowdict)
-    pd.DataFrame(datacsv).to_csv("upbm_gap_params.csv",index=False,columns=['upbm_filenames','gappos','gapsize'])
+    pd.DataFrame(datacsv).to_csv("upbm_gap_params.csv",index=False,columns=['upbm_filenames','gappos','gapsize','gapmodel'])
 
-#python3 predutils.py -p resource/data_upbm_selected_good_quality_final.csv
 #python3 predutils.py -g "test-in/Mus_musculus|NA|Unpublished|Zfp24.txt"
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Generate predicitons for all possible k-mer permutations.')

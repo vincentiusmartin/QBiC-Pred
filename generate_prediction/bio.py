@@ -99,7 +99,6 @@ def nonr_olig_freq(seqtbl,kmer,nonrev_list,gappos=0,gapsize=0):
             rc = revcomp(r)
             if r > rc:
                 r = rc
-            print(itoseq(r))
             # 392secs with loc,434 secs with the regression. R time, 10secs for allocation, 3.97mins for linreg
             # with 'at', only 23secs! -- 254secs total for 6mer
             olig_df[r][i] += 1

@@ -140,40 +140,46 @@ in javascript: updateProgress function calls this using status url
 @app.route('/status/<task_id>')
 def task_status(task_id):
     pretask_id = request.args["parent-0"] # i.e. preprocess
-
-    # see which task is active:
-    task = celery.AsyncResult(pretask_id) # preprocess
-    if task.state == 'SUCCESS': # if preprocess is finished then check prediction
-        task = celery.AsyncResult(task_id) # prediction
-    if task.state == 'PENDING':
+    response = {}
+    if pretask_id == "uploadpred":
         response = {
-            'state': task.state,
-            'current': 0,
+            'state': 'SUCCESS',
+            'current': 1,
             'total': 1,
-            'status': 'Pending...'
+            'status': '',
+            'result':'',
+            'taskid':task_id
         }
-        task.forget()
-    else: #task.state == 'PROGRESS' or 'SUCCESS'?
-        response = {
-            'state': task.state,
-            'current': task.info.get('current', 0),
-            'total': task.info.get('total', 1),
-            'status': task.info.get('status', '')
-        }
-        if 'error' in task.info:
-            response['error'] = task.info['error']
-        if 'result' in task.info:
-            response['result'] = task.info['result']
-            response['taskid'] = task.info['taskid']
-        # TODO: need to forget task
+    else:
+        # see which task is active:
+        task = celery.AsyncResult(pretask_id) # preprocess
+        if task.state == 'SUCCESS': # if preprocess is finished then check prediction
+            task = celery.AsyncResult(task_id) # prediction
+        if task.state == 'PENDING':
+            response = {
+                'state': task.state,
+                'current': 0,
+                'total': 1,
+                'status': 'Pending...'
+            }
+            task.forget()
+        else: #task.state == 'PROGRESS' or 'SUCCESS'?
+            response = {
+                'state': task.state,
+                'current': task.info.get('current', 0),
+                'total': task.info.get('total', 1),
+                'status': task.info.get('status', '')
+            }
+            if 'error' in task.info:
+                response['error'] = task.info['error']
+            if 'result' in task.info:
+                response['result'] = task.info['result']
+                response['taskid'] = task.info['taskid']
+            # TODO: need to forget task
 
-    #task.forget() #??? not sure if needed
-    # pkill -9 -f 'celery worker'
-
+        #task.forget() #??? not sure if needed
+        # pkill -9 -f 'celery worker'
     return jsonify(response)
-    #return render_template("result.html",tblres=[]) #tblres=res
-    #return send_from_directory(app.config['UPLOAD_FOLDER'],
-    #                           filename)
 
 @app.route('/getinputparam/<job_id>', methods=['GET'])
 def get_input_param(job_id):

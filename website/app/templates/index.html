@@ -7,6 +7,12 @@
 
 <div class="modal-body">
   <h1>Welcome!</h1>
+
+  <form method="post" enctype="multipart/form-data" id="predupload-form">
+    <label>Already have a prediction file?</label>
+    <input type=file class="form-control-file" name="predupload-file" />
+    <button id="submit-pred" type="button" class="btn btn-sm btn-secondary">Submit</button>
+  </form>
 </div>
 
 <div id="testing"></div>

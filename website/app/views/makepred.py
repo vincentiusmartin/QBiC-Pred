@@ -90,10 +90,6 @@ def handle_upload():
                         app.config['CHRDIR'] +"/"+chrver),
                         celerytask.do_prediction.s(unique_pbms,genes_selected,filteropt,filterval)).apply_async() # put genes_selected here
 
-            # better to not use nested dict as Flask use CallbackDict to track modification
-            #session['%s_p0'%task.id] = task.parent.id
-            #session['%s_p1'%task.id] = task.id
-
             # ==== STORING IN REDIS PART ====
             # it is important to store these in redis so information can be
             # passed to different browsers/machines.
@@ -109,11 +105,6 @@ def handle_upload():
             db.hmset(task.id,session_info)
             db.expire(task.id, app.config['USER_DATA_EXPIRY'])
             # ================================
-
-            # delete the stored file after USER_DATA_EXPIRY seconds:
-            # TODO: need a way to confine all model related operations in one place
-            #result = celerytask.delete_file.apply_async(args=('%s/%s.csv'%(app.config['UPLOAD_FOLDER'],task.id),),countdown=app.config['USER_DATA_EXPIRY'])
-
             task.forget() # not sure if needed???
 
             resp = make_response(jsonify({}), 202, {'Location': url_for('process_request',job_id=task.id)})
@@ -121,7 +112,7 @@ def handle_upload():
             job_name = request.form.get("job-name") if request.form.get("job-name") else task.id
             # we can put this in cookie to let browser save the recent jobs
             resp.set_cookie("qbic_recents:%s"%task.id, job_name, max_age=app.config['USER_DATA_EXPIRY'])
-            return  resp # {'Location': url_for('task_status',task_id=task.id)
+            return resp # {'Location': url_for('task_status',task_id=task.id)
 
             #return redirect(url_for('process_request'),code=202)'''
 

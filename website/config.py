@@ -30,3 +30,4 @@ HUGO_PBM_MAPPING = config["Directory Setting"]["HUGO_PBM_MAPPING"]
 
 ''' [User Session] '''
 USER_DATA_EXPIRY = int(config["User Session"]["USER_DATA_EXPIRY"])
+UPLOAD_PRED_EXPIRY = int(config["User Session"]["UPLOAD_PRED_EXPIRY"])
