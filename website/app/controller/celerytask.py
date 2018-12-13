@@ -124,7 +124,7 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
     return newcontainer
 
 def read_gapfile(gapfile):
-    df = pd.read_csv('resource/test/gap-test.txt')
+    df = pd.read_csv(app.config['GAP_FILE'])
     return dict(zip(df.upbm_filenames, df.gapmodel))
 
 def format2tbl(tbl,gene_names,filteropt=1):
