@@ -124,7 +124,7 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
     return newcontainer
 
 def read_gapfile(gapfile):
-    df = pd.read_csv(app.config['GAP_FILE'])
+    df = pd.read_csv(gapfile)
     return dict(zip(df.upbm_filenames, df.gapmodel))
 
 def format2tbl(tbl,gene_names,filteropt=1):
@@ -141,7 +141,7 @@ def format2tbl(tbl,gene_names,filteropt=1):
             linemap = line.strip().split(":")
             pbmtohugo[linemap[0]] = linemap[1].split(",")
 
-    gapdata = read_gapfile(app.config['PBM_HUGO_MAPPING'])
+    gapdata = read_gapfile(app.config['GAP_FILE'])
 
     sorted_key = sorted(tbl.keys())
     datavalues = []
@@ -155,6 +155,7 @@ def format2tbl(tbl,gene_names,filteropt=1):
         sorted_val = sorted(tbl[row_key],reverse=True,key=lambda x:abs(x[1]))
         for row_val in sorted_val:
             rowdict = {'row':row,'wild':wild,'mutant':mut,'diff':row_val[0]}
+            print(row_val)
             if filteropt == 1:
                 pbmname = row_val[2]
                 rowdict['z_score'] =  row_val[1]
@@ -162,12 +163,14 @@ def format2tbl(tbl,gene_names,filteropt=1):
                 pbmname = row_val[3]
                 rowdict['p_value'] =  Decimal(row_val[1])
                 rowdict['binding_status'] = row_val[2]
-            rowdict['pbmname'] = pbmname
-            rowdict['gapmodel'] = gapdata[pbmname]
             if pbmname  == 'None':
                 rowdict['TF_gene'] = ""
+                rowdict['pbmname'] = "None"
+                rowdict['gapmodel'] = "-"
             else:
                 rowdict['TF_gene'] = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
+                rowdict['pbmname'] = pbmname
+                rowdict['gapmodel'] = gapdata[pbmname]
             datavalues.append(rowdict)
 
     if filteropt == 1:
