@@ -155,7 +155,6 @@ def format2tbl(tbl,gene_names,filteropt=1):
         sorted_val = sorted(tbl[row_key],reverse=True,key=lambda x:abs(x[1]))
         for row_val in sorted_val:
             rowdict = {'row':row,'wild':wild,'mutant':mut,'diff':row_val[0]}
-            print(row_val)
             if filteropt == 1:
                 pbmname = row_val[2]
                 rowdict['z_score'] =  row_val[1]

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Upload Result{% endblock %}
+{% block body %}
+
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/uploadresult.css') }}">
+<script src="{{ url_for('static', filename='js/uploadresult.js') }}"></script>
+
+<div class="modal-body">
+  <form method="post" enctype="multipart/form-data" id="predupload-form">
+    <label>Already have a prediction file?</label>
+    <input type=file class="form-control-file" name="predupload-file" />
+    <button id="submit-pred" type="button" class="btn btn-sm btn-secondary">Submit</button>
+  </form>
+</div>
+
+{% endblock %}
