@@ -1,3 +1,46 @@
+function listExampleInput(){
+    var $exampleDropdown = $("#examplelist");
+    /* Fill the example dropdown */
+    var $noneOpt = $('<option />').val("").text("None").attr("inputfile","")
+              .attr("tfs",[]).attr("genomever","").attr("outputtype",1);
+    $exampleDropdown.append($noneOpt); // none option
+    $.ajax({
+      type: "GET",
+      url: '/examplelist',
+      dataType: 'json',
+      success: function(data){
+          // parse the resulting json
+          $.each(data, function(name,attributes) {
+              var $group = $('<option />').val(name).text(name);
+              $.each(attributes, function(key,val) {
+                  $group.attr(key,val);
+              });
+              $exampleDropdown.append($group);
+          });
+          $exampleDropdown.selectpicker('refresh');
+      },
+      error: function() {
+          alert("error getting example list");
+      }
+    });
+
+    /* add action when an option is selected */
+    // predlist
+    $exampleDropdown.on("changed.bs.select",function(){
+        var optSelected = $("#examplelist option:selected");
+        /* Update tf list */
+        var tfs = optSelected.attr("tfs").split(",");
+        $('#predlist').selectpicker('deselectAll');
+        $('#predlist').selectpicker('val',tfs);
+        updateToFamilies();
+
+        /* Update genome version */
+        $('#genomelist').selectpicker('val',optSelected.attr("genomever"));
+        /* Update output type */
+        $('input[name=optradio][value=' + optSelected.attr("outputtype") + ']').prop('checked',true)
+    });
+}
+
 function listPreddir(){
     // https://jsfiddle.net/qdmwxkb5/
     // https://stackoverflow.com/questions/815103/jquery-best-practice-to-populate-drop-down
@@ -14,19 +57,32 @@ function listPreddir(){
               var $group = $('<optgroup label="' + family + '" />');
               $.each(gene_pbm, function(gene, pbmnames) {
                   // should be searchable by family and by TF-name
-                  $group.append($('<option />').val(gene+":"+pbmnames).text(gene).attr("data-tokens",family+","+gene));  // family,gene
+                  $group.append($('<option />').val(gene).text(gene).attr('pbmnames',pbmnames).attr("data-tokens",family+","+gene));  // family,gene
               })
               $predDropdown.append($group);
 
               // Fill #familylist
               $famDropdown.append($('<option />').val(family).text(family));
           });
-          $('.selectpicker').selectpicker('refresh'); // needed to refresh optionlist
+          $famDropdown.selectpicker('refresh'); // needed to refresh optionlist
+          $predDropdown.selectpicker('refresh');
       },
       error: function() {
           alert("error getting prediction list");
       }
     });
+}
+
+function updateToFamilies(selectedPredList){
+    var famSelectedArr = new Array();
+    $("#predlist option:selected").each(function(){
+        fam = $(this).attr("data-tokens").split(",")[0];
+        if(!famSelectedArr.includes(fam)){
+            famSelectedArr.push(fam);
+        }
+    });
+    $('#familylist').selectpicker('deselectAll');
+    $('#familylist').selectpicker('val',famSelectedArr);
 }
 
 function updateFromFamilies(){
@@ -52,15 +108,7 @@ function updateFromFamilies(){
 
     /* When pred list is closed */
     $('#predlist').on('hide.bs.select', function () {
-        var famSelectedArr = new Array();
-        $("#predlist option:selected").each(function(){
-            fam = $(this).attr("data-tokens").split(",")[0];
-            if(!famSelectedArr.includes(fam)){
-                famSelectedArr.push(fam);
-            }
-        });
-        $('#familylist').selectpicker('deselectAll');
-        $('#familylist').selectpicker('val',famSelectedArr);
+        updateToFamilies()
     });
 }
 
@@ -137,6 +185,7 @@ function uploadFile(){
     });
 }
 
+/*
 function testing(){
   $.ajax({
       type: "GET",
@@ -169,17 +218,17 @@ function testing(){
       }
     });
 }
-
+*/
 // --------- End of Progress Related ---------
 
 // jquery specific function
 $(function() {
     listPreddir(); // list all TFs from our list in the dropdowns
+    listExampleInput();
     updateOutlabel(); // check change on output options
     updateFromFamilies();
     $('#submit-job').click(uploadFile);
     $('#submit-tf').click(uploadTFFomFile);
-    //testing();
 
     $('[data-toggle="popover"]').popover();
 });

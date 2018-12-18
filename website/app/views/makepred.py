@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.insert(0, '..')
 
-from flask import request,render_template,make_response,jsonify,url_for
+from flask import request,render_template,make_response,jsonify,url_for,send_from_directory
 from werkzeug.utils import secure_filename
 
 from celery import Celery,chain
@@ -114,13 +114,33 @@ def handle_upload():
             resp.set_cookie("qbic_recents:%s"%task.id, job_name, max_age=app.config['USER_DATA_EXPIRY'])
             return resp # {'Location': url_for('task_status',task_id=task.id)
 
-            #return redirect(url_for('process_request'),code=202)'''
+#========Filling dropdown==========
+
+@app.route('/predlist', methods=['GET'])
+def get_predlist():
+    with open(app.config['HUGO_PBM_MAPPING'],'r') as f:
+        family_map = {}
+        for line in f:
+            key,val = line.strip().split("->")
+            valmap = {z[0]:z[1] for z in (y.split(":") for y in (x for x in val.split(";")))} # generator
+            family_map[key] = valmap
+    return jsonify(family_map)
+
+@app.route('/examplelist', methods=['GET'])
+def get_examplelist():
+    return jsonify(app.config['INPUT_EXAMPLE_DICT'])
+
+#==================
 
 @app.route('/makepred', methods=['GET', 'POST'])
 def makepred():
     #session.permanent = True
     #session.clear() -- need to limit the amount of session somewhere
     return render_template("makepred.html")
+
+@app.route('/download/<path:filename>')
+def download_example(filename):
+    return send_from_directory(app.config['STATIC_EXAMPLE_DIR'], filename, as_attachment=True)
 
 @app.route('/about')
 def about():

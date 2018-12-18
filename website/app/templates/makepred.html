@@ -11,14 +11,25 @@
       <div class="form-title"><span>DATA SUBMISSION FORM</span></div>
     </div>
     <div id="form-input">
-      <div class="form-elm">
-        <label>Upload a mutation dataset (csv,tsv): </label>
-        <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-        data-toggle="popover" data-placement="right" data-trigger="hover"
-        data-content="Input a mutation dataset that contains these fields: chromosome, chromosome_pos,
+      <div class="row form-elm">
+        <div class="col-md-4" id="input-field">
+          <label>Upload a mutation dataset (csv,tsv): </label>
+          <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+          data-toggle="popover" data-placement="right" data-trigger="hover"
+          data-content="Input a mutation dataset that contains these fields: chromosome, chromosome_pos,
                      mutated_from, mutated_to">
-        </button>
-        <input type=file class="form-control-file" name="input-file" />
+          </button>
+          <input type=file class="form-control-file" name="input-file" id="input-file" />
+          <button type="button" class="btn btn-link" id="switch-example"> Use input from examples.</button>
+        </div>
+        <div class="col-md-4">
+            <label>Or select an example:</label>
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="Select an example use case.">
+            </button>
+            <select id="examplelist" name="example-select" class="selectpicker"></select>
+        </div>
       </div>
 
       <div class="row form-elm">
@@ -31,7 +42,7 @@
                         the transcription factors dropdown.">
           </button>
 
-          <select id="familylist" name="family-select" class="selectpicker" multiple data-live-search="true"></select>
+          <select id="familylist" name="family-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
           <!--<button id="submit-fam" class="btn btn-secondary btn-sm" type="button" style="margin-top:10px;">Select by Families</button>-->
         </div>
 
@@ -88,10 +99,10 @@
 
           <div id="outputradio" name="output-select">
             <div class="radio">
-              <label><input type="radio" name="optradio" value="1" checked="">&nbsp;largest absolute z-score </input></label>
+              <input type="radio" name="optradio" value="1" checked="">&nbsp;largest absolute z-score </input>
             </div>
             <div class="radio">
-              <label><input type="radio" name="optradio" value="2">&nbsp;p-value threshold </input></label>
+              <input type="radio" name="optradio" value="2">&nbsp;p-value threshold </input>
             </div>
           </div>
         </div>
@@ -142,6 +153,34 @@
     </div>
     <span class="text-danger" role="alert" id="upload-msg"></span>
   </form>
+
+  <div class="row" class="example-input">
+    <div class="col-md-2">Use example input:</div>
+    <div class="col-md-1">
+      <button type="button" class="btn btn-link example-content" id="example-icgc">
+        ICGC
+      </button>
+    </div>
+    <div class="col-md-1">
+      <button type="button" class="btn btn-link example-content" id="example-vcf">
+        VCF
+      </button>
+    </div>
+  </div>
+
+  <div class="row" class="example-input">
+    <div class="col-md-2">Download input files:</div>
+    <div class="col-sm-1">
+        <a href="/download/icgc-example.tsv">
+          ICGC
+        </a>
+    </div>
+    <div class="col-sm-1">
+        <a href="/download/vcf-example.vcf">
+          VCF
+        </a>
+    </div>
+  </div>
 </div>
 
 <div id="testing"></div>

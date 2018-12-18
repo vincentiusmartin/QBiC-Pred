@@ -10,6 +10,19 @@
   padding-left:10px;
 }
 
+#input-form{
+    border:1px solid gray;
+    background-color: #f0f0f5;
+}
+
+.example-input{
+    padding-top:2%;
+}
+
+.example-content{
+    padding-top:0px;
+}
+
 .help-icon {
   background-color:transparent;
 }
@@ -44,7 +57,7 @@
 }
 
 .form-title span {
-  background:#fff;
+  background:#f0f0f5;
   padding-right:10px;
   font-weight: bold;
 }
@@ -52,4 +65,8 @@
 .form-elm {
   padding:20px 0 20px 0px;
   page-break-after: always;
+}
+
+form label {
+  font-weight:bold;
 }

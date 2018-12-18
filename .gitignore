@@ -16,3 +16,6 @@ generate_prediction/test*
 
 # Need to ignore this mac-specific file as well
 .DS_Store
+
+# ignore certificate file
+*.pem
