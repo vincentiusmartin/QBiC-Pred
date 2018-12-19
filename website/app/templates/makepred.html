@@ -12,23 +12,26 @@
     </div>
     <div id="form-input">
       <div class="row form-elm">
-        <div class="col-md-4" id="input-field">
-          <label>Upload a mutation dataset (csv,tsv): </label>
+        <div class="col-md-4">
+          <label id="input-label">Upload a mutation dataset (csv,tsv): </label>
           <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-          data-toggle="popover" data-placement="right" data-trigger="hover"
-          data-content="Input a mutation dataset that contains these fields: chromosome, chromosome_pos,
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="Input a mutation dataset that contains these fields: chromosome, chromosome_pos,
                      mutated_from, mutated_to">
           </button>
-          <input type=file class="form-control-file" name="input-file" id="input-file" />
-          <button type="button" class="btn btn-link" id="switch-example"> Use input from examples.</button>
+          <div id="input-type">
+            <input type=file class="form-control-file" name="input-file" id="input-file" />
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" type="button" style="margin-top:10px;" id="input-switch"> Use input from examples</button>
+          <input type="text" id="input-mode" name="input-mode" value="1" style="visibility: hidden;" readonly /> <!-- mark the input mode -->
         </div>
         <div class="col-md-4">
-            <label>Or select an example:</label>
-            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+          <label>Or select an example:</label>
+          <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
             data-toggle="popover" data-placement="right" data-trigger="hover"
             data-content="Select an example use case.">
-            </button>
-            <select id="examplelist" name="example-select" class="selectpicker"></select>
+          </button>
+          <select id="examplelist" name="example-select" class="selectpicker"></select>
         </div>
       </div>
 
@@ -153,20 +156,6 @@
     </div>
     <span class="text-danger" role="alert" id="upload-msg"></span>
   </form>
-
-  <div class="row" class="example-input">
-    <div class="col-md-2">Use example input:</div>
-    <div class="col-md-1">
-      <button type="button" class="btn btn-link example-content" id="example-icgc">
-        ICGC
-      </button>
-    </div>
-    <div class="col-md-1">
-      <button type="button" class="btn btn-link example-content" id="example-vcf">
-        VCF
-      </button>
-    </div>
-  </div>
 
   <div class="row" class="example-input">
     <div class="col-md-2">Download input files:</div>

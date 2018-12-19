@@ -56,7 +56,10 @@ def inittbl(self,filename,cpath):
             break
 
     # we finish parsing the file, delete it
-    utils.delete_file(filename)
+    print("filename",filename)
+    if filename.startswith(app.config['UPLOAD_FOLDER']):
+        utils.delete_file(filename)
+        
     if error:
         return error
     else:

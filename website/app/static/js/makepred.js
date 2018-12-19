@@ -1,8 +1,57 @@
+function changeInputOptOnClick(){
+    $("#input-switch").click(function(){
+        if ($("#input-mode").val() == 1) {
+            changeInputOpt(2);
+        }else{
+            changeInputOpt(1);
+        }
+    });
+}
+
+function changeInputDownloadLink(filename){
+    $("#download-input-select").attr("href","/download/"+filename).html("download file");
+}
+
+/* Make separate function with on click so we can independently call it */
+function changeInputOpt(opt){
+    if(opt == 2){
+        $("#input-label").html("Select from examples:");
+        $("#input-type").html(`
+            <select id="input-example-list" name="input-example-list" class="selectpicker"  title="Select an example"></select>
+            <br />
+            <a id="download-input-select"></a>
+        `);
+        var $inputDropdown = $("#input-example-list");
+        var filelist = [];
+        $("#examplelist > option").each(function(){
+            var cur = $(this).attr("inputfile");
+            if(cur.length > 0 && !filelist.includes(cur)){
+                filelist.push(cur);
+                var $opt = $('<option />').val(cur).text(cur);
+                $inputDropdown.append($opt);
+            }
+        });
+        $inputDropdown.selectpicker('refresh');
+
+        $inputDropdown.on("changed.bs.select",function(){
+            changeInputDownloadLink($(this).find("option:selected").val());
+        });
+
+        $("#input-switch").html("Upload input files");
+        $("#input-mode").val(2);
+    }else{
+        $("#input-label").html("Upload a mutation dataset (csv,tsv):");
+        $("#input-type").html("<input type=file class=\"form-control-file\" name=\"input-file\" id=\"input-file\" />");
+        $("#input-switch").html("Use input from examples");
+        $("#input-mode").val(1);
+    }
+}
+
 function listExampleInput(){
     var $exampleDropdown = $("#examplelist");
     /* Fill the example dropdown */
     var $noneOpt = $('<option />').val("").text("None").attr("inputfile","")
-              .attr("tfs",[]).attr("genomever","").attr("outputtype",1);
+              .attr("tfs",[]).attr("genomever","hg19").attr("outputtype",1);
     $exampleDropdown.append($noneOpt); // none option
     $.ajax({
       type: "GET",
@@ -30,14 +79,29 @@ function listExampleInput(){
         var optSelected = $("#examplelist option:selected");
         /* Update tf list */
         var tfs = optSelected.attr("tfs").split(",");
+        var tfsVal = []
+        for(var i = 0; i < tfs.length; i++) {
+            // get value from its text
+            var curVal = $('#predlist option').filter(function () { return $(this).html() == tfs[i]; }).val();
+            tfsVal.push(curVal);
+        }
         $('#predlist').selectpicker('deselectAll');
-        $('#predlist').selectpicker('val',tfs);
+        $('#predlist').selectpicker('val',tfsVal);
         updateToFamilies();
 
         /* Update genome version */
         $('#genomelist').selectpicker('val',optSelected.attr("genomever"));
         /* Update output type */
         $('input[name=optradio][value=' + optSelected.attr("outputtype") + ']').prop('checked',true)
+
+        /* Update input */
+        if(optSelected.val().length > 0){
+            changeInputOpt(2);
+            $('#input-example-list').selectpicker('val',optSelected.attr("inputfile"));
+            changeInputDownloadLink(optSelected.attr("inputfile"));
+        }else {
+            changeInputOpt(1);
+        }
     });
 }
 
@@ -57,7 +121,7 @@ function listPreddir(){
               var $group = $('<optgroup label="' + family + '" />');
               $.each(gene_pbm, function(gene, pbmnames) {
                   // should be searchable by family and by TF-name
-                  $group.append($('<option />').val(gene).text(gene).attr('pbmnames',pbmnames).attr("data-tokens",family+","+gene));  // family,gene
+                  $group.append($('<option />').val(gene+":"+pbmnames).text(gene).attr("data-tokens",family+","+gene));  // family,gene
               })
               $predDropdown.append($group);
 
@@ -224,7 +288,9 @@ function testing(){
 // jquery specific function
 $(function() {
     listPreddir(); // list all TFs from our list in the dropdowns
-    listExampleInput();
+    $.when(listExampleInput()).done(function(){
+        changeInputOptOnClick(); // need to run after example dropdown is filled
+    });
     updateOutlabel(); // check change on output options
     updateFromFamilies();
     $('#submit-job').click(uploadFile);
