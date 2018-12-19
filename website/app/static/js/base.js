@@ -1,6 +1,6 @@
 
 function getRecentJobs(){
-    var $dropdown = $("#dropdown-header"); 
+    var $dropdown = $("#dropdown-header");
     $.ajax({
         type: "GET",
         url: '/recent',

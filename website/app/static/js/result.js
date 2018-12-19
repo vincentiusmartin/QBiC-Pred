@@ -146,3 +146,8 @@ function getInputParam(status_url){
         )
     });
 }
+
+$(function(){
+    $('.navbar-nav .nav-link').removeClass('active');
+    $('#nav-2').addClass('active');
+});

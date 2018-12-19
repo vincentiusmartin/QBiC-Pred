@@ -24,20 +24,21 @@
     <div class="container">
       <div class="header clearfix">
         <nav class="navbar fixed-top navbar-expand-sm bg-dark navbar-dark">
-          <!--<a class="navbar-left" href="/"><img style="height:70px; width: 300px;" src="{{ url_for('static', filename='images/logo.png') }}" alt="QBiC-Pred"></a>-->
-          <!-- Links -->
-          <ul class="navbar-nav"> <!-- ml-auto  -->
+          <ul class="navbar-nav nav-pills"> <!-- ml-auto  -->
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('makepred') }}">Make Prediction</a>
+              <a class="nav-link" href="{{ url_for('index') }}" id="nav-1">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('upload_result') }}">Upload Result</a>
+              <a class="nav-link" href="{{ url_for('makepred') }}" id="nav-2">Make Prediction</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('about') }}">About</a>
+              <a class="nav-link" href="{{ url_for('upload_result') }}" id="nav-3">Upload Result</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('testing') }}">Test</a>
+              <a class="nav-link" href="{{ url_for('about') }}" id="nav-4">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('testing') }}" id="nav-5">Test</a>
             </li>
           </ul>
           <ul class="navbar-nav ml-auto">

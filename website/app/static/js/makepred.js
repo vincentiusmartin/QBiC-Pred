@@ -295,6 +295,8 @@ $(function() {
     updateFromFamilies();
     $('#submit-job').click(uploadFile);
     $('#submit-tf').click(uploadTFFomFile);
-
     $('[data-toggle="popover"]').popover();
+
+    $('.navbar-nav .nav-link').removeClass('active');
+    $('#nav-2').addClass('active');
 });
