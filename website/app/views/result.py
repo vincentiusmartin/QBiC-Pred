@@ -108,7 +108,6 @@ def get_res_tbl(task_id):
     filtered_db = filter_fromdb(task_id,start,length,csKey,csField,cols[order_col],order_asc)
 
     retlist = []
-    filteropt = 1 if 'z_score' in cols else 2
 
     for doc in filtered_db['data']:
         #if not filter_search(row,csKey,csField):
@@ -117,11 +116,9 @@ def get_res_tbl(task_id):
         print(rowdict)
         rowdict['wild'] = doc.wild[:5] + '<span class="bolded-red">' + doc.wild[5] + '</span>' + doc.wild[6:]
         rowdict['mutant'] = doc.mutant[:5] + '<span class="bolded-red">' + doc.mutant[5] + '</span>' + doc.mutant[6:]
-        if filteropt == 1:
-            rowdict['z_score'] = customround(doc.z_score)
-        else:
-            rowdict['p_value'] = customround(doc.p_value)
-            rowdict['binding_status'] = doc.binding_status
+        rowdict['z_score'] = customround(doc.z_score)
+        rowdict['p_value'] = customround(doc.p_value)
+        rowdict['binding_status'] = doc.binding_status
         retlist.append([rowdict[col] for col in cols])
 
     return jsonify({

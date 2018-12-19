@@ -13,7 +13,8 @@ function displayResult(status_url){
         $('#tablewrap').css('display','block');
         var restbl = $('#restbl').DataTable({
             dom: 'lr<"#ressearch">tip',
-            scrollX: true,
+            // https://stackoverflow.com/questions/17237812/datatable-jquery-table-header-width-not-aligned-with-body-width
+            //scrollX: true, -- don't use scrollX
             searching: false,
             processing: true, // Enable the display of 'processing' when the table is being processed
             serverSide: true,
@@ -43,6 +44,7 @@ function displayResult(status_url){
             columns: cols
         });
         $('#restbl').css({"width":"100%"}); // need to set this to align the header
+        $('.dataTable').wrap('<div class="dataTables_scroll" />'); // this is needed to replace dataTables_scroll
         // This is used to replace the search bar from DataTable so we can have
         // our custom. Search bar itself is inactivated.
         // https://stackoverflow.com/questions/43454575/call-datatable-ajax-call-on-custom-button

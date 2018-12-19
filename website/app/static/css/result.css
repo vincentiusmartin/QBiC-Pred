@@ -2,6 +2,11 @@
   float:right;
 }
 
+.dataTables_scroll{
+  overflow:auto;
+  position:relative;
+}
+
 .bolded-red {
   color: red;
   font-weight: bold;

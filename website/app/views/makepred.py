@@ -10,13 +10,31 @@ from app import app,db
 
 import app.controller.celerytask as celerytask
 
-ALLOWED_EXTENSIONS = set(['csv','tsv'])
+ALLOWED_EXTENSIONS = set(['csv','tsv','vcf'])
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # view specific utils
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 # ==========================
+
+def is_valid_cols(filepath):
+    file_extension = os.path.splitext(filepath)[1]
+    if file_extension == ".tsv" or file_extension == ".csv":
+        required = ['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele']
+        with open(filepath) as f:
+            file_extension = os.path.splitext(filepath)[1]
+            if file_extension == ".tsv":
+                incols = f.readline().strip().split("\t")
+            else: # must be csv since we checked it
+                incols = f.readline().strip().split(",")
+        if not all(elem in incols for elem in required):
+            os.remove(filepath)
+            return False
+        else:
+            return True
+    return False
+
 
 '''
 return empty string if there is no file, filename if there is file and it has been handled
@@ -42,9 +60,9 @@ def prepare_request(request):
             maxsize = app.config['MAX_FILE_LENGTH'] / (1024*1024)
             return 'error','uploaded file is larger than the allowed maximum size of %dMB' % maxsize
         file.seek(0) # seek back
-        # Can only accept tsv or csv
+        # Can only accept tsv or csv or vcf
         if not allowed_file(file.filename):
-            return 'error','please upload only tsv or csv'
+            return 'error','please upload only tsv/csv or vcf file'
         # No file selected:
         if file.filename == '':
             return 'error','no selected file'
@@ -55,15 +73,7 @@ def prepare_request(request):
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
-        required = ['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele']
-        with open(filepath) as f:
-            file_extension = os.path.splitext(filepath)[1]
-            if file_extension == ".tsv":
-                incols = f.readline().strip().split("\t")
-            else: # must be csv since we checked it
-                incols = f.readline().strip().split(",")
-        if not all(elem in incols for elem in required):
-            os.remove(filepath)
+        if not is_valid_cols(filepath):
             return 'error','some required fields are missing from the input file'
         # Finally, file is okay
         return 'success',filename
@@ -83,8 +93,6 @@ def handle_upload():
             else:
                 filepath = app.config['UPLOAD_FOLDER'] + msg
             # request.form.getlist('pred-select'):['Arid3a:Arid3a_3875.1_v1_deBruijn', 'Bhlhb2:Bhlhb2_4971.1_v1_deBruijn']
-            print(request.form.getlist('pred-select'));
-            print(request.form.get('pred-select'));
             genes_selected = [elm.split(":")[0] for elm in request.form.getlist('pred-select')]
 
             select_list = [elm.split(":")[1] for elm in request.form.getlist('pred-select')]

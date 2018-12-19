@@ -59,7 +59,7 @@ def inittbl(self,filename,cpath):
     print("filename",filename)
     if filename.startswith(app.config['UPLOAD_FOLDER']):
         utils.delete_file(filename)
-        
+
     if error:
         return error
     else:
@@ -100,24 +100,25 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
             continue
         for row_key in container:
             seqidx = row_key[3]
+            diff = tflist[seqidx][0]
+            zscore = tflist[seqidx][1]
+            pval = scipy.stats.norm.sf(abs(zscore))*2
+            add = True
             if filteropt == 1:
                 # if z-score is chosen then filterval is the maximum of item shown
                 if len(container[row_key]) >= filterval:
                     least_idx = min(enumerate(container[row_key]),key=lambda x:abs(x[1][1]))[0]
                     if abs(tflist[seqidx][1]) > abs(container[row_key][least_idx][1]):
                         del container[row_key][least_idx]
-                        container[row_key].append(tflist[seqidx] + [pbmname])
-                else:
-                    container[row_key].append(tflist[seqidx] + [pbmname])
-            else: # filteropt == 2
-                zscore = tflist[seqidx][1]
-                pval = scipy.stats.norm.sf(abs(zscore))*2
-                # if z-score is chosen then filterval is the p-val threshold
-                if pval <= filterval:
-                    isbound = utils.isbound_escore_18mer(row_key[2],pbmname,app.config['ESCORE_DIR'])
-                    # tflist[seqidx][:-1] -> just diff
-                    container[row_key].append(tflist[seqidx][:-1] + [pval,isbound,pbmname])
-        sharedlist.append(pbmname) # TODO: delete this
+                    else:
+                        add = False
+            # filteropt = 2, if z-score is chosen then filterval is the p-val threshold
+            elif pval > filterval:
+                    add = False
+            if add:
+                isbound = utils.isbound_escore_18mer(row_key[2],pbmname,app.config['ESCORE_DIR'])
+                container[row_key].append([diff,zscore,pval,isbound,pbmname])
+        sharedlist.append(pbmname) # TODO: delete this?
         print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
 
     # remove seqidx and 18mer as it is not needed anymore
@@ -156,15 +157,12 @@ def format2tbl(tbl,gene_names,filteropt=1):
         wild = seq[0:5] + seq[5] + seq[6:11]
         mut = seq[0:5] + seq[11] + seq[6:11]
         sorted_val = sorted(tbl[row_key],reverse=True,key=lambda x:abs(x[1]))
-        for row_val in sorted_val:
+        for row_val in sorted_val: # [diff,zscore,pval,isbound,pbmname]
             rowdict = {'row':row,'wild':wild,'mutant':mut,'diff':row_val[0]}
-            if filteropt == 1:
-                pbmname = row_val[2]
-                rowdict['z_score'] =  row_val[1]
-            else:
-                pbmname = row_val[3]
-                rowdict['p_value'] =  Decimal(row_val[1])
-                rowdict['binding_status'] = row_val[2]
+            pbmname = row_val[4]
+            rowdict['z_score'] =  row_val[1]
+            rowdict['p_value'] =  Decimal(row_val[2])
+            rowdict['binding_status'] = row_val[3]
             if pbmname  == 'None':
                 rowdict['TF_gene'] = ""
                 rowdict['pbmname'] = "None"
@@ -175,10 +173,7 @@ def format2tbl(tbl,gene_names,filteropt=1):
                 rowdict['gapmodel'] = gapdata[pbmname]
             datavalues.append(rowdict)
 
-    if filteropt == 1:
-        colnames = ["row","wild","mutant","diff","z_score","TF_gene","gapmodel","pbmname"]
-    else: #filteropt == 1:
-        colnames = ["row","wild","mutant","diff","p_value","TF_gene","binding_status","gapmodel","pbmname"]
+    colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"]
     return colnames,datavalues
 
 def postprocess(datalist,gene_names,filteropt=1,filterval=1):
@@ -194,6 +189,7 @@ def postprocess(datalist,gene_names,filteropt=1,filterval=1):
                 for row_key in ddict:
                     for row_val in ddict[row_key]:
                         least_idx = min(enumerate(maintbl[row_key]),key=lambda x:abs(x[1][1]))[0]
+                        # row_val[1] is the t-value
                         if abs(row_val[1]) > abs(maintbl[row_key][least_idx][1]):
                             del maintbl[row_key][least_idx]
                             maintbl[row_key].append(row_val)
