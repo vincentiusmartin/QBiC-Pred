@@ -23,15 +23,21 @@ def inittbl(self,filename,cpath):
     kmer = 6
     start = time.time()
     file_extension = os.path.splitext(filename)[1]
-    if file_extension == ".tsv":
-        separator = "\t"
-    else: # must be csv since we checked it
-        separator = ","
-    tsv = pd.read_csv(filename,
-                sep=separator,
-                usecols=['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele'])
-    tsv = tsv[tsv['mutation_type'].apply(lambda x: "single base substitution" == x)].drop('mutation_type',1).drop_duplicates() # only take single base mutation
-    grouped = tsv.groupby('chromosome',sort=True)
+    if file_extension == ".vcf":
+        df = pd.read_csv(filename,sep="\t",header=None).drop(2,1)
+        df = df.rename(columns={0:"chromosome",1:"pos",3:"mutated_from",4:"mutated_to"})
+        df['chromosome'] = df['chromosome'].map(lambda x:x.replace("chr",""))
+    else:
+        if file_extension == ".tsv":
+            separator = "\t"
+        else: # must be csv since we checked it
+            separator = ","
+        df = pd.read_csv(filename,
+                    sep=separator,
+                    usecols=['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele'])
+        df = df[df['mutation_type'].apply(lambda x: "single base substitution" == x)].drop('mutation_type',1).drop_duplicates() # only take single base mutation
+        df = df.rename(columns={"chromosome_start":"pos","mutated_from_allele":"mutated_from","mutated_to_allele":"mutated_to"})
+    grouped = df.groupby('chromosome',sort=True)
     dataset = {key:item for key,item in grouped}
 
     result = list()
@@ -44,19 +50,18 @@ def inittbl(self,filename,cpath):
         print("Iterating dataset for chromosome {}...".format(cidx))
         chromosome = utils.get_chrom(cpath + "/chr." + str(cidx) + '.fa.gz')
         for idx,row in dataset[cidx].iterrows():
-            pos = row['chromosome_start'] - 1
-            if row['mutated_from_allele'] != chromosome[pos]:
+            pos = row['pos'] - 1
+            if row['mutated_from'] != chromosome[pos]:
                 error = "Found mismatch in the mutation: \n{}".format(row)
                 break
-            seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to_allele'] #-5,+6
+            seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to'] #-5,+6
             # for escore, just use 8?
-            esccore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to_allele']
+            esccore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to']
             result.append([idx,seq,esccore_seq,utils.seqtoi(seq),0,0,"-"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
         if error:
             break
 
-    # we finish parsing the file, delete it
-    print("filename",filename)
+    # finish parsing the file, delete it
     if filename.startswith(app.config['UPLOAD_FOLDER']):
         utils.delete_file(filename)
 

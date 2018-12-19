@@ -33,6 +33,10 @@ def is_valid_cols(filepath):
             return False
         else:
             return True
+    elif file_extension == ".vcf":
+        with open(filepath) as f:
+            if len(f.readline().strip().split("\t")) == 5:
+                return True
     return False
 
 
