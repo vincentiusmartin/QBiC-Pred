@@ -8,20 +8,25 @@ CELERY_BROKER_URL = redis://localhost:6379/0
 # important to track result
 CELERY_RESULT_BACKEND = redis://localhost:6379/0
 #CELERYD_TASK_SOFT_TIME_LIMIT = 60
+# CELERY_TASK_RESULT_EXPIRES = 10 # this removes celery-task-meta key in redis, default 1 day
 
 [Flask Conf]
-# max upload size = 32 * 1024 * 1024
-MAX_CONTENT_LENGTH = 33554432
+# max upload size = 100 * 1024 * 1024
+MAX_FILE_LENGTH = 204857600
 #cpu.count
-PCOUNT = 1
+PCOUNT = 4
 
 [Directory Setting]
-PREDDIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/preddir
+PREDDIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/preddir/
 UPLOAD_FOLDER = /tmp/
-CHRDIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/chromosomes
-ESCORE_DIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/escore/escore
-PBM_HUGO_MAPPING = resource/pbmtohugo.txt
-HUGO_PBM_MAPPING = resource/hugotopbm.txt
+CHRDIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/chromosomes/
+ESCORE_DIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/escore/escore/
+STATIC_EXAMPLE_DIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/QBiC-Pred/website/app/static/files/
+INPUT_EXAMPLE_LIST = resources/examplelist.py
+PBM_HUGO_MAPPING = resources/mappingdata/pbmtohugo.txt
+HUGO_PBM_MAPPING = resources/mappingdata/hugotopbm.txt
+GAP_FILE = resource/test/gap-test.txt
 
 [User Session]
 USER_DATA_EXPIRY = 3600
+UPLOAD_PRED_EXPIRY = 3600
