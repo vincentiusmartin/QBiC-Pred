@@ -2,13 +2,12 @@
 from celery import Celery,chain
 from app import app,celery,db
 
-from decimal import Decimal
-
 import redisearch
 import time,sys
 import pandas as pd
 import billiard as mp #multiprocessing substitute to enable daemon
 import scipy.stats
+import numpy as np
 
 import os
 
@@ -87,7 +86,7 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
     buggedtf = 0
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
     if filteropt == 1: #t-value
-        container = {tuple(row[:4]):[[0,0,"None"]] for row in dataset} # rowidx,12mer,18mer,seqidx : 0,0,"-"
+        container = {tuple(row[:4]):[[0,0,1,"-","None"]] for row in dataset} # rowidx,12mer,18mer,seqidx : [diff,z,p,bind,"-"]
     else: #p-value
         # leave this empty as for p-value, we don't have to compare and the size is dynamic
         container = {tuple(row[:4]):[] for row in dataset}
@@ -96,7 +95,7 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
     for i in range(0,len(predlist)):
         start = time.time()
         pbmname = '.'.join(map(str,predlist[i].split(".")[1:-1]))
-        print("Processing ",pbmname)
+        print("Processing " + pbmname)
         with open(predlist[i], 'r') as f:
             tflist = pd.read_csv(f, delimiter=' ').round(5).values.tolist()
         if len(tflist) < 4**12:
@@ -107,6 +106,8 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
             seqidx = row_key[3]
             diff = tflist[seqidx][0]
             zscore = tflist[seqidx][1]
+            if np.isnan(zscore):
+                zscore = 0
             pval = scipy.stats.norm.sf(abs(zscore))*2
             add = True
             if filteropt == 1:
@@ -166,7 +167,7 @@ def format2tbl(tbl,gene_names,filteropt=1):
             rowdict = {'row':row,'wild':wild,'mutant':mut,'diff':row_val[0]}
             pbmname = row_val[4]
             rowdict['z_score'] =  row_val[1]
-            rowdict['p_value'] =  Decimal(row_val[2])
+            rowdict['p_value'] =  row_val[2]
             rowdict['binding_status'] = row_val[3]
             if pbmname  == 'None':
                 rowdict['TF_gene'] = ""
@@ -218,7 +219,7 @@ def savetoredis(req_id,colnames,datavalues,expired_time):
     client = redisearch.Client(req_id)
     indexes = []
     for col in colnames:
-        if "score" in col or "diff" in col or "row" in col:
+        if "score" in col or "diff" in col or "row" in col or "z_score" in col or "p_value" in col:
             indexes.append(redisearch.NumericField(col,sortable=True))
         else:
             indexes.append(redisearch.TextField(col,sortable=True))

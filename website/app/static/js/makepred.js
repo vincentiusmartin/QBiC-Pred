@@ -93,6 +93,7 @@ function listExampleInput(){
         $('#genomelist').selectpicker('val',optSelected.attr("genomever"));
         /* Update output type */
         $('input[name=optradio][value=' + optSelected.attr("outputtype") + ']').prop('checked',true)
+        updateOutputLabel(optSelected.attr("outputtype"));
 
         /* Update input */
         if(optSelected.val().length > 0){
@@ -176,23 +177,31 @@ function updateFromFamilies(){
     });
 }
 
-function updateOutlabel(){
+function updateOutputLabelWrapper(){
     $("#outputradio").change(function() {
         var val = $('input[name=optradio]:checked', '#outputradio').val();
-        var newOpts = [];
-        if (val=="1"){
-            $("#output-option").html("#TFs to output:");
-            newOpts = [1,2,3];
-        }else{
-            $("#output-option").html("p-val cutoff:");
-            newOpts = [0.01,0.05,0.1];
-        }
-        var $opt = $("#output-selection-opt");
-        $opt.empty();
-        $.each(newOpts,function(idx,val){
-            $opt.append($("<option />").text(val));
-        });
+        updateOutputLabel(val);
     });
+}
+
+function updateOutputLabel(newlabel){
+    if (newlabel=="1"){
+        $("#output-option").html("#TFs to output:");
+        $("#output-selection-wrapper").html(`
+            <select id="output-selection-opt" name="output-selection-opt">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+            </select>
+            `)
+    }else{
+        $("#output-option").html("p-value cutoff:");
+        $("#output-selection-wrapper").html(`
+            <input class="form-control" type="text"
+             id="output-selection-opt" name="output-selection-opt"
+             value="0.0001" placeholder="input p-value cutoff" />
+            `).addClass("col-lg-6");
+    }
 }
 
 /* get TF uploaded from file */
@@ -291,7 +300,7 @@ $(function() {
     $.when(listExampleInput()).done(function(){
         changeInputOptOnClick(); // need to run after example dropdown is filled
     });
-    updateOutlabel(); // check change on output options
+    updateOutputLabelWrapper(); // check change on output options
     updateFromFamilies();
     $('#submit-job').click(uploadFile);
     $('#submit-tf').click(uploadTFFomFile);

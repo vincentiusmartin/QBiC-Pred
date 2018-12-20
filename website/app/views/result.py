@@ -19,6 +19,7 @@ job_id: from last task in the pipeline
 def process_request(job_id):
     # get the task data from redis
     taskdata = db.hgetall(job_id)
+    print(taskdata)
     p0 = taskdata["parent_id"]
     p1 = taskdata["task_id"]
     parents = json.dumps({'parent-0':p0,'parent-1':p1})
@@ -109,11 +110,11 @@ def get_res_tbl(task_id):
 
     retlist = []
 
+    print(filtered_db)
     for doc in filtered_db['data']:
         #if not filter_search(row,csKey,csField):
         #    continue
         rowdict = {col:getattr(doc,col) for col in cols}
-        print(rowdict)
         rowdict['wild'] = doc.wild[:5] + '<span class="bolded-red">' + doc.wild[5] + '</span>' + doc.wild[6:]
         rowdict['mutant'] = doc.mutant[:5] + '<span class="bolded-red">' + doc.mutant[5] + '</span>' + doc.mutant[6:]
         rowdict['z_score'] = customround(doc.z_score)

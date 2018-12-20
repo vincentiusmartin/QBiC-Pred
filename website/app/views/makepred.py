@@ -47,13 +47,8 @@ return: status, msg
 msg = filename if success
 '''
 def prepare_request(request):
-    if request.form.get('input-mode') == "2":
-        if request.form.get('input-example-list') == "None":
-            return 'error','no input file part'
-        else:
-            return 'example', request.form.get('input-example-list')
-    else:
-        # There is no input file in the request
+    # First, check if the input file is valid, this depends on the input-mode
+    if request.form.get('input-mode') == "1":
         if 'input-file' not in request.files:
             return 'error','no input file part'
         file = request.files['input-file']
@@ -70,17 +65,29 @@ def prepare_request(request):
         # No file selected:
         if file.filename == '':
             return 'error','no selected file'
-        # No TFs selected
-        if not request.form.getlist('pred-select'):
-            return 'error','please select transcription factors'
         # Check if we have all the columns we need
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         if not is_valid_cols(filepath):
             return 'error','some required fields are missing from the input file'
-        # Finally, file is okay
-        return 'success',filename
+        returnstatus = "success"
+    else: #input-mode==2
+        if request.form.get('input-example-list') == "None":
+            return 'error','no input file part'
+        returnstatus = "example"
+        filename = request.form.get('input-example-list')
+    # No TFs selected
+    if not request.form.getlist('pred-select'):
+        return 'error','please select transcription factors'
+    # Check if p-value is in the valid range
+    filteropt = int(request.form.get('optradio'))
+    if filteropt == 2:
+        pval = float(request.form.get('output-selection-opt'))
+        if pval > 1 or pval < 0:
+            return 'error','p-value should be between 0 and 1'
+    # Finally, everything is okay
+    return returnstatus,filename
 
 
 @app.route('/upload', methods=['POST'])

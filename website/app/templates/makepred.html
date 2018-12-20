@@ -16,8 +16,8 @@
           <label id="input-label">Upload a mutation dataset (csv,tsv): </label>
           <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
             data-toggle="popover" data-placement="right" data-trigger="hover"
-            data-content="Input a mutation dataset that contains these fields: chromosome, chromosome_pos,
-                     mutated_from, mutated_to">
+            data-content="Input a variant/mutation dataset (VCF format, icgc simple somatic mutation file, or any tsv/csv
+                          with columns: chromosome, chromosome_pos, mutated_from, mutated_to. See About page for details.">
           </button>
           <div id="input-type">
             <input type=file class="form-control-file" name="input-file" id="input-file" />
@@ -41,7 +41,7 @@
 
           <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
           data-toggle="popover" data-placement="right" data-trigger="hover"
-          data-content="Select all TFs in the selected DBD families. Modifications in this dropdown will be reflected in
+          data-content="All TFs in the selected families will be selected. Modifications in this dropdown will be reflected in
                         the transcription factors dropdown.">
           </button>
 
@@ -82,7 +82,8 @@
 
           <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
           data-toggle="popover" data-placement="right" data-trigger="hover"
-          data-content="Select a genome version that corresponds to your dataset">
+          data-content="For input files containing genomic coordinates, this version of the human genome
+                        will be used.">
           </button>
 
           <select id="genomelist" name="genome-select" class="selectpicker">
@@ -96,8 +97,9 @@
 
           <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
           data-toggle="popover" data-placement="right" data-trigger="hover"
-          data-content="Output certain number of TFs that have the highest absolute z-score or all TFs with a p-value
-                        below a certain cutoff.">
+          data-content="Output will include, for each variant, either all TFs with p-value below the cutoff or
+                        the top TF genes accroding to the largest absolute value of the normalized binding
+                        difference (i.e. z-score).">
           </button>
 
           <div id="outputradio" name="output-select">
@@ -117,11 +119,13 @@
           data-content="This represents the value that corresponds to the radio button on the left.">
           </button>
           <br />
-          <select id="output-selection-opt" name="output-selection-opt">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-          </select>
+          <div id="output-selection-wrapper">
+            <select id="output-selection-opt" name="output-selection-opt">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+            </select>
+          </div>
         </div>
       </div> <!-- from row form-elm -->
 
@@ -129,7 +133,7 @@
 
       <div class="row form-elm">
         <div class="col-md-4">
-          <label for="job-name">Job Name (optional)</label>
+          <label for="job-name">Job name (optional)</label>
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
               data-toggle="popover" data-placement="right" data-trigger="hover"
               data-content="Job name for this prediction job.">
@@ -139,10 +143,10 @@
         </div>
 
         <div class="col-md-4">
-          <label for="email-name">Email Address (optional)</label>
+          <label for="email-name">Email address (optional)</label>
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
               data-toggle="popover" data-placement="right" data-trigger="hover"
-              data-content="Email address for update.">
+              data-content="Will be used to give notification about the job status.">
             </button>
           <br />
           <input type="text" class="form-group" id="email-name" placeholder="Enter your email (optional)">
