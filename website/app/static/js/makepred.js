@@ -258,40 +258,6 @@ function uploadFile(){
     });
 }
 
-/*
-function testing(){
-  $.ajax({
-      type: "GET",
-      url: '/testing',
-      dataType: 'json',
-      success: function(res){
-            alert(res);
-            var tbl = '<table class=\"table table-bordered\" id=\"testtbl\">';
-            var keys = [];
-            tbl += '<thead>';
-            tbl += '<tr>';
-            for (var i = 0; i < Object.keys(res[0]).length; i++) { // zero index is the list of colname
-                keys.push(res[0][i]);
-                tbl += '<th>' + res[0][i] + '</th>';
-            }
-            tbl += '</tr></thead><tbody>';
-            for (var i = 1; i < res.length; i++) {
-                tbl += '<tr>';
-                for (var j = 0; j < keys.length; j++){
-                    tbl += '<td>' + res[i][keys[j]] + '</td>';
-                }
-                tbl += '</tr>';
-            }
-            tbl += '</tbody></table>';
-            $('#testing').html(tbl);
-            //$('#testtbl').DataTable();
-      },
-      error: function() {
-          alert("error testing");
-      }
-    });
-}
-*/
 // --------- End of Progress Related ---------
 
 // jquery specific function

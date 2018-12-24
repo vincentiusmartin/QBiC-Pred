@@ -5,6 +5,7 @@ import os
 import uuid
 
 import pandas as pd
+from pandas.core.groupby.groupby import DataError
 
 import app.controller.celerytask as celerytask
 
@@ -14,17 +15,32 @@ def upload_result():
     #session.clear() -- need to limit the amount of session somewhere
     return render_template("uploadresult.html")
 
-@app.route('/submitpredfile', methods=['POST'])
-def submit_pred_upload():
+def prepare_predfile(request):
     if 'predupload-file' not in request.files:
-        return jsonify({'Message':'no input file part'}), 500
+        return 'error', 'no input file part'
     file = request.files['predupload-file']
     filename = secure_filename(file.filename)
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(filepath)
-    df = pd.read_csv(filepath,dtype=str)
-    os.remove(filepath)
 
+    try:
+        df = pd.read_csv(filepath,dtype=str)
+    except:
+        return 'error', 'input is not supported'
+
+    check_cols = set(["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"])
+    df_cols = set(df.columns)
+    if not check_cols.issubset(df_cols):
+        return 'error', 'could not find all required fields'
+    return 'success',df
+
+@app.route('/submitpredfile', methods=['POST'])
+def submit_pred_upload():
+    status,message = prepare_predfile(request)
+    if status == "error":
+        return jsonify({'Message':message}), 500
+
+    df = pd.DataFrame(message)
     rand_id = str(uuid.uuid4())
 
     cols = list(df.columns.values)

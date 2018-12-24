@@ -48,7 +48,7 @@ msg = filename if success
 '''
 def prepare_request(request):
     # First, check if the input file is valid, this depends on the input-mode
-    if request.form.get('input-mode') == "1":
+    if request.form.get('input-mode') == "1": # not example
         if 'input-file' not in request.files:
             return 'error','no input file part'
         file = request.files['input-file']
