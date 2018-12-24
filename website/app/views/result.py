@@ -1,7 +1,7 @@
 import sys
 sys.path.insert(0, '..')
 
-from flask import send_from_directory,jsonify,request,render_template,url_for,Response
+from flask import send_from_directory,jsonify,request,render_template,url_for,Response,abort
 from app import app,db,celery
 
 import redisearch
@@ -19,7 +19,8 @@ job_id: from last task in the pipeline
 def process_request(job_id):
     # get the task data from redis
     taskdata = db.hgetall(job_id)
-    print(taskdata)
+    if "parent_id" not in taskdata:
+        abort(404)
     p0 = taskdata["parent_id"]
     p1 = taskdata["task_id"]
     parents = json.dumps({'parent-0':p0,'parent-1':p1})
@@ -63,26 +64,72 @@ def get_res_col(task_id):
     # else just return an empty list
     return jsonify(cols)
 
-def filter_fromdb(task_id,start,length,searchquery,searchtype,order_col="row",order_asc=True):
-    # https://oss.redislabs.com/redisearch/Query_Syntax/
+def dofilter(search_filter,doc):
+    flag = True
+    for filter in search_filter:
+        if filter["searchOpt"] == "in sequence":
+            if filter["searchKey"] in doc.wild or filter["searchKey"] in doc.mutant:
+                continue
+        elif filter["searchOpt"] == "at least" or filter["searchOpt"] == "at most":
+            col = filter["searchCol"].replace("-","_")
+            searchval = float(getattr(doc,col))
+            threshold = float(filter["searchKey"])
+            if (filter["searchOpt"] == "at least" and searchval >= threshold) or \
+                (filter["searchOpt"] == "at most" and searchval <= threshold):
+                continue
+        else:
+            searchval = getattr(doc,filter["searchCol"])
+            if (filter["searchOpt"] == "exact" and filter["searchKey"] == searchval) or \
+               (filter["searchOpt"] == "exclude" and filter["searchKey"] != searchval):
+                continue
+        flag = False
+        break
+    return flag
+
+def filter_fromdb(task_id,search_filter,start,length,order_col="row",order_asc=True):
     result = {}
     client = redisearch.Client(task_id)
-    if searchtype == "All": # no search key and not ordered
-        querystr = "%s*" % searchquery
-        # bad to sort every time TODO: fix later
-        query = redisearch.Query(querystr).sort_by(order_col,order_asc).paging(start,length)
-        docs = []
-        #for i in range(start,min(result['recordsTotal'],start+length)):
-        #    docs.append(client.load_document(i))
+    result['recordsTotal'] = int(client.info()['num_docs'])
+
+    #manual = False # manually made because redisearch sucks
+    if search_filter:
+        query = redisearch.Query("*").sort_by(order_col,order_asc).paging(0,result['recordsTotal'])
+        documents = client.search(query).docs
+        filtered_docs = list(filter(lambda doc: dofilter(search_filter,doc),documents))
+        result['recordsFiltered'] = len(filtered_docs)
+        result['data'] = filtered_docs[start:start+length]
+    else:
+        query = redisearch.Query("*").sort_by(order_col,order_asc).paging(start,length)
         res = client.search(query)
-        result['recordsTotal'] = int(client.info()['num_docs'])
         result['recordsFiltered'] = res.total
         result['data'] = res.docs
+
+    #if searchtype == "exclude":
+    #    #searchtext = searchquery.replace(">","\\>") -- @col:query
+    #    querystr = "-(@%s:\"%s\")" % (colname,searchquery)
+    #else: #searchtype == "exact"
+    #    querystr = "@%s:\"%s\"" % (colname,searchquery)
+
     return result
 
 def customround(num):
     fl = float(num) # so it can accept string
     return "%.3e"%fl if abs(fl) < 10**(-4) or abs(fl) > 10**(4) else "%.4f"%fl
+
+def htmlformat(invar,type,colname):
+    str_in = str(invar)
+    if type == "filter":
+        return """\
+          <div class="dropdown cell-filter">
+            <button class="btn btn-link unstyled-button cell-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {content}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <button class="dropdown-item cell-filter-item" data-colname={colname} data-filter="exact">Only include rows with this value</a>
+              <button class="dropdown-item cell-filter-item" data-colname={colname} data-filter="exclude">Exclude rows with this value</a>
+            </div>
+          </div>
+        """.format(content=str_in,colname=colname)
 
 @app.route('/getrestbl/<task_id>',methods=['GET'])
 def get_res_tbl(task_id):
@@ -93,8 +140,7 @@ def get_res_tbl(task_id):
     length = int(request.args['length'])
 
     # cs is custom search
-    csKey = request.args['csKey']
-    csField = request.args['csOpt']
+    searchFilter = ast.literal_eval(request.args['searchFilter'])
 
     # check orderable -- orderMulti is disabled in result.js so we can assume
     # one column ordering.
@@ -106,11 +152,9 @@ def get_res_tbl(task_id):
 
     cols = ast.literal_eval(db.hgetall("%s:cols"%task_id)['cols'])
 
-    filtered_db = filter_fromdb(task_id,start,length,csKey,csField,cols[order_col],order_asc)
-
+    filtered_db = filter_fromdb(task_id,searchFilter,start,length,cols[order_col],order_asc)
     retlist = []
 
-    print(filtered_db)
     for doc in filtered_db['data']:
         #if not filter_search(row,csKey,csField):
         #    continue
@@ -119,7 +163,10 @@ def get_res_tbl(task_id):
         rowdict['mutant'] = doc.mutant[:5] + '<span class="bolded-red">' + doc.mutant[5] + '</span>' + doc.mutant[6:]
         rowdict['z_score'] = customround(doc.z_score)
         rowdict['p_value'] = customround(doc.p_value)
-        rowdict['binding_status'] = doc.binding_status
+        rowdict['binding_status'] = htmlformat(doc.binding_status,"filter","binding_status")
+        rowdict['gapmodel'] = htmlformat(doc.gapmodel,"filter","gapmodel")
+        rowdict['TF_gene'] = htmlformat(doc.TF_gene,"filter","TF_gene")
+        rowdict['pbmname'] = htmlformat(doc.pbmname,"filter","pbmname")
         retlist.append([rowdict[col] for col in cols])
 
     return jsonify({

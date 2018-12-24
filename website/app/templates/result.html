@@ -16,13 +16,20 @@
     });
   </script>
   <div class = "col-md-3">
-    <div class="sticky-top left-content" style="top: 56px;" id="inputpanel">
+    <div class="left-content" style="top: 56px;" id="inputpanel">
       <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">Selected TFs
         <span class="caret"></span></button>
         <ul class="dropdown-menu" id="genes-dropdown">
         </ul>
       </div>
+    </div>
+
+    <div class="left-content" id="filterpanel">
+      <p><b> Filters: </b></p>
+      <ul class="list-group list-group-custom" id="filter-list">
+        <!--<li class="list-group-item">Cras justo odio</li>-->
+      </ul>
     </div>
   </div>
   <div class = "col-md-9">
@@ -44,6 +51,7 @@
 
     <div id="csv-download" style="display: none;"></div>
   </div>
+
 </div>
 
 {% endblock %}

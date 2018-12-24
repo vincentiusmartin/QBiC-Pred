@@ -2,6 +2,31 @@
   float:right;
 }
 
+#filterpanel{
+    margin-top: 5%;
+}
+
+.list-group-custom{
+  max-height: 200px;
+  margin-bottom: 10px;
+  overflow:scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.list-group-item-custom{
+    font-size:8pt;
+}
+
+.unstyled-button {
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+.clickable-cell.dropdown-toggle::after {
+    display:none;
+}
+
 .dataTables_scroll{
   overflow:auto;
   position:relative;
@@ -26,3 +51,16 @@
   top:40%;
   z-index: 1;
 }
+
+/* Style the close button (span) */
+.close {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: 0%;
+  padding: 12px 16px;
+  transform: translate(0%, -50%);
+  font-size:12pt;
+}
+
+.close:hover {background: #bbb;}

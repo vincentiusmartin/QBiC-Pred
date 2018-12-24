@@ -1,3 +1,59 @@
+function displayOpt(searchOpt,searchKey){
+    switch(searchOpt) {
+        case 'exclude':
+            return "~"+searchKey;
+        case 'in sequence':
+            return '&#2738;'+searchKey+'&#2738;';
+        case 'at least':
+            return '&geq;'+searchKey;
+        case 'at most':
+            return '&leq;'+searchKey;
+        default:
+            return searchKey;
+    }
+}
+
+function addFilterElm(searchOpt,searchKey,searchCol){
+    var ftext = searchCol + ":" + displayOpt(searchOpt,searchKey);
+    $("#filter-list li").each(function(idx,li){
+        if($(li).attr("searchKey")==searchKey && $(li).attr("searchCol")==searchCol){
+            $(li).remove();
+        }
+    });
+    var closeBtnText = "<span class=\"close\">x</span>"
+    var $filterItem = $('<li />')
+              .html(ftext + closeBtnText)
+              .addClass("list-group-item")
+              .addClass("list-group-item-custom")
+              .attr("searchOpt",searchOpt)
+              .attr("searchKey",searchKey)
+              .attr("searchCol",searchCol);
+    $("#filter-list").append($filterItem);
+    attachCloseListHandler();
+}
+
+function getFilterList(){
+    var filterList = [];
+    $("#filter-list li").each(function(idx,li){
+        var filter = {
+            "searchOpt":$(li).attr("searchOpt"),
+            "searchKey":$(li).attr("searchKey"),
+            "searchCol":$(li).attr("searchCol")
+        };
+        filterList.push(filter);
+    });
+    return filterList;
+}
+
+function attachCloseListHandler(){
+    $(".list-group-item").on( "click", ".close", function(){
+        var parent = $(this).parent();
+        var searchOpt = parent.attr("searchOpt");
+        parent.remove();
+        $('#restbl').DataTable().ajax.reload();
+    });
+}
+
 /**
   This function parse result from datatable and display it to the user.
 **/
@@ -8,8 +64,7 @@ function displayResult(status_url){
     var job_id = job_arr[job_arr.length-1];
     var cols;
     $.getJSON('/getrescol/'+job_id,function(cols) {
-        searchKey = "";
-        searchOpt = "All";
+        var searchFilter = [];
         $('#tablewrap').css('display','block');
         var restbl = $('#restbl').DataTable({
             dom: 'lr<"#ressearch">tip',
@@ -33,42 +88,90 @@ function displayResult(status_url){
                 $('.dataTables_paginate').show();
                 $('.dataTables_length').show();
                 $('#ressearch-btn').prop('disabled', false);
+                $(".cell-filter-item").click(function(){
+                    searchOpt = $(this).data("filter");
+                    searchKey = $(this).parent().siblings("button.cell-btn").text().trim();
+                    searchCol = $(this).data("colname")
+                    addFilterElm(searchOpt,searchKey,searchCol)
+                    restbl.ajax.reload();
+                });
             },
             ajax: {
-              url: '/getrestbl/'+job_id,
-              data:function(d){
-                 d.csKey = searchKey; // custom search
-                 d.csOpt = searchOpt;
-              }
+                url: '/getrestbl/'+job_id,
+                data:function(d){
+                    searchFilter = getFilterList(); // get all filters from the list
+                    d.searchFilter = JSON.stringify(searchFilter); // custom search
+                }
             },
             columns: cols
         });
+        // this have to be outside due to the need of refering to the table
         $('#restbl').css({"width":"100%"}); // need to set this to align the header
         $('.dataTable').wrap('<div class="dataTables_scroll" />'); // this is needed to replace dataTables_scroll
         // This is used to replace the search bar from DataTable so we can have
         // our custom. Search bar itself is inactivated.
         // https://stackoverflow.com/questions/43454575/call-datatable-ajax-call-on-custom-button
         $("#ressearch").addClass("form-inline mb-3").html(`
-          <div class="form-grup" style="margin-right:5px;">
-            <input id="ressearch-text" class="form-control" type="text" placeholder="Enter search keyword" aria-label="Search">
-          </div>
-          <div class="form-grup" style="margin-right:5px;">
-            <select id="ressearch-select" name="ressearch-select" class="selectpicker" data-width="fit">
-              <option selected>All</option>
-              <option>Dummy option</option>
+          <div class="form-group" id="math-compare-form" style="margin-right:5px;display:none;">
+            <select id="math-compare-select" name="math-compare-select" class="selectpicker"
+              data-width="fit">
+              <option selected>at most</option>
+              <option>at least</option>
             </select>
           </div>
-          <div class="form-grup">
-           <button id="ressearch-btn" class="btn btn-primary btn-md" type="button">Search</button>
+          <div class="form-group" style="margin-right:5px;">
+            <input id="ressearch-text" class="form-control" type="text" placeholder="Enter search keyword" aria-label="Search">
+          </div>
+          <div class="form-group" style="margin-right:5px;">
+            <select id="ressearch-select" name="ressearch-select" class="selectpicker" data-width="fit">
+              <option selected>in sequence</option>
+              <option>p-value</option>
+              <option>z-score</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <button id="ressearch-btn" class="btn btn-primary btn-md" type="button">Search</button>
           </div>
           `);
-         $("#ressearch-btn").click(function() {
+        $('#ressearch-select').change(function(){
+            var searchOpt = $("#ressearch-select option:selected").text();
+            if(searchOpt == 'p-value' || searchOpt == 'z-score'){
+                $('#math-compare-form').css("display","inline-block");
+            }else{
+                $('#math-compare-form').css("display","none");
+            }
+        });
+        $("#ressearch-text").keyup(function(event) {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.which === 13) {
+                event.preventDefault();  // Cancel the default action, if needed
+                // Trigger the button element with a click
+                $("#ressearch-btn").click();
+            }
+        });
+        $("#ressearch-btn").click(function() {
              // set search field for getrestbl
-            searchKey = $("#ressearch-text").val();
-            searchOpt = $("#ressearch-select option:selected").text();
-            restbl.ajax.reload();
-         });
-         $("#ressearch-select").selectpicker(); // to show the dropdownn options
+            var searchKey = $("#ressearch-text").val();
+            var selected = $("#ressearch-select option:selected").text();
+            var check = true;
+            if(!searchKey){
+                check = false;
+            }else if(isNaN(searchKey) && (selected == 'p-value' || selected == 'z-score')){
+                check = false;
+                alert("error: search value must be numeric"); // $('#search-error').html
+            }
+            if(check){
+                if(selected == 'p-value' || selected == 'z-score'){
+                    var compare = $("#math-compare-form option:selected").text();
+                    addFilterElm(compare,searchKey,selected);
+                }else{
+                    addFilterElm(selected,searchKey,"sequence");
+                }
+                restbl.ajax.reload();
+            }
+        });
+        $("#ressearch-select").selectpicker(); // to show the dropdownn options
+        $("#math-compare-select").selectpicker();
     });
 }
 

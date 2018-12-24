@@ -56,7 +56,7 @@ def inittbl(self,filename,cpath):
             seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to'] #-5,+6
             # for escore, just use 8?
             esccore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to']
-            result.append([idx,seq,esccore_seq,utils.seqtoi(seq),0,0,"-"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
+            result.append([idx,seq,esccore_seq,utils.seqtoi(seq),0,0,"None"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
         if error:
             break
 
@@ -86,7 +86,7 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
     buggedtf = 0
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
     if filteropt == 1: #t-value
-        container = {tuple(row[:4]):[[0,0,1,"-","None"]] for row in dataset} # rowidx,12mer,18mer,seqidx : [diff,z,p,bind,"-"]
+        container = {tuple(row[:4]):[[0,0,1,"None","None"]] for row in dataset} # rowidx,12mer,18mer,seqidx : [diff,z,p,bind,pbmname]
     else: #p-value
         # leave this empty as for p-value, we don't have to compare and the size is dynamic
         container = {tuple(row[:4]):[] for row in dataset}
@@ -172,7 +172,7 @@ def format2tbl(tbl,gene_names,filteropt=1):
             if pbmname  == 'None':
                 rowdict['TF_gene'] = ""
                 rowdict['pbmname'] = "None"
-                rowdict['gapmodel'] = "-"
+                rowdict['gapmodel'] = "None"
             else:
                 rowdict['TF_gene'] = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
                 rowdict['pbmname'] = pbmname
@@ -210,9 +210,11 @@ def drop_index(task_id):
     '''
     Make this a celery task so we can schedule it
     '''
-    print("Remove index for %s from redis"%task_id)
+    print("Remove key/index for %s from redis"%task_id)
     client = redisearch.Client(task_id)
     client.drop_index()
+    db.delete(task_id)
+    db.delete("%s:cols"%task_id)
 
 def savetoredis(req_id,colnames,datavalues,expired_time):
     db.hmset("%s:cols"%req_id,{'cols':colnames})
