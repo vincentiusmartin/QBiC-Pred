@@ -21,9 +21,9 @@
     <script src="{{ url_for('static', filename='js/base.js') }}"></script>
   </head>
   <body>
-    <div class="container">
-      <div class="header clearfix">
-        <nav class="navbar fixed-top navbar-expand-sm bg-dark navbar-dark">
+    <div class="container qbic-body "> <!-- to make full width, just remove container inside-->
+      <nav class="navbar fixed-top navbar-expand-sm bg-light navbar-light qbic-nav">
+        <div class="container">
           <ul class="navbar-nav nav-pills"> <!-- ml-auto  -->
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('index') }}" id="nav-1">Home</a>
@@ -50,8 +50,8 @@
               </div>
             </li>
           </ul>
-        </nav>
-      </div>
+        </div>
+      </nav>
 
       {% block body %}
       {% endblock %}

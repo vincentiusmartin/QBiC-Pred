@@ -1,5 +1,6 @@
 body{
   padding-top: 60px; /* need to do this to avoid overlap with navbar */
+  background-color:#f8f9fb;
 }
 
 @font-face {
@@ -18,6 +19,15 @@ html,body {
 
 
 .navbar-nav > li > a {
-  color: white !important;
+  color: black !important;
 
+}
+
+.qbic-nav{
+  border-bottom:2px solid #e6e6e6;
+  padding-bottom:10px;
+}
+
+.qbic-body{
+  background-color:white;
 }
