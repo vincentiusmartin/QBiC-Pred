@@ -1,4 +1,22 @@
 .slideshow-img{
     width:400px;
-    height:400px;
+    height:350px;
+}
+
+.blue-text{
+  color:#33adff;
+}
+
+.index-button-text{
+  font-size:12px;
+}
+
+#carousel-qbic-index .carousel-caption {
+    text-align: center;
+    left:25%;
+    max-width: 500px;
+      /*top: auto;*/
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: initial;
 }

@@ -16,10 +16,12 @@ html,body {
     height: 100%;
 }
 
-
+.navbar-nav > .nav-item > a.active{
+  color:#33adff !important;
+}
 
 .navbar-nav > li > a {
-  color: black !important;
+  color: black;
 
 }
 
@@ -30,4 +32,8 @@ html,body {
 
 .qbic-body{
   background-color:white;
+}
+
+.footer{
+  background-color:gray;
 }
