@@ -21,42 +21,59 @@
     <script src="{{ url_for('static', filename='js/base.js') }}"></script>
   </head>
   <body>
-    <div class="container qbic-body "> <!-- to make full width, just remove container inside-->
-      <nav class="navbar fixed-top navbar-expand-sm bg-light navbar-light qbic-nav">
+    <div class="container qbic-body"> <!-- to make full width, just remove container inside-->
+      <nav class="navbar fixed-top navbar-expand-lg bg-light navbar-light qbic-nav py-0 mt-0">
         <div class="container">
-          <ul class="navbar-nav"> <!-- ml-auto  -->
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('index') }}" id="nav-1">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('makepred') }}" id="nav-2">Make Prediction</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('upload_result') }}" id="nav-3">Upload Result</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('about') }}" id="nav-4">About</a>
-            </li>
-            <!--<li class="nav-item">
-              <a class="nav-link" href="{{ url_for('testing') }}" id="nav-5">Test</a>
-            </li>-->
+          <ul class="navbar-nav mr-auto">
+              <li>
+                <a class="nav-link py-0" href="/">
+                  <img src="/static/images/headerlogo.png" id="header-logo">
+                </a>
+              </li>
           </ul>
-          <ul class="navbar-nav ml-auto">
-              <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Recent jobs
-                </button>
-                <div id="dropdown-header" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"></div>
-              </div>
-            </li>
-          </ul>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#header-toggler" aria-controls="header-toggler" aria-expanded="false" aria-label="Click to toggle menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="header-toggler">
+            <ul class="navbar-nav mx-auto"> <!-- ml-auto  -->
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}" id="nav-1">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('makepred') }}" id="nav-2">Make Prediction</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('upload_result') }}" id="nav-3">Upload Result</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('about') }}" id="nav-4">About</a>
+              </li>
+              <!--<li class="nav-item">
+                <a class="nav-link" href="{{ url_for('testing') }}" id="nav-5">Test</a>
+              </li>-->
+            </ul>
+            <div class="dropdown ml-auto">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Recent jobs
+              </button>
+              <div id="dropdown-header" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"></div>
+            </div>
+          </div>
         </div>
       </nav>
 
       {% block body %}
       {% endblock %}
       <footer class="footer">
-        <p>© 2018 For questions, feedbacks, or bugs please send an email to qbic-pred@duke.edu</p>
+        <div class="row" id="box-search">
+            <div class="footer-thumbnail text-center">
+                <img src="/static/images/footer.png" alt="" class="img-responsive" id="footer-img">
+                <div class="footer-caption col-md-7">
+                    <p>© 2018 For questions, feedbacks, or bugs please send an email to qbic-pred@duke.edu</p>
+                </div>
+            </div>
+        </div>
       </footer>
     </div> <!-- /container -->
   </body>

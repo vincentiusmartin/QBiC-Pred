@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}QBiC-Pred: Home{% endblock %}
 {% block body %}
 
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/index.css') }}">
@@ -13,7 +13,7 @@
     </ol>
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img class="d-block w-100 slideshow-img" src="/static/images/mut1.jpeg">
+        <img class="d-block w-100 slideshow-img" src="/static/images/mut2.png">
         <div class="carousel-caption">
             <h1><span class="blue-text">QBiC</span>-Pred</h1>
             <p class="lead">Quantitative prediction of TF binding changes due to sequence variants</p>
@@ -21,21 +21,21 @@
             <a href="{{ url_for('upload_result') }}" class="btn btn-lg btn-outline-secondary index-button-text" style="margin-left:2%;">UPLOAD RESULT</a>
         </div><!-- end carousel-caption -->
       </div>
-      <div class="carousel-item slideshow-img">
-        <img class="d-block w-100 slideshow-img" src="/static/images/mut2.jpg">
+      <div class="carousel-item">
+        <img class="d-block w-100 slideshow-img" src="/static/images/mut1.jpeg">
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-8">
-        <h2>Welcome to QBiC!</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-        <a href="{{ url_for('about') }}" class="btn btn-lg btn-outline-primary index-button-text">KNOW MORE</a>
-      </div>
-      <div class="col-md-4">
-        <img src="/static/images/mut1.jpeg" style="width:300px;height:300px;">
-      </div>
+  </div>
+  <div class="row" style="padding-top:2%;">
+    <div class="col-md-8">
+      <h2>Welcome to QBiC!</h2>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
+      <a href="{{ url_for('about') }}" class="btn btn-lg btn-outline-primary index-button-text">KNOW MORE</a>
+    </div>
+    <div class="col-md-4">
+      <img src="/static/images/mut3.png" style="width: 85%;float:right;">
     </div>
   </div>
 

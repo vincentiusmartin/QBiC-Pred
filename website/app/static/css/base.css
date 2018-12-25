@@ -1,5 +1,5 @@
 body{
-  padding-top: 60px; /* need to do this to avoid overlap with navbar */
+  padding-top: 90px; /* need to do this to avoid overlap with navbar */
   background-color:#f8f9fb;
 }
 
@@ -14,6 +14,20 @@ body *{
 
 html,body {
     height: 100%;
+}
+
+#header-logo{
+  width: 78%;
+}
+
+#footer-img{
+  width:100%;
+}
+
+#footer-caption{
+  position: absolute;
+  bottom: 8px;
+  left: 16px;
 }
 
 .navbar-nav > .nav-item > a.active{
@@ -34,6 +48,17 @@ html,body {
   background-color:white;
 }
 
-.footer{
-  background-color:gray;
+
+.footer-thumbnail {
+    position: relative;
+}
+
+.footer-caption {
+  color:white;
+  text-align:left;
+  position: absolute;
+  font-size:12px;
+  top: 35%;
+  left: 0;
+  width: 100%;
 }
