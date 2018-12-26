@@ -1,53 +1,58 @@
 function changeInputOptOnClick(){
-    $("#input-switch").click(function(){
-        if ($("#input-mode").val() == 1) {
-            changeInputOpt(2);
-        }else{
+    $(".disabled-btn").click(function(){
+        if ($(".disabled-btn").val() == 1) {
             changeInputOpt(1);
+        }else{
+            changeInputOpt(2);
         }
     });
 }
 
-function changeInputDownloadLink(filename){
-    $("#download-input-select").attr("href","/download/"+filename).html("download file");
+function changeInputDownloadLink(){
+    var filename = $("#input-example-list option:selected").text();
+    if(filename){
+        $("#download-input-select").attr("href","/download/"+filename).html("download file");
+    }else{
+        $("#download-input-select").attr("href","").html("");
+    }
 }
 
 /* Make separate function with on click so we can independently call it */
 function changeInputOpt(opt){
+    var content1 = "Upload a mutation dataset:";
+    var content2 = "Select an input from examples:";
     if(opt == 2){
-        $("#input-label").html("Select from examples:");
-        $("#input-type").html(`
-            <select id="input-example-list" name="input-example-list" class="selectpicker"  title="Select an example"></select>
-            <br />
-            <a id="download-input-select"></a>
-        `);
-        var $inputDropdown = $("#input-example-list");
-        var filelist = [];
-        $("#examplelist > option").each(function(){
-            var cur = $(this).attr("inputfile");
-            if(cur.length > 0 && !filelist.includes(cur)){
-                filelist.push(cur);
-                var $opt = $('<option />').val(cur).text(cur);
-                $inputDropdown.append($opt);
-            }
-        });
-        $inputDropdown.selectpicker('refresh');
+        $("#input-mode").val("2");
+        $("#input-lbl-2").val("active").html(content2);
+        $("#input-lbl-1").html('<button class="btn disabled-btn" type="button">' +
+              content1 +
+            '</button>');
+        $("#input-example-list").prop('disabled', false).selectpicker('refresh');
+        $("#input-file").filestyle('disabled',true);
 
-        $inputDropdown.on("changed.bs.select",function(){
-            changeInputDownloadLink($(this).find("option:selected").val());
-        });
+        var optSelected = $("#input-example-list option:selected");
 
-        $("#input-switch").html("Upload input files");
-        $("#input-mode").val(2);
+        changeInputDownloadLink(optSelected.attr("inputfile"));
+        $("#input-example-list").change(function(){
+            var selected = $("#input-example-list option:selected").text();
+            changeInputDownloadLink(selected);
+        });
     }else{
-        $("#input-label").html("Upload a mutation dataset (csv,tsv):");
-        $("#input-type").html("<input type=file class=\"form-control-file\" name=\"input-file\" id=\"input-file\" />");
-        $("#input-switch").html("Use input from examples");
-        $("#input-mode").val(1);
+        $("#input-mode").val("1");
+        $("#input-lbl-1").val("active").html(content1);
+        $("#input-lbl-2").html('<button class="btn disabled-btn" type="button">' +
+              content2 +
+            '</button>');
+        $("#input-example-list").prop('disabled', true).selectpicker('refresh');;
+        $("#input-file").filestyle('disabled',false);
+        $("#download-input-select").attr("href","").html("");
     }
+    changeInputOptOnClick(); // reload java script
 }
 
 function listExampleInput(){
+    var dfd = jQuery.Deferred();
+
     var $exampleDropdown = $("#examplelist");
     /* Fill the example dropdown */
     var $noneOpt = $('<option />').val("").text("None").attr("inputfile","")
@@ -58,6 +63,7 @@ function listExampleInput(){
       url: '/examplelist',
       dataType: 'json',
       success: function(data){
+          dfd.resolve("ok");
           // parse the resulting json
           $.each(data, function(name,attributes) {
               var $group = $('<option />').val(name).text(name);
@@ -69,6 +75,7 @@ function listExampleInput(){
           $exampleDropdown.selectpicker('refresh');
       },
       error: function() {
+          dfd.reject("error");
           alert("error getting example list");
       }
     });
@@ -99,11 +106,25 @@ function listExampleInput(){
         if(optSelected.val().length > 0){
             changeInputOpt(2);
             $('#input-example-list').selectpicker('val',optSelected.attr("inputfile"));
-            changeInputDownloadLink(optSelected.attr("inputfile"));
         }else {
             changeInputOpt(1);
         }
     });
+    return dfd.promise();
+}
+
+function updateInputExamples(){
+    var $inputDropdown = $("#input-example-list");
+    var filelist = [];
+    $("#examplelist > option").each(function(){
+        var cur = $(this).attr("inputfile");
+        if(cur.length > 0 && !filelist.includes(cur)){
+            filelist.push(cur);
+            var $opt = $('<option />').val(cur).text(cur);
+            $inputDropdown.append($opt);
+        }
+    });
+    $inputDropdown.selectpicker('refresh');
 }
 
 function listPreddir(){
@@ -262,15 +283,25 @@ function uploadFile(){
 
 // jquery specific function
 $(function() {
+    $("#input-file").filestyle({
+        btnClass: 'btn-secondary',
+        htmlIcon: '<i class="fas fa-folder-open"></i> ',
+        size:'sm'
+    });
+
     listPreddir(); // list all TFs from our list in the dropdowns
     $.when(listExampleInput()).done(function(){
-        changeInputOptOnClick(); // need to run after example dropdown is filled
+        updateInputExamples(); // need to run after example dropdown is filled
     });
+    changeInputOptOnClick();
+
     updateOutputLabelWrapper(); // check change on output options
     updateFromFamilies();
-    $('#submit-job').click(uploadFile);
     $('#submit-tf').click(uploadTFFomFile);
     $('[data-toggle="popover"]').popover();
+
+    // submit the form
+    $('#submit-job').click(uploadFile);
 
     $('.navbar-nav .nav-link').removeClass('active');
     $('#nav-2').addClass('active');
