@@ -3,7 +3,17 @@
 }
 
 #filterpanel{
-    margin-top: 5%;
+  margin-top: 5%;
+}
+
+
+@font-face {
+  font-family: Raleway;
+  src: url('raleway-regular.ttf');
+}
+
+#tablewrap{
+    font-family: Raleway !important;
 }
 
 .list-group-custom{

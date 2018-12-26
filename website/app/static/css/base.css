@@ -8,12 +8,12 @@ body{
   src: url('luthier-regular.ttf');
 }
 
-body *{
-    font-family: Luthier;
+body{
+  font-family: Luthier;
 }
 
 html,body {
-    height: 100%;
+  height: 100%;
 }
 
 #header-logo{

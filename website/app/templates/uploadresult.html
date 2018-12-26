@@ -4,14 +4,30 @@
 
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/uploadresult.css') }}">
 <script src="{{ url_for('static', filename='js/uploadresult.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap-filestyle.min.js') }}"></script>
 
 <div class="modal-body">
-  <form method="post" enctype="multipart/form-data" id="predupload-form">
-    <label>Already have a prediction file?</label>
-    <input type=file class="form-control-file" name="predupload-file" />
-    <button id="submit-pred" type="button" class="btn btn-sm btn-secondary">Submit</button>
+  <h1>Already have a prediction file?</h1>
+  <p>
+    To avoid processing, you can directly upload a prediction result here if
+    you already have one.
+  </p>
+
+  <form action="" method="post" class="dropzone" enctype="multipart/form-data" id="predupload-form">
+    <div class="col-md-6">
+      <input type=file id="predupload-file" name="predupload-file"  />
+    </div>
+    <div style="padding:1% 0 1% 1%;">
+    <button id="submit-pred" type="button" class="btn btn-md btn-info">Submit</button>
+    </div>
     <span class="text-danger" role="alert" id="error-upload-msg"></span>
   </form>
+
+  <div>
+    You can also download an example output file: <a href="/download/result-example.csv">result-example.csv</a>
+  </div>
+
 </div>
+
 
 {% endblock %}

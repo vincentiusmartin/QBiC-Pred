@@ -20,8 +20,11 @@ function uploadPredResult(){
     });
 }
 
-
 $(function(){
+    $('#predupload-file').filestyle({
+        'btnClass': 'btn-secondary',
+        'htmlIcon': '<i class="fas fa-folder-open"></i> '
+    });
     $('#submit-pred').click(uploadPredResult);
 
     $('.navbar-nav .nav-link').removeClass('active');
