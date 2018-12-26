@@ -153,7 +153,7 @@ function updateToFamilies(selectedPredList){
 function updateFromFamilies(){
     /* Token: {family:genename}*/
     /* When family list is closed */
-    $('#familylist').on('change', function () { //hide.bs.select
+    $('#familylist').on('hide.bs.select', function () { //hide.bs.select
         var selected = new Array();
         $("#familylist option:selected").each(function(){
             selected.push(this.value);
