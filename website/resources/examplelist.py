@@ -11,7 +11,7 @@ examples = \
         'outputtype':1
     },
     'MAFK-ChIP-seq-allele-specific-binding-variants':{
-        'inputfile':'mafk-asb-example.tsv',
+        'inputfile':'mafk-asb-example.vcf',
         'tfs':['MAFK'],
         'genomever':"hg19",
         'outputtype':2
