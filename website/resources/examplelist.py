@@ -4,15 +4,15 @@ Output type: 1 for largest absolute z-score and 2 for p-val threshold
 
 examples = \
 {
-    'example1':{
+    'icgc-breast-cancer-mutations':{
         'inputfile':'icgc-example.tsv',
-        'tfs':['TfX','E2F'],
-        'genomever':"hg38",
+        'tfs':['MYC','E2F','FOXA1'],
+        'genomever':"hg19",
         'outputtype':1
     },
-    'example2':{
-        'inputfile':'icgc-example.tsv',
-        'tfs':['TfX'],
+    'MAFK-ChIP-seq-allele-specific-binding-variants':{
+        'inputfile':'mafk-asb-example.tsv',
+        'tfs':['MAFK'],
         'genomever':"hg19",
         'outputtype':2
     },
