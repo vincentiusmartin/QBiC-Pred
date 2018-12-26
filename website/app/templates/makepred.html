@@ -6,160 +6,162 @@
 <script src="{{ url_for('static', filename='js/makepred.js') }}"></script>
 
 <div class="modal-body">
-  <form method="post" enctype="multipart/form-data" id="input-form" class="dropzone">
-    <div class="row">
-      <div class="form-title"><span>DATA SUBMISSION FORM</span></div>
-    </div>
-    <div id="form-input">
-      <div class="row form-elm">
-        <div class="col-md-4">
-          <label id="input-label">Upload a mutation dataset (csv,tsv): </label>
-          <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-            data-toggle="popover" data-placement="right" data-trigger="hover"
-            data-content="Input a variant/mutation dataset (VCF format, icgc simple somatic mutation file, or any tsv/csv
-                          with columns: chromosome, chromosome_pos, mutated_from, mutated_to. See About page for details.">
-          </button>
-          <div id="input-type">
-            <input type=file class="form-control-file" name="input-file" id="input-file" />
+  <div class="container" id="input-form">
+    <form method="post" enctype="multipart/form-data" class="dropzone">
+      <div class="row">
+        <div class="form-title"><span>DATA SUBMISSION FORM</span></div>
+      </div>
+      <div id="form-input">
+        <div class="row form-elm">
+          <div class="col-md-4">
+            <label id="input-label">Upload a mutation dataset (csv,tsv): </label>
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+              data-toggle="popover" data-placement="right" data-trigger="hover"
+              data-content="Input a variant/mutation dataset (VCF format, icgc simple somatic mutation file, or any tsv/csv
+                            with columns: chromosome, chromosome_pos, mutated_from, mutated_to. See About page for details.">
+            </button>
+            <div id="input-type">
+              <input type=file class="form-control-file" name="input-file" id="input-file" />
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" type="button" style="margin-top:10px;" id="input-switch"> Use input from examples</button>
+            <input type="text" id="input-mode" name="input-mode" value="1" style="visibility: hidden;" readonly /> <!-- mark the input mode -->
           </div>
-          <button type="button" class="btn btn-secondary btn-sm" type="button" style="margin-top:10px;" id="input-switch"> Use input from examples</button>
-          <input type="text" id="input-mode" name="input-mode" value="1" style="visibility: hidden;" readonly /> <!-- mark the input mode -->
-        </div>
-        <div class="col-md-4">
-          <label>Or select an example:</label>
-          <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-            data-toggle="popover" data-placement="right" data-trigger="hover"
-            data-content="Select an example use case.">
-          </button>
-          <select id="examplelist" name="example-select" class="selectpicker"></select>
-        </div>
-      </div>
-
-      <div class="row form-elm">
-        <div class="col-md-4">
-          <label>Select TFs by families:</label>
-
-          <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-          data-toggle="popover" data-placement="right" data-trigger="hover"
-          data-content="All TFs in the selected families will be selected. Modifications in this dropdown will be reflected in
-                        the transcription factors dropdown.">
-          </button>
-
-          <select id="familylist" name="family-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
-          <!--<button id="submit-fam" class="btn btn-secondary btn-sm" type="button" style="margin-top:10px;">Select by Families</button>-->
-        </div>
-
-        <div class="col-md-4">
-          <label>Select transcription factors:</label>
-
-          <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-          data-toggle="popover" data-placement="right" data-trigger="hover"
-          data-content="Select by TF names">
-          </button>
-
-          <select id="predlist" name="pred-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
-        </div>
-
-        <div class="col-md-4">
-          <label>Upload a file with TF names: </label>
-
-          <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-          data-toggle="popover" data-placement="right" data-trigger="hover"
-          data-content="Upload a file containing TF names separated by new lines. Please click the 'Select by TFs'
-                        button to apply the selections from your file.">
-          </button>
-
-          <input type=file name="tf-file" id="tf-file" />
-          <button id="submit-tf" class="btn btn-secondary btn-sm" type="button" style="margin-top:10px;">Select by TFs</button>
-        </div>
-      </div>
-
-      <hr class="divider-line" />
-
-      <div class="row form-elm">
-        <div class="col-md-4 form-group">
-          <label for="genomelist">Select a genome version:</label>
-
-          <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-          data-toggle="popover" data-placement="right" data-trigger="hover"
-          data-content="For input files containing genomic coordinates, this version of the human genome
-                        will be used.">
-          </button>
-
-          <select id="genomelist" name="genome-select" class="selectpicker">
-            <option selected>hg19</option>
-            <option>hg38</option>
-          </select>
-        </div>
-
-        <div class="col-md-4 form-group">
-          <label for="outputradio">Select the desired output:</label>
-
-          <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-          data-toggle="popover" data-placement="right" data-trigger="hover"
-          data-content="Output will include, for each variant, either all TFs with p-value below the cutoff or
-                        the top TF genes accroding to the largest absolute value of the normalized binding
-                        difference (i.e. z-score).">
-          </button>
-
-          <div id="outputradio" name="output-select">
-            <div class="radio">
-              <input type="radio" name="optradio" value="1" checked="">&nbsp;largest absolute z-score </input>
-            </div>
-            <div class="radio">
-              <input type="radio" name="optradio" value="2">&nbsp;p-value threshold </input>
-            </div>
+          <div class="col-md-4">
+            <label>Or select an example:</label>
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+              data-toggle="popover" data-placement="right" data-trigger="hover"
+              data-content="Select an example use case.">
+            </button>
+            <select id="examplelist" name="example-select" class="selectpicker"></select>
           </div>
         </div>
 
-        <div class="col-md-4 output-col form-group">
-          <label for="output-option" id="output-option">#TFs to output:</label>
-          <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-          data-toggle="popover" data-placement="right" data-trigger="hover"
-          data-content="This represents the value that corresponds to the radio button on the left.">
-          </button>
-          <br />
-          <div id="output-selection-wrapper">
-            <select id="output-selection-opt" name="output-selection-opt">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
+        <div class="row form-elm">
+          <div class="col-md-4">
+            <label>Select TFs by families:</label>
+
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="All TFs in the selected families will be selected. Modifications in this dropdown will be reflected in
+                          the transcription factors dropdown.">
+            </button>
+
+            <select id="familylist" name="family-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
+            <!--<button id="submit-fam" class="btn btn-secondary btn-sm" type="button" style="margin-top:10px;">Select by Families</button>-->
+          </div>
+
+          <div class="col-md-4">
+            <label>Select transcription factors:</label>
+
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="Select by TF names">
+            </button>
+
+            <select id="predlist" name="pred-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
+          </div>
+
+          <div class="col-md-4">
+            <label>Upload a file with TF names: </label>
+
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="Upload a file containing TF names separated by new lines. Please click the 'Select by TFs'
+                          button to apply the selections from your file.">
+            </button>
+
+            <input type=file name="tf-file" id="tf-file" />
+            <button id="submit-tf" class="btn btn-secondary btn-sm" type="button" style="margin-top:10px;">Select by TFs</button>
+          </div>
+        </div>
+
+        <hr class="divider-line" />
+
+        <div class="row form-elm">
+          <div class="col-md-4 form-group">
+            <label for="genomelist">Select a genome version:</label>
+
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="For input files containing genomic coordinates, this version of the human genome
+                          will be used.">
+            </button>
+
+            <select id="genomelist" name="genome-select" class="selectpicker">
+              <option selected>hg19</option>
+              <option>hg38</option>
             </select>
           </div>
-        </div>
-      </div> <!-- from row form-elm -->
 
-      <hr class="divider-line" />
+          <div class="col-md-4 form-group">
+            <label for="outputradio">Select the desired output:</label>
 
-      <div class="row form-elm">
-        <div class="col-md-4">
-          <label for="job-name">Job name (optional)</label>
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-              data-toggle="popover" data-placement="right" data-trigger="hover"
-              data-content="Job name for this prediction job.">
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="Output will include, for each variant, either all TFs with p-value below the cutoff or
+                          the top TF genes accroding to the largest absolute value of the normalized binding
+                          difference (i.e. z-score).">
             </button>
-          <br />
-          <input type="text" class="form-group" id="job-name" name="job-name" placeholder="Enter job name">
+
+            <div id="outputradio" name="output-select">
+              <div class="radio">
+                <input type="radio" name="optradio" value="1" checked="">&nbsp;largest absolute z-score </input>
+              </div>
+              <div class="radio">
+                <input type="radio" name="optradio" value="2">&nbsp;p-value threshold </input>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 output-col form-group">
+            <label for="output-option" id="output-option">#TFs to output:</label>
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="This represents the value that corresponds to the radio button on the left.">
+            </button>
+            <br />
+            <div id="output-selection-wrapper">
+              <select id="output-selection-opt" name="output-selection-opt">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+              </select>
+            </div>
+          </div>
+        </div> <!-- from row form-elm -->
+
+        <hr class="divider-line" />
+
+        <div class="row form-elm">
+          <div class="col-md-4">
+            <label for="job-name">Job name (optional)</label>
+              <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+                data-toggle="popover" data-placement="right" data-trigger="hover"
+                data-content="Job name for this prediction job.">
+              </button>
+            <br />
+            <input type="text" class="form-group" id="job-name" name="job-name" placeholder="Enter job name">
+          </div>
+
+          <div class="col-md-4">
+            <label for="email-name">Email address (optional)</label>
+              <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+                data-toggle="popover" data-placement="right" data-trigger="hover"
+                data-content="Will be used to give notification about the job status.">
+              </button>
+            <br />
+            <input type="text" class="form-group" id="email-name" placeholder="Enter your email (optional)">
+          </div>
         </div>
 
-        <div class="col-md-4">
-          <label for="email-name">Email address (optional)</label>
-            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-              data-toggle="popover" data-placement="right" data-trigger="hover"
-              data-content="Will be used to give notification about the job status.">
-            </button>
-          <br />
-          <input type="text" class="form-group" id="email-name" placeholder="Enter your email (optional)">
-        </div>
       </div>
 
-    </div>
-
-    <div id="upload-form">
-      <button id="submit-job" type="button" class="btn btn-primary">Submit</button>
-    </div>
-    <span class="text-danger" role="alert" id="upload-msg"></span>
-  </form>
+      <div id="upload-form">
+        <button id="submit-job" type="button" class="btn btn-primary">Submit</button>
+      </div>
+      <span class="text-danger" role="alert" id="upload-msg"></span>
+    </form>
+  </div>
 
   <div class="row example-input">
     <div class="col-md-2">Download input files:</div>

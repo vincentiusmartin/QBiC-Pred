@@ -4,12 +4,12 @@ body{
 }
 
 @font-face {
-  font-family: Raleway;
-  src: url('raleway-regular.ttf');
+  font-family: Luthier;
+  src: url('luthier-regular.ttf');
 }
 
 body *{
-    font-family: Raleway;
+    font-family: Luthier;
 }
 
 html,body {
@@ -36,7 +36,6 @@ html,body {
 
 .navbar-nav > li > a {
   color: black;
-
 }
 
 .qbic-nav{
