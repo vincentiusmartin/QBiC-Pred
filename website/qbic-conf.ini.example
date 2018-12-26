@@ -14,7 +14,7 @@ CELERY_RESULT_BACKEND = redis://localhost:6379/0
 # max upload size = 100 * 1024 * 1024
 MAX_FILE_LENGTH = 204857600
 #cpu.count
-PCOUNT = 4
+PCOUNT = 1
 
 [Directory Setting]
 PREDDIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/preddir/
@@ -23,8 +23,8 @@ CHRDIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/chromosome
 ESCORE_DIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/escore/escore/
 STATIC_EXAMPLE_DIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/QBiC-Pred/website/app/static/files/
 INPUT_EXAMPLE_LIST = resources/examplelist.py
-PBM_HUGO_MAPPING = resources/mappingdata/pbmtohugo.txt
-HUGO_PBM_MAPPING = resources/mappingdata/hugotopbm.txt
+PBM_HUGO_MAPPING = resource/test/pbmtohugo.txt
+HUGO_PBM_MAPPING = resource/test/hugotopbm.txt
 GAP_FILE = resource/test/gap-test.txt
 
 [User Session]
