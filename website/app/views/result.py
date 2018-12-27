@@ -51,7 +51,7 @@ def get_file(taskid):
         csv,
         mimetype="text/csv",
         headers={"Content-disposition":
-                 "attachment; filename=prediction_result.csv"})
+                 "attachment; filename=prediction_result-%s.csv"%taskid})
 
 @app.route('/getrescol/<task_id>',methods=['GET'])
 def get_res_col(task_id):
