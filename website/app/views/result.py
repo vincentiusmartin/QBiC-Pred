@@ -42,7 +42,7 @@ def get_file(taskid):
         listparam = []
         for col in cols:
             if col == "TF_gene":
-                listparam.append("\"%s\""eval("doc.%s"%col))
+                listparam.append("\"%s\""%eval("doc.%s"%col))
             else:
                 listparam.append(eval("doc.%s"%col))
         csv += ",".join(listparam)
