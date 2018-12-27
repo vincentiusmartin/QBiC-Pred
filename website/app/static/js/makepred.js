@@ -22,9 +22,9 @@ function changeInputOpt(opt){
     var content1 = "Upload a mutation dataset:";
     var content2 = "Select an input from examples:";
     if(opt == 2){
-        $("#input-mode").val("2");
-        $("#input-lbl-2").val("active").html(content2);
-        $("#input-lbl-1").html('<button class="btn disabled-btn" type="button">' +
+        $("#input-mode").val("2"); // needed to differentiate input type
+        $("#input-lbl-2").html(content2);
+        $("#input-lbl-1").html('<button class="btn disabled-btn" value="1" type="button">' +
               content1 +
             '</button>');
         $("#input-example-list").prop('disabled', false).selectpicker('refresh');
@@ -39,8 +39,8 @@ function changeInputOpt(opt){
         });
     }else{
         $("#input-mode").val("1");
-        $("#input-lbl-1").val("active").html(content1);
-        $("#input-lbl-2").html('<button class="btn disabled-btn" type="button">' +
+        $("#input-lbl-1").html(content1);
+        $("#input-lbl-2").html('<button class="btn disabled-btn" value="2" type="button">' +
               content2 +
             '</button>');
         $("#input-example-list").prop('disabled', true).selectpicker('refresh');;
