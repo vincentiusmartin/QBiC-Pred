@@ -41,7 +41,10 @@ def get_file(taskid):
         doc = client.load_document(i)
         listparam = []
         for col in cols:
-            listparam.append(eval("doc.%s"%col))
+            if col == "TF_gene":
+                listparam.append("\"%s\""eval("doc.%s"%col))
+            else:
+                listparam.append(eval("doc.%s"%col))
         csv += ",".join(listparam)
         if i != num_docs-1:
             csv += "\n"
