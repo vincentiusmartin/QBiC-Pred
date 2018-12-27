@@ -3,7 +3,7 @@ function displayOpt(searchOpt,searchKey){
         case 'exclude':
             return "~"+searchKey;
         case 'in sequence':
-            return '&#2738;'+searchKey+'&#2738;';
+            return '&#x2731;'+searchKey+'&#x2731;';
         case 'at least':
             return '&geq;'+searchKey;
         case 'at most':
@@ -92,8 +92,8 @@ function displayResult(status_url){
                 $(".cell-filter-item").click(function(){
                     searchOpt = $(this).data("filter");
                     searchKey = $(this).parent().siblings("button.cell-btn").text().trim();
-                    searchCol = $(this).data("colname")
-                    addFilterElm(searchOpt,searchKey,searchCol)
+                    searchCol = $(this).data("colname");
+                    addFilterElm(searchOpt,searchKey,searchCol);
                     restbl.ajax.reload();
                 });
             },
@@ -120,12 +120,13 @@ function displayResult(status_url){
               <option>at least</option>
             </select>
           </div>
-          <div class="form-group" style="margin-right:5px;">
-            <input id="ressearch-text" class="form-control" type="text" placeholder="Enter search keyword" aria-label="Search">
+          <div class="form-group" style="margin-right:5px;" id="ressearch-field">
+                <input id="ressearch-query" class="form-control" type="text" placeholder="Enter search keyword" aria-label="Search">
           </div>
           <div class="form-group" style="margin-right:5px;">
             <select id="ressearch-select" name="ressearch-select" class="selectpicker" data-width="fit">
               <option selected>in sequence</option>
+              <option>TF genes</option>
               <option>p-value</option>
               <option>z-score</option>
             </select>
@@ -141,8 +142,22 @@ function displayResult(status_url){
             }else{
                 $('#math-compare-form').css("display","none");
             }
+            if(searchOpt == 'TF genes'){
+                $("#ressearch-field").html(`
+                    <select id="ressearch-query" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
+                `);
+                var $rquery = $("#ressearch-query");
+                $("#genes-dropdown > a").each(function(){
+                    $rquery.append($('<option />').val($(this).text()).text($(this).text()));
+                });
+                $("#ressearch-query").selectpicker('refresh');
+            }else{
+                $("#ressearch-field").html(`
+                    <input id="ressearch-query" class="form-control" type="text" placeholder="Enter search keyword" aria-label="Search" />
+                `);
+            }
         });
-        $("#ressearch-text").keyup(function(event) {
+        $("#ressearch-query").keyup(function(event) {
             // Number 13 is the "Enter" key on the keyboard
             if (event.which === 13) {
                 event.preventDefault();  // Cancel the default action, if needed
@@ -152,19 +167,23 @@ function displayResult(status_url){
         });
         $("#ressearch-btn").click(function() {
              // set search field for getrestbl
-            var searchKey = $("#ressearch-text").val();
+            var searchKey = $("#ressearch-query").val();
             var selected = $("#ressearch-select option:selected").text();
             var check = true;
-            if(!searchKey){
+            if(!searchKey || (selected == "TF genes" && $("#ressearch-query > option:selected").length==0)){
                 check = false;
             }else if(isNaN(searchKey) && (selected == 'p-value' || selected == 'z-score')){
                 check = false;
                 alert("error: search value must be numeric"); // $('#search-error').html
             }
             if(check){
-                if(selected == 'p-value' || selected == 'z-score'){
+                if(selected == "p-value" || selected == "z-score"){
                     var compare = $("#math-compare-form option:selected").text();
                     addFilterElm(compare,searchKey,selected);
+                }else if(selected == "TF genes"){
+                    $("#ressearch-query > option:selected").each(function(){
+                        addFilterElm("exact",$(this).text(),"TF_gene");
+                    });
                 }else{
                     addFilterElm(selected,searchKey,"sequence");
                 }
