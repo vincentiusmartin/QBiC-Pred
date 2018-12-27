@@ -49,8 +49,11 @@ def submit_pred_upload():
     else:
         filteropt = 2
     filterval = "-"
-    genes_selected = df.TF_gene.unique()
+    genes_str = ",".join(list(df.TF_gene))
+    genes_selected = list(set(genes_str.split(",")))
     datavalues = df.to_dict('records')
+
+    print(genes_selected)
 
     celerytask.savetoredis(rand_id,cols,datavalues,app.config['UPLOAD_PRED_EXPIRY'])
 

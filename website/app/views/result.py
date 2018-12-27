@@ -82,9 +82,14 @@ def dofilter(search_filter,doc):
                 continue
         else:
             searchval = getattr(doc,filter["searchCol"])
-            if (filter["searchOpt"] == "exact" and filter["searchKey"] == searchval) or \
-               (filter["searchOpt"] == "exclude" and filter["searchKey"] != searchval):
-                continue
+            if filter["searchCol"] == "TF_gene": # easy fix for now, think about it later
+                if (filter["searchOpt"] == "exact" and filter["searchKey"] in searchval) or \
+                   (filter["searchOpt"] == "exclude" and filter["searchKey"] in searchval):
+                   continue
+            else:
+                if (filter["searchOpt"] == "exact" and filter["searchKey"] == searchval) or \
+                   (filter["searchOpt"] == "exclude" and filter["searchKey"] != searchval):
+                   continue
         flag = False
         break
     return flag
@@ -120,19 +125,41 @@ def customround(num):
     return "%.3e"%fl if abs(fl) < 10**(-4) or abs(fl) > 10**(4) else "%.4f"%fl
 
 def htmlformat(invar,type,colname):
+    '''
+    invar is the value of the cell
+    '''
     str_in = str(invar)
     if type == "filter":
-        return """\
-          <div class="dropdown cell-filter">
-            <button class="btn btn-link unstyled-button cell-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {content}
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <button class="dropdown-item cell-filter-item" data-colname={colname} data-filter="exact">Only include rows with this value</a>
-              <button class="dropdown-item cell-filter-item" data-colname={colname} data-filter="exclude">Exclude rows with this value</a>
-            </div>
-          </div>
-        """.format(content=str_in,colname=colname)
+        buttonhtml = """\
+            <span class="dropdown cell-filter">
+              <button class="btn btn-link unstyled-button cell-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {content}
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <button class="dropdown-item cell-filter-item" data-colname={colname} data-filter="exact">Only include rows with this value</a>
+                <button class="dropdown-item cell-filter-item" data-colname={colname} data-filter="exclude">Exclude rows with this value</a>
+              </div>
+            </span>
+        """
+
+        if colname == "TF_gene":
+            cellvals = str_in.split(",")
+            formatted = [buttonhtml.format(content=val,colname=colname) for val in cellvals]
+            content = ""
+            charinrow = 0
+            total = len(formatted)
+            for i in range(0,total): #super forced hacking for string wrap -_-
+                content += formatted[i]
+                if i < total-1:
+                    content += ", "
+                charinrow += len(cellvals[i]) + 2
+                if charinrow > 20 and i<total-1:
+                    content += "<br />"
+                    charinrow = 0
+        else:
+            content = buttonhtml.format(content=str_in,colname=colname)
+
+        return content
 
 @app.route('/getrestbl/<task_id>',methods=['GET'])
 def get_res_tbl(task_id):

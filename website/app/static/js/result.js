@@ -74,6 +74,7 @@ function displayResult(status_url){
             processing: true, // Enable the display of 'processing' when the table is being processed
             serverSide: true,
             orderMulti: false,
+            autoWidth: false,
             language: {
                 processing: "<i class=\"fas fa-circle-notch fa-spin fa-5x\" style=\"color: gray;\"></i>"
             }, // $("#tableid").addClass("disabled");
@@ -103,7 +104,7 @@ function displayResult(status_url){
                     d.searchFilter = JSON.stringify(searchFilter); // custom search
                 }
             },
-            columns: cols
+            columns: cols,
         });
         // this have to be outside due to the need of refering to the table
         $('#restbl').css({"width":"100%"}); // need to set this to align the header
