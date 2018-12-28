@@ -38,6 +38,9 @@ def is_valid_cols(filepath):
         with open(filepath) as f:
             if len(f.readline().strip().split("\t")) == 5:
                 return True
+            else:
+                os.remove(filepath)
+                return False
     return False
 
 
@@ -78,7 +81,6 @@ def prepare_request(request):
             return 'error','no input file part'
         returnstatus = "example"
         egkey = request.form.get('examplelist')
-        print("-asdadas-" + app.config['INPUT_EXAMPLE_DICT'][egkey]['inputfile'])
         filename = app.config['INPUT_EXAMPLE_DICT'][egkey]['inputfile']
     # No TFs selected
     if not request.form.getlist('pred-select'):
