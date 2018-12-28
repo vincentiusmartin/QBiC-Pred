@@ -1,0 +1,7 @@
+.example-file{
+  background-color:#f2f2f2;
+}
+
+.example-file > tbody > tr > th,td{
+  padding:0 15px 0 15px;
+}

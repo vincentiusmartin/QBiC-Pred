@@ -7,8 +7,163 @@
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/about.css') }}">
 <script src="{{ url_for('static', filename='js/about.js') }}"></script>
 
-<div class="jumbotron">
-  <h1>The About Page</h1>
-  <p class="lead">Explanation about the website here</p>
+<div class="modal-body">
+  <h2>Table of Contents:</h2>
+  <ol>
+    <li>QBiC-Pred input</li>
+    <li>TF binding models</li>
+    <li>QBiC-Pred output</li>
+  </ol>
+
+  <h3>1. QBiC-Pred input</h3>
+  <p>The main input file for QBiC-Pred must be a text file containing variants/
+    mutations in one of the following formats:</p>
+  <ul>
+    <li>
+      <p>
+        VCF format (<a href="/download/vcf-example.vcf">download sample file</a>) <br />
+        Each line has at least 5 tab-separated fields. <br />
+        Column 1: chromosome name (hg19 or hg38) <br />
+        Column 2: position (hg19 or hg38); must be a positive integer within chromosome length <br />
+        Column 3: variant name; this field can be left empty <br />
+        Column 4: reference allele; must be a single upper or lower case nucleotide letter <br />
+        Column 5: alternative allele; must be a single upper or lower case nucleotide letter <br />
+         (future QBiC releases will also allow short indels and multiple base substitutions) <br />
+      </p>
+      <table class="example-file">
+        <tr>
+          <td>chr1</td>
+          <td>48473010</td>
+          <td>.</td>
+          <td>A</td>
+          <td>G</td>
+        </tr>
+        <tr>
+          <td>chr2</td>
+          <td>97536853</td>
+          <td>.</td>
+          <td>C</td>
+          <td>T</td>
+        </tr>
+        <tr>
+          <td>chr3</td>
+          <td>181842690</td>
+          <td>.</td>
+          <td>G</td>
+          <td>A</td>
+        </tr>
+        <tr>
+          <td>chr5</td>
+          <td>54469459</td>
+          <td>.</td>
+          <td>C</td>
+          <td>G</td>
+        </tr>
+      </table>
+    </li><br />
+    <li><p align="justify">
+      ICGC simple somatic mutation file  (<a href="/download/icgc-example.tsv">download sample file</a>) <br />
+      Please see the ICGC guidelines  for details about this tab-separated file format. The columns used by QBiC-Pred are: chromosome, chromosome_start, chromosome_end (which must be the same as chromosome_start for single nucleotide variants), mutation_type (QBiC-Pred will only use variants with this field set to “single base substitution”), mutated_from_allele, and mutated_to_allele.
+    </p>
+    <table class="example-file" style="font-size:90%;">
+      <tr>
+        <th>...</th>
+        <th>chromosome</th>
+        <th>chromosome_start</th>
+        <th>chromosome_start</th>
+        <th>...</th>
+        <th>mutation_type</th>
+        <th>...</th>
+        <th>mutated_from_allele</th>
+        <th>mutated_to_allele</th>
+      </tr>
+      <tr>
+        <td>...</td>
+        <td>6</td>
+        <td>65152140</td>
+        <td>65152140</td>
+        <td>...</td>
+        <td>single base substitution</td>
+        <td>...</td>
+        <td>.T</td>
+        <td>C</td>
+      </tr>
+      <tr>
+        <td>...</td>
+        <td>8</td>
+        <td>108596584</td>
+        <td>108596584</td>
+        <td>...</td>
+        <td>single base substitution</td>
+        <td>...</td>
+        <td>.T</td>
+        <td>C</td>
+      </tr>
+      <tr>
+        <td>...</td>
+        <td>15</td>
+        <td>34737692</td>
+        <td>34737692</td>
+        <td>...</td>
+        <td>single base substitution</td>
+        <td>...</td>
+        <td>.A</td>
+        <td>C</td>
+      </tr>
+      <tr>
+        <td>...</td>
+        <td>9</td>
+        <td>84841627</td>
+        <td>84841627</td>
+        <td>...</td>
+        <td>single base substitution</td>
+        <td>...</td>
+        <td>.C</td>
+        <td>G</td>
+      </tr>
+    </table>
+    </li><br />
+    <li>
+      <p>
+      Any tsv (tab-separated values) or csv (comma-separated values) file with the following columns: chromosome, chromosome_pos, mutated_from, mutated_to (<a href="/download/example3.tsv">download sample file</a>) <br />
+      </p>
+      <table class="example-file">
+        <tr>
+          <th>chromosome</th>
+          <th>chromosome_pos</th>
+          <th>mutated_from</th>
+          <th>mutated_to</th>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>65152140</td>
+          <td>T</td>
+          <td>C</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>108596584</td>
+          <td>T</td>
+          <td>C</td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td>34737692</td>
+          <td>A</td>
+          <td>C</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>84841627</td>
+          <td>C</td>
+          <td>G</td>
+        </tr>
+      </table>
+    </li>
+  </ul>
+
+  <p>
+    QBiC-Pred will process each input file to extract the genomic sequence contexts for all variants (please ensure that the correct version of the genome is selected on the “Make Predictions” page). The extracted sequence context will be visible to the user when the output results are displayed.
+  </p>
 </div>
 {% endblock %}
