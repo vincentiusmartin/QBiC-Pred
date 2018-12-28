@@ -116,7 +116,7 @@ def dofilter(infilter,doc):
             searchval = getattr(doc,filter["searchCol"])
             if filter["searchCol"] == "TF_gene": # easy fix for now, think about it later
                 if (filter["searchOpt"] == "exact" and filter["searchKey"] in searchval) or \
-                   (filter["searchOpt"] == "exclude" and filter["searchKey"] in searchval):
+                   (filter["searchOpt"] == "exclude" and filter["searchKey"] not in searchval):
                    continue
             else:
                 if (filter["searchOpt"] == "exact" and filter["searchKey"] == searchval) or \
