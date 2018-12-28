@@ -233,6 +233,7 @@ function uploadTFFomFile(){
         if (file) {
             var reader = new FileReader();
             reader.readAsText(file, "UTF-8");
+            var undefinedTFs = new Array();
             reader.onload = function (evt) {
                 var lines = evt.target.result.trim().split('\n');
                 var selected = [];
@@ -240,9 +241,17 @@ function uploadTFFomFile(){
                     var tfval = $('#predlist option').filter(function() {
                         return (this.text.localeCompare(lines[i]) == 0);
                     }).val(); // ugly jquery syntax...
+                    if (typeof tfval === "undefined") {
+                        undefinedTFs.push(lines[i]);
+                    }
                     selected.push(tfval);
                 }
+                if(undefinedTFs.length > 0){
+                    alert("The following TFs do not have PBM data:\n  " + undefinedTFs +
+                    "\n(TF gene names must use HGNC nomenclature)");
+                }
                 $('#predlist').selectpicker('val',selected);
+                updateToFamilies();
             }
             reader.onerror = function (evt) {
                 alert("error");

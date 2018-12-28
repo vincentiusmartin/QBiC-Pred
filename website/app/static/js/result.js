@@ -268,7 +268,7 @@ function getInputParam(status_url){
 
         $('#inputpanel').prepend(
             '<p><b> File input:</b><br />' + data['filename'] + '</p>' +
-            '<p><b> Desired output:</b><br />' + filterstr + '</p>' +
+            '<p><b> Running mode:</b><br />' + filterstr + '</p>' +
             '<p><b> Genome version:</b><br />' + data['chrver'] + '</p>'
         )
     });
