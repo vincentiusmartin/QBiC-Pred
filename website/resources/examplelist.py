@@ -6,7 +6,7 @@ examples = \
 {
     'icgc-breast-cancer-mutations':{
         'inputfile':'icgc-example.tsv',
-        'tfs':['MYC','E2F','FOXA1'],
+        'tfs':['E2F1','FOXA1','MYC'],
         'genomever':"hg19",
         'outputtype':1
     },
