@@ -129,6 +129,7 @@ function displayResult(status_url){
             <select id="ressearch-select" name="ressearch-select" class="selectpicker" data-width="fit">
               <option selected>in sequence</option>
               <option>TF genes</option>
+              <option>Binding status</option>
               <option>p-value</option>
               <option>z-score</option>
             </select>
@@ -144,14 +145,26 @@ function displayResult(status_url){
             }else{
                 $('#math-compare-form').css("display","none");
             }
-            if(searchOpt == 'TF genes'){
+            if(searchOpt == 'TF genes' || searchOpt == 'Binding status'){
                 $("#ressearch-field").html(`
                     <select id="ressearch-query" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
                 `);
                 var $rquery = $("#ressearch-query");
-                $("#genes-dropdown > a").each(function(){
-                    $rquery.append($('<option />').val($(this).text()).text($(this).text()));
-                });
+                if(searchOpt == 'TF genes'){
+                  $("#genes-dropdown > a").each(function(){
+                      $rquery.append($('<option />').val($(this).text()).text($(this).text()));
+                  });
+                }else if(searchOpt == 'Binding status'){
+                  $rquery.append($('<option />').val("ambiguous&gt;ambiguous").text("unbound>unbound"));
+                  $rquery.append($('<option />').val("ambiguous&gt;ambiguous").text("unbound>bound"));
+                  $rquery.append($('<option />').val("ambiguous&gt;ambiguous").text("unbound>ambiguous"));
+                  $rquery.append($('<option />').val("ambiguous&gt;ambiguous").text("ambiguous>unbound"));
+                  $rquery.append($('<option />').val("ambiguous&gt;ambiguous").text("ambiguous>bound"));
+                  $rquery.append($('<option />').val("ambiguous&gt;ambiguous").text("ambiguous>ambiguous"));
+                  $rquery.append($('<option />').val("ambiguous&gt;ambiguous").text("bound>unbound"));
+                  $rquery.append($('<option />').val("ambiguous&gt;ambiguous").text("bound>bound"));
+                  $rquery.append($('<option />').val("ambiguous&gt;ambiguous").text("bound>ambiguous"));
+                }
                 $("#ressearch-query").selectpicker('refresh');
             }else{
                 $("#ressearch-field").html(`
@@ -172,7 +185,11 @@ function displayResult(status_url){
             var searchKey = $("#ressearch-query").val();
             var selected = $("#ressearch-select option:selected").text();
             var check = true;
-            if(!searchKey || (selected == "TF genes" && $("#ressearch-query > option:selected").length==0)){
+            if(!searchKey ||
+               (
+               (selected == "TF genes" || selected == "Binding status")
+               && $("#ressearch-query > option:selected").length==0)
+               ){
                 check = false;
             }else if(isNaN(searchKey) && (selected == 'p-value' || selected == 'z-score')){
                 check = false;
@@ -182,9 +199,13 @@ function displayResult(status_url){
                 if(selected == "p-value" || selected == "z-score"){
                     var compare = $("#math-compare-form option:selected").text();
                     addFilterElm(compare,searchKey,selected);
-                }else if(selected == "TF genes"){
+                }else if(selected == "TF genes" || selected == "Binding status"){
+                    var col = "TF_gene"
+                    if(selected == "Binding status"){
+                      col = "binding_status";
+                    }
                     $("#ressearch-query > option:selected").each(function(){
-                        addFilterElm("or",$(this).text(),"TF_gene");
+                        addFilterElm("or",$(this).text(),col);
                     });
                 }else{
                     addFilterElm(selected,searchKey,"sequence");
