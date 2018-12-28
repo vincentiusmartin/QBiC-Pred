@@ -215,7 +215,7 @@
 
   <a name="section3"><h3>3. QBiC-Pred output</h3></a>
   <p>QBiC-Pred reports results in the form of a table that the user can explore and interact with:</p>
-  <span class="example-select"><img src="/static/images/about_page/output1.png" /></span>
+  <span class="screenshoot-img"><img src="/static/images/about_page/output1.png" /></span>
 
   <p>
     In addition to reporting the TF(s) affected by each variant, QBiC provides information about the status of each allele, which can be “bound”, “unbound”, or “ambiguous”. This status is derived from the same PBM data sets used to train the OLS binding models. But, unlike the OLS model, defining the status of an allele is based on 8-mer enrichment scores (E-scores) commonly derived from PBM data (see, <a href="https://www.ncbi.nlm.nih.gov/pubmed/16998473">Berger et al. Nature Biotech, 2006</a>; <a href="https://www.cell.com/cell-systems/fulltext/S2405-4712(18)30062-0">Shen et al. Cell Systems 2018</a>). As in our previous work, we define an allele as specifically “bound” if it is contained in two overlapping 8-mers with E-score &gt; 0.4. Conversely, we define an allele as “unbound” if all 8-mers overlapping the allele have E-score &lt; 0.35. All other cases are considered “ambiguous”.
