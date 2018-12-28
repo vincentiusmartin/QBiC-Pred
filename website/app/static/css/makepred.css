@@ -24,6 +24,7 @@
 }
 
 .disabled-btn{
+  text-align: justify;
   padding-left:0px;
   color:gray;
   text-decoration: underline;

@@ -1,15 +1,17 @@
 function displayOpt(searchOpt,searchKey){
     switch(searchOpt) {
         case 'exclude':
-            return "~"+searchKey;
+            return '<span style="color:red;">~</span>'+searchKey;
         case 'in sequence':
-            return '&#x2731;'+searchKey+'&#x2731;';
+            return '<span style="color:#42a7f4;">&#x2731;</span>'+searchKey+'<span style="color:#42a7f4;">&#x2731;</span>'
         case 'at least':
             return '&geq;'+searchKey;
         case 'at most':
             return '&leq;'+searchKey;
-        default:
+        case 'or':
             return searchKey;
+        default:
+            return ' <span style="color:#2b50f2;">has</span> '+searchKey;
     }
 }
 
@@ -182,7 +184,7 @@ function displayResult(status_url){
                     addFilterElm(compare,searchKey,selected);
                 }else if(selected == "TF genes"){
                     $("#ressearch-query > option:selected").each(function(){
-                        addFilterElm("exact",$(this).text(),"TF_gene");
+                        addFilterElm("or",$(this).text(),"TF_gene");
                     });
                 }else{
                     addFilterElm(selected,searchKey,"sequence");

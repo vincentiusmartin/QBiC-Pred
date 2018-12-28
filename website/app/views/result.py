@@ -60,15 +60,47 @@ def get_file(taskid):
 def get_res_col(task_id):
     cols = []
     col_id = "%s:cols"%task_id
+    colmap = { # hardcoded, need to fix this
+    "row":"Index",
+    "wild":"Ref",
+    "mutant":"Alt",
+    "diff":"Difference",
+    "p_value":"p value",
+    "z_score":"z score",
+    "TF_gene":"TF gene",
+    "binding_status":"Binding status",
+    "gapmodel":"Gap model",
+    "pbmname":"PBM filename"
+    }
     if db.exists(col_id):
         cols_fromdb = ast.literal_eval(db.hgetall(col_id)['cols'])
         #with open("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)) as f:
-        cols = [{"title":title} for title in cols_fromdb]
+        cols = [{"title":colmap[title]} for title in cols_fromdb]
     # else just return an empty list
     return jsonify(cols)
 
-def dofilter(search_filter,doc):
+def dofilter(infilter,doc):
+    search_filter = list(infilter)
+    # first get all the OR filter
+    or_filter = {}
+    newlist = []
+    for filter in search_filter:
+        if filter["searchOpt"] == "or":
+            if filter["searchCol"] in or_filter:
+                or_filter[filter["searchCol"]].append(filter["searchKey"])
+            else:
+                or_filter[filter["searchCol"]] = [filter["searchKey"]]
+        else:
+            newlist.append(filter)
+    for col in or_filter:
+        searchval = getattr(doc,col).split(",")
+        found = any(x in or_filter[col] for x in searchval)
+        if not found:
+            return False
+
+    # checking other filters
     flag = True
+    search_filter = list(newlist)
     for filter in search_filter:
         if filter["searchOpt"] == "in sequence":
             if filter["searchKey"] in doc.wild or filter["searchKey"] in doc.mutant:
@@ -188,7 +220,10 @@ def get_res_tbl(task_id):
     for doc in filtered_db['data']:
         #if not filter_search(row,csKey,csField):
         #    continue
-        rowdict = {col:getattr(doc,col) for col in cols}
+        try: # TODO: handle this
+            rowdict = {col:getattr(doc,col) for col in cols}
+        except: #now: if not found, just return 404
+            abort(404)
         rowdict['wild'] = doc.wild[:5] + '<span class="bolded-red">' + doc.wild[5] + '</span>' + doc.wild[6:]
         rowdict['mutant'] = doc.mutant[:5] + '<span class="bolded-red">' + doc.mutant[5] + '</span>' + doc.mutant[6:]
         rowdict['z_score'] = customround(doc.z_score)

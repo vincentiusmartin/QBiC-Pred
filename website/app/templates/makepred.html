@@ -15,7 +15,9 @@
       <div id="form-input">
         <div class="row form-elm">
           <div class="col-md-3">
-            <label id="input-lbl-1" value="active">Upload a mutation dataset:</label>
+            <label id="input-lbl-1" value="active">
+                Upload mutation dataset:
+            </label>
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
               data-toggle="popover" data-placement="right" data-trigger="hover"
               data-content="Input a variant/mutation dataset (VCF format, icgc simple somatic mutation file, or any tsv/csv
@@ -28,26 +30,18 @@
             <h3>OR</h3>
           </div>
           <div class="col-md-4">
-            <label id="input-lbl-2" value="disabled">
-                <button class="btn disabled-btn" value="2" type="button">Select an input from examples:</button>
-            </label>
-            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
-              data-toggle="popover" data-placement="right" data-trigger="hover"
-              data-content="Use input from examples.">
-            </button>
-            <select id="input-example-list" name="input-example-list" class="selectpicker"  title="Select an example" disabled></select>
-            <br />
-            <a id="download-input-select"></a>
-          </div>
-          <div class="col-md-4">
-            <label>
-                Or select an example use case <br /> (this will fill all necessary fields):
+            <label id="input-lbl-2" value="active">
+                <button class="btn disabled-btn" value="2" type="button">
+                    Select an example use case <br /> (this will fill all necessary fields):
+                </button>
             </label>
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
               data-toggle="popover" data-placement="right" data-trigger="hover"
               data-content="Select an example use case.">
             </button>
-            <select id="examplelist" name="example-select" class="selectpicker"></select>
+            <select id="examplelist" name="examplelist" class="selectpicker"></select>
+            <br />
+            <a id="download-input-select"></a>
           </div>
         </div>
 

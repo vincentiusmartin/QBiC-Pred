@@ -48,7 +48,6 @@ msg = filename if success
 '''
 def prepare_request(request):
     # First, check if the input file is valid, this depends on the input-mode
-    print("asdasdasd " + request.form.get('input-mode'))
     if request.form.get('input-mode') == "1": # not example
         if 'input-file' not in request.files:
             return 'error','no input file part'
@@ -74,10 +73,12 @@ def prepare_request(request):
             return 'error','some required fields are missing from the input file'
         returnstatus = "success"
     else: #input-mode==2
-        if request.form.get('input-example-list') == "None":
+        if not request.form.get('examplelist'):
             return 'error','no input file part'
         returnstatus = "example"
-        filename = request.form.get('input-example-list')
+        egkey = request.form.get('examplelist')
+        print("-asdadas-" + app.config['INPUT_EXAMPLE_DICT'][egkey]['inputfile'])
+        filename = app.config['INPUT_EXAMPLE_DICT'][egkey]['inputfile']
     # No TFs selected
     if not request.form.getlist('pred-select'):
         return 'error','please select transcription factors'

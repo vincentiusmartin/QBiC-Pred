@@ -9,33 +9,37 @@ function changeInputOptOnClick(){
 }
 
 function changeInputDownloadLink(){
-    var filename = $("#input-example-list option:selected").text();
+    var filename = $("#examplelist option:selected").attr("inputfile");
     if(filename){
-        $("#download-input-select").attr("href","/download/"+filename).html("download file");
+        $("#download-input-select").attr("href","/download/"+filename).html("download input file");
     }else{
         $("#download-input-select").attr("href","").html("");
     }
 }
 
+function changeOptOnFileSelected(){
+    /* Also handle for file selection here */
+    $("#input-file").on('change', function(){
+        if($("#input-mode").val() == "2"){
+            changeInputOpt(1);
+        }
+    });
+}
+
 /* Make separate function with on click so we can independently call it */
 function changeInputOpt(opt){
     var content1 = "Upload a mutation dataset:";
-    var content2 = "Select an input from examples:";
-    if(opt == 2){
+    var content2 = "Select an example use case <br /> (this will fill all necessary fields): ";
+    if(opt == 2){ // 2 is active and 1 is inactive
         $("#input-mode").val("2"); // needed to differentiate input type
         $("#input-lbl-2").html(content2);
         $("#input-lbl-1").html('<button class="btn disabled-btn" value="1" type="button">' +
               content1 +
             '</button>');
-        $("#input-example-list").prop('disabled', false).selectpicker('refresh');
-        $("#input-file").filestyle('disabled',true);
-
-        var optSelected = $("#input-example-list option:selected");
-
-        changeInputDownloadLink(optSelected.attr("inputfile"));
-        $("#input-example-list").change(function(){
-            var selected = $("#input-example-list option:selected").text();
-            changeInputDownloadLink(selected);
+        var optSelected = $("#examplelist option:selected");
+        changeInputDownloadLink();
+        $("#examplelist").change(function(){
+            changeInputDownloadLink();
         });
     }else{
         $("#input-mode").val("1");
@@ -43,8 +47,6 @@ function changeInputOpt(opt){
         $("#input-lbl-2").html('<button class="btn disabled-btn" value="2" type="button">' +
               content2 +
             '</button>');
-        $("#input-example-list").prop('disabled', true).selectpicker('refresh');;
-        $("#input-file").filestyle('disabled',false);
         $("#download-input-select").attr("href","").html("");
     }
     changeInputOptOnClick(); // reload java script
@@ -105,26 +107,11 @@ function listExampleInput(){
         /* Update input */
         if(optSelected.val().length > 0){
             changeInputOpt(2);
-            $('#input-example-list').selectpicker('val',optSelected.attr("inputfile"));
         }else {
             changeInputOpt(1);
         }
     });
     return dfd.promise();
-}
-
-function updateInputExamples(){
-    var $inputDropdown = $("#input-example-list");
-    var filelist = [];
-    $("#examplelist > option").each(function(){
-        var cur = $(this).attr("inputfile");
-        if(cur.length > 0 && !filelist.includes(cur)){
-            filelist.push(cur);
-            var $opt = $('<option />').val(cur).text(cur);
-            $inputDropdown.append($opt);
-        }
-    });
-    $inputDropdown.selectpicker('refresh');
 }
 
 function listPreddir(){
@@ -290,9 +277,8 @@ $(function() {
     });
 
     listPreddir(); // list all TFs from our list in the dropdowns
-    $.when(listExampleInput()).done(function(){
-        updateInputExamples(); // need to run after example dropdown is filled
-    });
+    changeOptOnFileSelected();
+    listExampleInput();
     changeInputOptOnClick();
 
     updateOutputLabelWrapper(); // check change on output options
