@@ -236,7 +236,7 @@ function updateProgress(status_url,parents){
                $('#status').hide();
                $(".progress").hide();
                displayResult(status_url);
-               $('#csv-download').css('display','block').html("<a href=\"/files/" + data['taskid'] + "\" download=\"result.csv\">Download CSV</a>");
+               $('#csv-download').css('display','block').html("Download <a href=\"/files/csv/" + data['taskid'] + "\" >CSV</a>/<a href=\"/files/tsv/" + data['taskid'] + "\">TSV</a>");
            }
            else if ('error' in data) {
                // found an error

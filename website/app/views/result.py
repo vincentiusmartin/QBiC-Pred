@@ -27,12 +27,13 @@ def process_request(job_id):
     #session.clear() # clear the session given from index
     return render_template("result.html",stats_url=url_for('task_status',task_id=job_id),parents=parents)
 
-@app.route('/files/<taskid>')
-def get_file(taskid):
+@app.route('/files/<filetype>/<taskid>')
+def get_file(filetype,taskid):
     """Download a file."""
     task = db.hgetall("%s:cols"%taskid)
     cols = ast.literal_eval(task['cols'])
-    csv = "%s\n" % ",".join(cols)
+    sep = "\t" if filetype=="tsv" else ","
+    csv = "%s\n" % sep.join(cols)
 
     client = redisearch.Client(taskid)
     num_docs = int(client.info()['num_docs'])
@@ -45,16 +46,16 @@ def get_file(taskid):
                 listparam.append("\"%s\""%eval("doc.%s"%col))
             else:
                 listparam.append(eval("doc.%s"%col))
-        csv += ",".join(listparam)
+        csv += sep.join(listparam)
         if i != num_docs-1:
             csv += "\n"
 
-    ''' return the csv file without having to save it '''
+    ''' return the csv/tsv file without having to save it '''
     return Response(
         csv,
         mimetype="text/csv",
         headers={"Content-disposition":
-                 "attachment; filename=prediction_result-%s.csv"%taskid})
+                 "attachment; filename=prediction_result-%s.%s"%(taskid,filetype)})
 
 @app.route('/getrescol/<task_id>',methods=['GET'])
 def get_res_col(task_id):
