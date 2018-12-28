@@ -10,12 +10,12 @@
 <div class="modal-body">
   <h2>Table of Contents:</h2>
   <ol>
-    <li>QBiC-Pred input</li>
-    <li>TF binding models</li>
-    <li>QBiC-Pred output</li>
+    <li><a href="#section1">QBiC-Pred input</a></li>
+    <li><a href="#section2">TF binding models</a></li>
+    <li><a href="#section3">QBiC-Pred output</a></li>
   </ol>
 
-  <h3>1. QBiC-Pred input</h3>
+  <a name="section1"><h3>1. QBiC-Pred input</h3></a>
   <p>The main input file for QBiC-Pred must be a text file containing variants/
     mutations in one of the following formats:</p>
   <ul>
@@ -30,7 +30,7 @@
         Column 5: alternative allele; must be a single upper or lower case nucleotide letter <br />
          (future QBiC releases will also allow short indels and multiple base substitutions) <br />
       </p>
-      <table class="example-file">
+      <table class="graybg">
         <tr>
           <td>chr1</td>
           <td>48473010</td>
@@ -61,11 +61,11 @@
         </tr>
       </table>
     </li><br />
-    <li><p align="justify">
+    <li><p>
       ICGC simple somatic mutation file  (<a href="/download/icgc-example.tsv">download sample file</a>) <br />
       Please see the ICGC guidelines  for details about this tab-separated file format. The columns used by QBiC-Pred are: chromosome, chromosome_start, chromosome_end (which must be the same as chromosome_start for single nucleotide variants), mutation_type (QBiC-Pred will only use variants with this field set to “single base substitution”), mutated_from_allele, and mutated_to_allele.
     </p>
-    <table class="example-file" style="font-size:90%;">
+    <table class="graybg" style="font-size:90%;">
       <tr>
         <th>...</th>
         <th>chromosome</th>
@@ -127,7 +127,7 @@
       <p>
       Any tsv (tab-separated values) or csv (comma-separated values) file with the following columns: chromosome, chromosome_pos, mutated_from, mutated_to (<a href="/download/example3.tsv">download sample file</a>) <br />
       </p>
-      <table class="example-file">
+      <table class="graybg">
         <tr>
           <th>chromosome</th>
           <th>chromosome_pos</th>
@@ -165,5 +165,112 @@
   <p>
     QBiC-Pred will process each input file to extract the genomic sequence contexts for all variants (please ensure that the correct version of the genome is selected on the “Make Predictions” page). The extracted sequence context will be visible to the user when the output results are displayed.
   </p>
+
+  <p>
+    The input file size is currently limited to 100MB since each file is processed in our server. Since QBiC makes prediction based on base substitution mutation, if the user has rows contain other type of mutations, they can be filtered out first to enable more rows with base substitution to be processed.  Also, for large jobs containing a large number of variants, the user can check on the status of the job by using the <span class="inline-img"><img src="/static/images/about_page/recent_btn.png" /></span> button on the upper right corner of any QBiC page. The jobs have unique identifies and they are stored on the QBiC-Pred server for 24 hours. This page can be bookmarked for later visit.
+  </p>
+
+  <p>
+    Other required input fields:
+  </p>
+  <ul>
+    <li>
+      <p>
+        <b>TF proteins to be tested.</b>	TF proteins to be tested. The user can select either entire families of TFs (see   <span class="gray-inline-text">Select TFs by families</span>), or individual TFs by using <span class="gray-inline-text">Select transcription factors:</span>  or by providing an input file with TF gene names (see  <span class="gray-inline-text">upload a TF file</span>). <br />
+        Individual TFs, as well as TF families, are searchable by the user: <br />
+      </p>
+      <span class="example-select"><img src="/static/images/about_page/searchbytf.png" /></span>
+      <span class="example-select"><img src="/static/images/about_page/searchbyfam.png" /></span>
+      <p>
+        QBiC-Pred uses the HGNC nomenclature for gene names. A full list of TF gene names for which QBiC-Pred contains predictive models is available here. In case the user provides a file containing gene names not recognized by QBiC-Pred, or for which we do not current have predictive models, an error message will alert the user:
+      <p>
+      <span class="example-select"><img src="/static/images/about_page/tfsnotfound.png" /></span>
+    </li>
+    <li>
+      <p>
+        <b>Human genome version</b> to be used (default: hg19).
+      </p>
+    </li>
+    <li>
+      <b>Desired output</b> for the QBiC-Pred results, which can be either:
+      <ul>
+        <li>
+          <b>p-value threshold</b> (default option). In this case QBiC-Pred will return, for each input variant, all input TFs predicted to be affected by that variant at a significance (p-value) of less than the value set of the user (default 0.0001). Predictions of both increased and decreased TF binding will be returned.
+        </li>
+        <li>
+          <b>largest absolute z-score</b>. In this case QBiC-Pred will return, for each input variant, the input TF (or the top 2 or 3 input TFs) for which the variant has the largest effect (i.e. largest z-score in absolute value). Z-scores represent normalized binding changes, and thus they are comparable among TFs. Positive z-scores reflect increased TF binding due to the variant. Negative z-scores reflect decreased binding.
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <a name="section2"><h3>2. TF Binding Models</h3></a>
+  <p>QBiC predictions are based on quantitative TF binding models trained on universal protein binding microarray (PBM) data from the following databases:</p>
+  <ul>
+    <li>UniPROBE: <a href="http://thebrain.bwh.harvard.edu/uniprobe/">http://thebrain.bwh.harvard.edu/uniprobe/</a></li>
+    <li>CisBP: <a href="http://cisbp.ccbr.utoronto.ca/">http://cisbp.ccbr.utoronto.ca/</a></li>
+    <li>PBM data generated in the Gordan laboratory (reported in <a href="https://www.cell.com/cell-systems/fulltext/S2405-4712(18)30062-0">Shen et al. Cell Systems 2018</a>, or included with the release of QBiC)</li>
+  </ul>
+  <br />
+
+  <a name="section3"><h3>3. QBiC-Pred output</h3></a>
+  <p>QBiC-Pred reports results in the form of a table that the user can explore and interact with:</p>
+  <span class="example-select"><img src="/static/images/about_page/output1.png" /></span>
+
+  <p>
+    In addition to reporting the TF(s) affected by each variant, QBiC provides information about the status of each allele, which can be “bound”, “unbound”, or “ambiguous”. This status is derived from the same PBM data sets used to train the OLS binding models. But, unlike the OLS model, defining the status of an allele is based on 8-mer enrichment scores (E-scores) commonly derived from PBM data (see, <a href="https://www.ncbi.nlm.nih.gov/pubmed/16998473">Berger et al. Nature Biotech, 2006</a>; <a href="https://www.cell.com/cell-systems/fulltext/S2405-4712(18)30062-0">Shen et al. Cell Systems 2018</a>). As in our previous work, we define an allele as specifically “bound” if it is contained in two overlapping 8-mers with E-score &gt; 0.4. Conversely, we define an allele as “unbound” if all 8-mers overlapping the allele have E-score &lt; 0.35. All other cases are considered “ambiguous”.
+  </p>
+
+  <p>
+    QBiC provides this information to allow users to focus only on prediction that are of most interest to them, e.g. from “unbound” for the reference allele to “bound” for the alternative allele (“unbound&gt;bound” in the “Binding status” column). The users can easily filter the results by clicking on values in the “Binding status” column:
+  </p>
+
+  <div class="row">
+    <div class="col-5">
+      <span class="screenshoot-img"><img src="/static/images/about_page/output2a.png" /></span>
+    </div>
+    <div class="col-1">
+      <span class="arrowto">&gt;</span>
+    </div>
+    <div class="col-5">
+      <span class="screenshoot-img"><img src="/static/images/about_page/output2b.png" /></span>
+    </div>
+  </div>
+
+  <p>
+    Filters can be set in a similar manner for TF names, models, and PBM data sets. For example:
+  </p>
+
+  <div class="row">
+    <div class="col-5">
+      <span class="screenshoot-img"><img src="/static/images/about_page/output3a.png" /></span>
+    </div>
+    <div class="col-1">
+      <span class="arrowto">&gt;</span>
+    </div>
+    <div class="col-5">
+      <span class="screenshoot-img"><img src="/static/images/about_page/output3b.png" /></span>
+    </div>
+  </div>
+
+  <p>
+    For PBM data sets (column  <span class="gray-inline-text">pbmname</span>), the QBiC output table also provides an option to directly download the data and the model used to make the predictions. The output table also specifies which type of model, i.e. using gapped or ungapped k-mers is used (column  <span class="gray-inline-text">gapmodel</span>).
+  </p>
+
+  <p>
+    Additional output processing options include filtering by p-value, z-score, sequence, or TF name using the “Search” functionality:
+  </p>
+
+  <div class="screenshoot-img"><img src="/static/images/about_page/output4a.png" /></div>
+  <p>
+    For example, if the user is interested in visualizing only predictions with large increased in TF binding, he/she can set minimum z-score value such as depicted below:
+  </p>
+  <div class="screenshoot-img"><img src="/static/images/about_page/output4b.png" /></div>
+
+  <p>
+  At any point during the visualization and processing of the QBiC-Pred results, users can download the current results in comma delimited format using <span class="gray-inline-text">download csv</span> link below the table. The downloaded results can be uploaded back into QBiC-Pred at any time for further processing and filtering, using the “Upload Result” page:
+  </p>
+  <div class="screenshoot-img"><img src="/static/images/about_page/uploadpage.png" /></div>
+  <br />
 </div>
 {% endblock %}

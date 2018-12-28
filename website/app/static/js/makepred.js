@@ -153,7 +153,7 @@ function makeTFDownloadLink(){
             tfSelectedArr.push($(this).text());
         });
         if(tfSelectedArr.length>0){
-            $("#download-tfs-select").attr("href","/tfsdownload/"+JSON.stringify(tfSelectedArr)).html("download tfs file");
+            $("#download-tfs-select").attr("href","/tfsdownload/"+JSON.stringify(tfSelectedArr)).html("download selected TFs");
         }else{
             $("#download-tfs-select").attr("href","").html("");
         }

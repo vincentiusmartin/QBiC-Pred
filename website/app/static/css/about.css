@@ -1,7 +1,37 @@
-.example-file{
+p{
+ text-align:justify;
+}
+
+.graybg{
   background-color:#f2f2f2;
 }
 
 .example-file > tbody > tr > th,td{
   padding:0 15px 0 15px;
+}
+
+.inline-img > img {
+  width:100px;
+}
+
+.example-select > img{
+  width:250px;
+  padding:0 2% 1% 0;
+  vertical-align: text-top;
+}
+
+.gray-inline-text{
+  background-color:#d9d9d9;
+}
+
+.screenshoot-img > img{
+  width:500px;
+  vertical-align: text-top;
+  align:left;
+}
+
+.arrowto{
+  padding:300px 0 0 30px;
+  font-size:80px;
+  color:red;
 }
