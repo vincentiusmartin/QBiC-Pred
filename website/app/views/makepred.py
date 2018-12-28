@@ -181,10 +181,6 @@ def get_examplelist():
 def makepred():
     return render_template("makepred.html")
 
-@app.route('/download/<path:filename>')
-def download_example(filename):
-    return send_from_directory(app.config['STATIC_EXAMPLE_DIR'], filename, as_attachment=True)
-
 @app.route('/about')
 def about():
     return render_template("about.html")

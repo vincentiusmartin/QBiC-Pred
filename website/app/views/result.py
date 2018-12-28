@@ -174,8 +174,8 @@ def htmlformat(invar,type,colname):
               </div>
             </span>
         """
-
         buttonhgnc = """<a href="https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/{hgnc}" target="_blank"  class="btn btn-link dropdown-item" role="button">Look in HGNC website</a>"""
+        buttonpbm =  """<a href="/download/pbmdata/{pbmname}"  class="btn btn-link dropdown-item" role="button">Download pbm data</a>"""
 
         if colname == "TF_gene":
             cellvals = str_in.split(",")
@@ -195,6 +195,9 @@ def htmlformat(invar,type,colname):
                 if charinrow > 20 and i<total-1:
                     content += "<br />"
                     charinrow = 0
+        elif colname == "pbmname":
+            pbmstrbutton = buttonpbm.format(pbmname="%s.txt"%str_in)
+            content = buttonhtml.format(content=str_in,colname=colname,additional=pbmstrbutton)
         else:
             content = buttonhtml.format(content=str_in,colname=colname,additional="")
 
