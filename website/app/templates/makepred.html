@@ -115,27 +115,25 @@
 
             <div id="outputradio" name="output-select">
               <div class="radio">
-                <input type="radio" name="optradio" value="1" checked="">&nbsp;largest absolute z-score </input>
+                <input type="radio" name="optradio" value="2" checked="">&nbsp;p-value threshold </input>
               </div>
               <div class="radio">
-                <input type="radio" name="optradio" value="2">&nbsp;p-value threshold </input>
+                <input type="radio" name="optradio" value="1">&nbsp;largest absolute z-score </input>
               </div>
             </div>
           </div>
 
           <div class="col-md-4 output-col form-group">
-            <label for="output-option" id="output-option">#TFs to output:</label>
+            <label for="output-option" id="output-option">p-value cutoff:</label>
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
             data-toggle="popover" data-placement="right" data-trigger="hover"
             data-content="This represents the value that corresponds to the radio button on the left.">
             </button>
             <br />
-            <div id="output-selection-wrapper">
-              <select id="output-selection-opt" name="output-selection-opt">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-              </select>
+            <div id="output-selection-wrapper" class="col-lg-6">
+                <input class="form-control" type="text"
+                 id="output-selection-opt" name="output-selection-opt"
+                 value="0.0001" placeholder="input p-value cutoff" />
             </div>
           </div>
         </div> <!-- from row form-elm -->

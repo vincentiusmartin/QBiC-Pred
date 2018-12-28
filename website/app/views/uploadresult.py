@@ -27,7 +27,6 @@ def prepare_predfile(request):
         df = pd.read_csv(filepath,dtype=str)
     except:
         return 'error', 'input is not supported'
-
     check_cols = set(["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"])
     df_cols = set(df.columns)
     if not check_cols.issubset(df_cols):

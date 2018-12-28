@@ -1,5 +1,6 @@
 import configparser
 import importlib.util
+import pandas as pd
 
 def import_from_file(filepath):
     # https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
@@ -7,6 +8,11 @@ def import_from_file(filepath):
     foo = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(foo)
     return foo
+
+def parse_hugo_name_mapping(filepath):
+    df = pd.read_csv(filepath,sep=" ")
+    mapping = pd.Series(df.hugo_id.values,index=df.hugo_name).to_dict()
+    return mapping
 
 config = configparser.ConfigParser()
 config.read('qbic-conf.ini')
@@ -38,7 +44,7 @@ HUGO_PBM_MAPPING = config["Directory Setting"]["HUGO_PBM_MAPPING"]
 GAP_FILE = config["Directory Setting"]["GAP_FILE"]
 STATIC_EXAMPLE_DIR = config["Directory Setting"]["STATIC_EXAMPLE_DIR"]
 INPUT_EXAMPLE_DICT = import_from_file(config["Directory Setting"]["INPUT_EXAMPLE_LIST"]).examples
-
+HUGO_NAME_ID_MAPPING = parse_hugo_name_mapping(config["Directory Setting"]["HUGO_NAME_ID_MAPPING"])
 
 ''' [User Session] '''
 USER_DATA_EXPIRY = int(config["User Session"]["USER_DATA_EXPIRY"])

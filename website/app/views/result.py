@@ -168,15 +168,22 @@ def htmlformat(invar,type,colname):
                 {content}
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <button class="dropdown-item cell-filter-item" data-colname={colname} data-filter="exact">Only include rows with this value</a>
-                <button class="dropdown-item cell-filter-item" data-colname={colname} data-filter="exclude">Exclude rows with this value</a>
+                <button class="dropdown-item cell-filter-item" data-colname={colname} data-filter="exact">Only include rows with this value</button>
+                <button class="dropdown-item cell-filter-item" data-colname={colname} data-filter="exclude">Exclude rows with this value</button>
+                {additional}
               </div>
             </span>
         """
 
+        buttonhgnc = """<a href="https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/{hgnc}" target="_blank"  class="btn btn-link dropdown-item" role="button">Look in HGNC website</a>"""
+
         if colname == "TF_gene":
             cellvals = str_in.split(",")
-            formatted = [buttonhtml.format(content=val,colname=colname) for val in cellvals]
+            formatted = []
+            for val in cellvals:
+                hgncstrbtn = buttonhgnc.format(hgnc=app.config['HUGO_NAME_ID_MAPPING'][val])
+                formatted.append(buttonhtml.format(content=val,colname=colname,additional=hgncstrbtn))
+                print(buttonhtml.format(content=val,colname=colname,additional=hgncstrbtn))
             content = ""
             charinrow = 0
             total = len(formatted)
@@ -189,7 +196,7 @@ def htmlformat(invar,type,colname):
                     content += "<br />"
                     charinrow = 0
         else:
-            content = buttonhtml.format(content=str_in,colname=colname)
+            content = buttonhtml.format(content=str_in,colname=colname,additional="")
 
         return content
 
