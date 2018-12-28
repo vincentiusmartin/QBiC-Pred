@@ -2,8 +2,9 @@ import os
 import sys
 sys.path.insert(0, '..')
 
-from flask import request,render_template,make_response,jsonify,url_for,send_from_directory
+from flask import request,render_template,make_response,jsonify,url_for,send_from_directory,Response
 from werkzeug.utils import secure_filename
+import ast
 
 from celery import Celery,chain
 from app import app,db
@@ -158,6 +159,17 @@ def get_predlist():
             valmap = {z[0]:z[1] for z in (y.split(":") for y in (x for x in val.split(";")))} # generator
             family_map[key] = valmap
     return jsonify(family_map)
+
+@app.route('/tfsdownload/<strlist>', methods=['GET'])
+def make_tflist(strlist):
+    tflist = ast.literal_eval(strlist)
+
+    ''' return the csv file without having to save it '''
+    return Response(
+        "\n".join(tflist),
+        mimetype="text/csv",
+        headers={"Content-disposition":
+                 "attachment; filename=tfs-selected.txt"})
 
 @app.route('/examplelist', methods=['GET'])
 def get_examplelist():

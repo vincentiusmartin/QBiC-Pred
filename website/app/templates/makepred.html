@@ -56,7 +56,6 @@
             </button>
 
             <select id="familylist" name="family-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
-            <!--<button id="submit-fam" class="btn btn-secondary btn-sm" type="button" style="margin-top:10px;">Select by Families</button>-->
           </div>
 
           <div class="col-md-4">
@@ -68,19 +67,21 @@
             </button>
 
             <select id="predlist" name="pred-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
+            <br />
+            <a id="download-tfs-select"></a>
           </div>
 
-          <div class="col-md-4">
-            <label>Upload a file with TF names: </label>
+          <div class="col-lg-3">
+            <label>Or upload a TF file: </label>
 
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
             data-toggle="popover" data-placement="right" data-trigger="hover"
-            data-content="Upload a file containing TF names separated by new lines. Please click the 'Select by TFs'
-                          button to apply the selections from your file.">
+            data-content="Upload a file containing TF names separated by new lines. Input will automatically be added to
+                          the TFs dropdown.">
             </button>
 
-            <input type=file name="tf-file" id="tf-file" />
-            <button id="submit-tf" class="btn btn-info btn-sm" type="button" style="margin-top:10px;">Select by TFs</button>
+            <input type=file name="tf-file" id="tf-file"></input>
+            <!--<button id="submit-tf" class="btn btn-info btn-sm" type="button" style="margin-top:10px;">Select by TFs</button>-->
           </div>
         </div>
 

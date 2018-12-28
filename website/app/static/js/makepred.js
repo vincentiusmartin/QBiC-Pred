@@ -146,7 +146,21 @@ function listPreddir(){
     });
 }
 
-function updateToFamilies(selectedPredList){
+function makeTFDownloadLink(){
+    $("#predlist").change(function(){
+        var tfSelectedArr = new Array();
+        $("#predlist option:selected").each(function(){
+            tfSelectedArr.push($(this).text());
+        });
+        if(tfSelectedArr.length>0){
+            $("#download-tfs-select").attr("href","/tfsdownload/"+JSON.stringify(tfSelectedArr)).html("download tfs file");
+        }else{
+            $("#download-tfs-select").attr("href","").html("");
+        }
+    });
+}
+
+function updateToFamilies(){
     var famSelectedArr = new Array();
     $("#predlist option:selected").each(function(){
         fam = $(this).attr("data-tokens").split(",")[0];
@@ -214,26 +228,27 @@ function updateOutputLabel(newlabel){
 
 /* get TF uploaded from file */
 function uploadTFFomFile(){
-    var file = $('#tf-file').prop('files')[0];
-    if (file) {
-        var reader = new FileReader();
-        reader.readAsText(file, "UTF-8");
-        reader.onload = function (evt) {
-            var lines = evt.target.result.trim().split('\n');
-            var selected = [];
-            for(var i = 0; i < lines.length; i++) {
-                var tfval = $('#predlist option').filter(function() {
-                    return (this.text.localeCompare(lines[i]) == 0);
-                }).val(); // ugly jquery syntax...
-                selected.push(tfval);
+    $("#tf-file").on('change', function(){
+        var file = $('#tf-file').prop('files')[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.readAsText(file, "UTF-8");
+            reader.onload = function (evt) {
+                var lines = evt.target.result.trim().split('\n');
+                var selected = [];
+                for(var i = 0; i < lines.length; i++) {
+                    var tfval = $('#predlist option').filter(function() {
+                        return (this.text.localeCompare(lines[i]) == 0);
+                    }).val(); // ugly jquery syntax...
+                    selected.push(tfval);
+                }
+                $('#predlist').selectpicker('val',selected);
             }
-            $('#predlist').selectpicker('val',selected);
+            reader.onerror = function (evt) {
+                alert("error");
+            }
         }
-        reader.onerror = function (evt) {
-            alert("error");
-        }
-    }
-    $('#tf-file').val('');
+    });
 }
 
 // --------- Functionality related ---------
@@ -277,13 +292,14 @@ $(function() {
     });
 
     listPreddir(); // list all TFs from our list in the dropdowns
+    makeTFDownloadLink();
     changeOptOnFileSelected();
     listExampleInput();
     changeInputOptOnClick();
 
     updateOutputLabelWrapper(); // check change on output options
     updateFromFamilies();
-    $('#submit-tf').click(uploadTFFomFile);
+    uploadTFFomFile();
     $('[data-toggle="popover"]').popover();
 
     // submit the form
