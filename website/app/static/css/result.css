@@ -20,6 +20,7 @@
   max-height: 200px;
   margin-bottom: 10px;
   overflow:scroll;
+  word-wrap: break-word;
   -webkit-overflow-scrolling: touch;
 }
 
