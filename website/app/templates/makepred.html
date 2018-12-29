@@ -24,7 +24,7 @@
                             with columns: chromosome, chromosome_pos, mutated_from, mutated_to. See About page for details.)">
             </button>
             <input type=file class="form-control-file" name="input-file" id="input-file" />
-            <p style="padding:5px 0 0 0;font-size:12px;">(some input examples are provided at the bottom of this page.)</p>
+            <p style="padding:5px 0 0 0;font-size:12px;">(don't have mutation data? some input examples are provided at the bottom of this page or use an example from the right)</p>
             <input type="text" id="input-mode" value="1" name="input-mode" style="visibility: hidden;" readonly /> <!-- mark the input mode -->
           </div>
           <div class="col-md-1" id="filein-separator">
@@ -46,7 +46,7 @@
           </div>
         </div>
 
-        <div class="row form-elm pt-0" style="margin-top:-5px;">
+        <div class="row form-elm" style="margin-top:-40px;">
           <div class="col-md-4">
             <label>Select TFs by families:</label>
 
@@ -56,7 +56,7 @@
                           the transcription factors dropdown.">
             </button>
 
-            <select id="familylist" name="family-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
+            <select id="familylist" name="family-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true" data-dropup-auto="false"></select>
           </div>
 
           <div class="col-md-4">
@@ -67,7 +67,7 @@
             data-content="Select by TF names">
             </button>
 
-            <select id="predlist" name="pred-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
+            <select id="predlist" name="pred-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true" data-dropup-auto="false"></select>
             <br />
             <a id="download-tfs-select"></a>
           </div>
