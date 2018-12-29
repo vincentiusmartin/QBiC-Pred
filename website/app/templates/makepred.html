@@ -21,7 +21,7 @@
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
               data-toggle="popover" data-placement="right" data-trigger="hover"
               data-content="Input a variant/mutation dataset (VCF format, icgc simple somatic mutation file, or any tsv/csv
-                            with columns: chromosome, chromosome_pos, mutated_from, mutated_to. See About page for details.">
+                            with columns: chromosome, chromosome_pos, mutated_from, mutated_to. See About page for details.)">
             </button>
             <input type=file class="form-control-file" name="input-file" id="input-file" />
             <input type="text" id="input-mode" value="1" name="input-mode" style="visibility: hidden;" readonly /> <!-- mark the input mode -->
@@ -55,7 +55,7 @@
                           the transcription factors dropdown.">
             </button>
 
-            <select id="familylist" name="family-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
+            <select id="familylist" name="family-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true" onfocus="this.size=5;"></select>
           </div>
 
           <div class="col-md-4">
@@ -66,7 +66,7 @@
             data-content="Select by TF names">
             </button>
 
-            <select id="predlist" name="pred-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true"></select>
+            <select id="predlist" name="pred-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true" onfocus="this.size=5;"></select>
             <br />
             <a id="download-tfs-select"></a>
           </div>
