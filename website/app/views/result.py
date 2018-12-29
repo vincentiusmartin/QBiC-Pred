@@ -175,7 +175,7 @@ def htmlformat(invar,type,colname):
               </div>
             </span>
         """
-        buttonhgnc = """<a href="https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/{hgnc}" target="_blank"  class="btn btn-link dropdown-item" role="button">Look in HGNC website</a>"""
+        buttonhgnc = """<a href="https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/{hgnc}" target="_blank"  class="btn btn-link dropdown-item" role="button">See gene entry on HGNC website</a>"""
         buttonpbm =  """<a href="/download/pbmdata/{pbmname}"  class="btn btn-link dropdown-item" role="button">Download pbm data</a>"""
 
         if colname == "TF_gene":

@@ -1,13 +1,13 @@
 function displayOpt(searchOpt,searchKey){
     switch(searchOpt) {
         case 'exclude':
-            return '<span style="color:red;">~</span>'+searchKey;
+            return ' <span style="color:red;">~</span>'+searchKey;
         case 'in sequence':
-            return '<span style="color:#42a7f4;">&#x2731;</span>'+searchKey+'<span style="color:#42a7f4;">&#x2731;</span>'
+            return ' <span style="color:#42a7f4;">&#x2731;</span>'+searchKey+'<span style="color:#42a7f4;">&#x2731;</span>'
         case 'at least':
-            return '&geq;'+searchKey;
+            return ' &geq;'+searchKey;
         case 'at most':
-            return '&leq;'+searchKey;
+            return ' &leq;'+searchKey;
         case 'or':
             return searchKey;
         default:
