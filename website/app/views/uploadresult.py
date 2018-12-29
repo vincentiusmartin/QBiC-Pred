@@ -8,6 +8,7 @@ import pandas as pd
 from pandas.core.groupby.groupby import DataError
 
 import app.controller.celerytask as celerytask
+import app.controller.utils as utils
 
 @app.route('/uploadresult', methods=['GET', 'POST'])
 def upload_result():
@@ -27,6 +28,7 @@ def prepare_predfile(request):
         df = pd.read_csv(filepath,dtype=str)
     except:
         return 'error', 'input is not supported'
+    utils.delete_file(filepath) #delete once read
     check_cols = set(["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"])
     df_cols = set(df.columns)
     if not check_cols.issubset(df_cols):
@@ -39,7 +41,7 @@ def submit_pred_upload():
     if status == "error":
         return jsonify({'Message':message}), 500
 
-    df = pd.DataFrame(message)
+    df = pd.DataFrame(message) # if success then message is the dataframe
     rand_id = str(uuid.uuid4())
 
     cols = list(df.columns.values)
@@ -51,8 +53,6 @@ def submit_pred_upload():
     genes_str = ",".join(list(df.TF_gene))
     genes_selected = list(set(genes_str.split(",")))
     datavalues = df.to_dict('records')
-
-    print(genes_selected)
 
     celerytask.savetoredis(rand_id,cols,datavalues,app.config['UPLOAD_PRED_EXPIRY'])
 

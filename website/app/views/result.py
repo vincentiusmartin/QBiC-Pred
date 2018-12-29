@@ -184,7 +184,6 @@ def htmlformat(invar,type,colname):
             for val in cellvals:
                 hgncstrbtn = buttonhgnc.format(hgnc=app.config['HUGO_NAME_ID_MAPPING'][val])
                 formatted.append(buttonhtml.format(content=val,colname=colname,additional=hgncstrbtn))
-                print(buttonhtml.format(content=val,colname=colname,additional=hgncstrbtn))
             content = ""
             charinrow = 0
             total = len(formatted)
