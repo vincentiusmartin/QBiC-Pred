@@ -72,7 +72,7 @@
   border-bottom: 2px solid #e6e6e6;
   line-height: 0.1em;
   margin: 10px 0 20px;
-  padding-top: 30px;
+  padding-top: 25px;
 }
 
 .form-title span {
@@ -82,7 +82,7 @@
 }
 
 .form-elm {
-  padding:20px 0 20px 0px;
+  padding:10px 0 10px 0px;
   page-break-after: always;
 }
 
