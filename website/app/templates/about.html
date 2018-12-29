@@ -7,7 +7,7 @@
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/about.css') }}">
 <script src="{{ url_for('static', filename='js/about.js') }}"></script>
 
-<div class="modal-body">
+<div class="modal-body"><div class="container">
   <h2>Table of Contents:</h2>
   <ol>
     <li><a href="#section1">QBiC-Pred input</a></li>
@@ -30,44 +30,46 @@
         Column 5: alternative allele; must be a single upper or lower case nucleotide letter <br />
          (future QBiC releases will also allow short indels and multiple base substitutions) <br />
       </p>
-      <table class="graybg">
-        <tr>
-          <td>chr1</td>
-          <td>48473010</td>
-          <td>.</td>
-          <td>A</td>
-          <td>G</td>
-        </tr>
-        <tr>
-          <td>chr2</td>
-          <td>97536853</td>
-          <td>.</td>
-          <td>C</td>
-          <td>T</td>
-        </tr>
-        <tr>
-          <td>chr3</td>
-          <td>181842690</td>
-          <td>.</td>
-          <td>G</td>
-          <td>A</td>
-        </tr>
-        <tr>
-          <td>chr5</td>
-          <td>54469459</td>
-          <td>.</td>
-          <td>C</td>
-          <td>G</td>
-        </tr>
+      <table class="table table-borderless example-table">
+        <tbody>
+          <tr>
+            <td>chr1</td>
+            <td>48473010</td>
+            <td>.</td>
+            <td>A</td>
+            <td>G</td>
+          </tr>
+          <tr>
+            <td>chr2</td>
+            <td>97536853</td>
+            <td>.</td>
+            <td>C</td>
+            <td>T</td>
+          </tr>
+          <tr>
+            <td>chr3</td>
+            <td>181842690</td>
+            <td>.</td>
+            <td>G</td>
+            <td>A</td>
+          </tr>
+          <tr>
+            <td>chr5</td>
+            <td>54469459</td>
+            <td>.</td>
+            <td>C</td>
+            <td>G</td>
+          </tr>
+        </tbody>
       </table>
     </li><br />
     <li><p>
       ICGC simple somatic mutation file  (<a href="/download/icgc-example.tsv">download sample file</a>) <br />
       Please see the ICGC guidelines  for details about this tab-separated file format. The columns used by QBiC-Pred are: chromosome, chromosome_start, chromosome_end (which must be the same as chromosome_start for single nucleotide variants), mutation_type (QBiC-Pred will only use variants with this field set to “single base substitution”), mutated_from_allele, and mutated_to_allele.
     </p>
-    <table class="table table-borderless graybg example-table">
-      <tr>
-        <thead>
+    <table class="table table-borderless example-table">
+      <thead>
+        <tr>
           <th>...</th>
           <th>chromosome</th>
           <th>chromosome_start</th>
@@ -77,8 +79,8 @@
           <th>...</th>
           <th>mutated_from_allele</th>
           <th>mutated_to_allele</th>
-        </thead>
-      </tr>
+        </tr>
+      </thead>
       <tr>
         <td>...</td>
         <td>6</td>
@@ -279,5 +281,5 @@
   </p>
   <div class="screenshoot-img"><img src="/static/images/about_page/uploadpage.png" /></div>
   <br />
-</div>
+</div></div>
 {% endblock %}
