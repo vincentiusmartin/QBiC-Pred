@@ -65,12 +65,12 @@
       ICGC simple somatic mutation file  (<a href="/download/icgc-example.tsv">download sample file</a>) <br />
       Please see the ICGC guidelines  for details about this tab-separated file format. The columns used by QBiC-Pred are: chromosome, chromosome_start, chromosome_end (which must be the same as chromosome_start for single nucleotide variants), mutation_type (QBiC-Pred will only use variants with this field set to “single base substitution”), mutated_from_allele, and mutated_to_allele.
     </p>
-    <table class="graybg" style="font-size:90%;">
+    <table class="graybg example-table">
       <tr>
         <th>...</th>
         <th>chromosome</th>
         <th>chromosome_start</th>
-        <th>chromosome_start</th>
+        <th>chromosome_end</th>
         <th>...</th>
         <th>mutation_type</th>
         <th>...</th>
@@ -85,7 +85,7 @@
         <td>...</td>
         <td>single base substitution</td>
         <td>...</td>
-        <td>.T</td>
+        <td>T</td>
         <td>C</td>
       </tr>
       <tr>
@@ -96,7 +96,7 @@
         <td>...</td>
         <td>single base substitution</td>
         <td>...</td>
-        <td>.T</td>
+        <td>T</td>
         <td>C</td>
       </tr>
       <tr>
@@ -107,7 +107,7 @@
         <td>...</td>
         <td>single base substitution</td>
         <td>...</td>
-        <td>.A</td>
+        <td>A</td>
         <td>C</td>
       </tr>
       <tr>
@@ -118,16 +118,17 @@
         <td>...</td>
         <td>single base substitution</td>
         <td>...</td>
-        <td>.C</td>
+        <td>C</td>
         <td>G</td>
       </tr>
     </table>
-    </li><br />
+    </li>
+    <br />
     <li>
       <p>
       Any tsv (tab-separated values) or csv (comma-separated values) file with the following columns: chromosome, chromosome_pos, mutated_from, mutated_to (<a href="/download/example3.tsv">download sample file</a>) <br />
       </p>
-      <table class="graybg">
+      <table class="graybg example-table">
         <tr>
           <th>chromosome</th>
           <th>chromosome_pos</th>
