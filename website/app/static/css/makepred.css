@@ -44,6 +44,8 @@
 
 .help-icon {
   background-color:transparent;
+  display:inline-block;
+  position:absolute;
 }
 
 .help-icon:hover {
@@ -81,9 +83,9 @@
   font-weight: bold;
 }
 
+
 .form-elm {
-  padding:10px 0 10px 0px;
-  page-break-after: always;
+  margin-top:10px;
 }
 
 form label {

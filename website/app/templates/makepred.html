@@ -13,8 +13,8 @@
         <div class="form-title"><span>DATA SUBMISSION FORM</span></div>
       </div>
       <div id="form-input">
-        <div class="row form-elm pt-1">
-          <div class="col-md-3">
+        <div class="row pt-1">
+          <div class="col-md-3 form-elm">
             <label id="input-lbl-1" value="active">
                 Upload mutation dataset:
             </label>
@@ -27,10 +27,10 @@
             <p style="padding:5px 0 0 0;font-size:12px;">(don't have mutation data? some input examples are provided at the bottom of this page or use an example from the right)</p>
             <input type="text" id="input-mode" value="1" name="input-mode" style="visibility: hidden;" readonly /> <!-- mark the input mode -->
           </div>
-          <div class="col-md-1" id="filein-separator">
+          <div class="col-md-1 form-elm1" id="filein-separator">
             <h3>OR</h3>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 form-elm">
             <label id="input-lbl-2" value="active">
                 <button class="btn disabled-btn" value="2" type="button">
                     Select an example use case <br /> (this will fill all necessary fields):
@@ -40,14 +40,15 @@
               data-toggle="popover" data-placement="right" data-trigger="hover"
               data-content="Select an example use case.">
             </button>
+            <br />
             <select id="examplelist" name="examplelist" class="selectpicker"></select>
             <br />
             <a id="download-input-select"></a>
           </div>
         </div>
 
-        <div class="row form-elm" style="margin-top:-40px;">
-          <div class="col-md-4">
+        <div class="row form-elm">
+          <div class="col-md-4 col-sm-12 form-elm">
             <label>Select TFs by families:</label>
 
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
@@ -55,32 +56,31 @@
             data-content="All TFs in the selected families will be selected. Modifications in this dropdown will be reflected in
                           the transcription factors dropdown.">
             </button>
-
+            <br />
             <select id="familylist" name="family-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true" data-dropup-auto="false"></select>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-4 form-elm">
             <label>Select transcription factors:</label>
 
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
             data-toggle="popover" data-placement="right" data-trigger="hover"
             data-content="Select by TF names">
             </button>
-
+            <br />
             <select id="predlist" name="pred-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true" data-dropup-auto="false"></select>
             <br />
             <a id="download-tfs-select"></a>
           </div>
 
-          <div class="col-lg-3">
+          <div class="col-md-3 form-elm">
             <label>Or upload a TF file: </label>
-
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
             data-toggle="popover" data-placement="right" data-trigger="hover"
             data-content="Upload a file containing TF names separated by new lines. Input will automatically be added to
                           the TFs dropdown.">
             </button>
-
+            <br />
             <input type=file name="tf-file" id="tf-file"></input>
             <br />
             <a id="download-tffile-example" href="/download/tflist-example.txt">download example TF file</a>
@@ -89,8 +89,8 @@
 
         <hr class="divider-line" />
 
-        <div class="row form-elm">
-          <div class="col-md-4 form-group">
+        <div class="row">
+          <div class="col-md-4 form-group form-elm">
             <label for="genomelist">Select a genome version:</label>
 
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
@@ -98,14 +98,14 @@
             data-content="For input files containing genomic coordinates, this version of the human genome
                           will be used.">
             </button>
-
+            <br />
             <select id="genomelist" name="genome-select" class="selectpicker">
               <option selected>hg19</option>
               <option>hg38</option>
             </select>
           </div>
 
-          <div class="col-md-4 form-group">
+          <div class="col-md-4 form-group form-elm">
             <label for="outputradio">Select the desired output:</label>
 
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
@@ -125,7 +125,7 @@
             </div>
           </div>
 
-          <div class="col-md-4 output-col form-group">
+          <div class="col-md-4 output-col form-group form-elm">
             <label for="output-option" id="output-option">p-value cutoff:</label>
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
             data-toggle="popover" data-placement="right" data-trigger="hover"
@@ -142,8 +142,8 @@
 
         <hr class="divider-line" />
 
-        <div class="row form-elm">
-          <div class="col-md-4">
+        <div class="row">
+          <div class="col-md-4 form-elm">
             <label for="job-name">Job name (optional)</label>
               <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
                 data-toggle="popover" data-placement="right" data-trigger="hover"
@@ -175,14 +175,14 @@
 
   <div class="row example-input">
     <div class="col-md-3">Download sample input files:</div>
-    <div class="col-sm-1">
+    <div class="col-md-2">
         <a href="/download/icgc-example.tsv">
-          ICGC
+          ICGC format
         </a>
     </div>
-    <div class="col-sm-1">
+    <div class="col-md-2">
         <a href="/download/vcf-example.vcf">
-          VCF
+          VCF format
         </a>
     </div>
   </div>

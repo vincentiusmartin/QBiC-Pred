@@ -42,6 +42,12 @@ p{
   align:left;
 }
 
+.combined-img > img{
+  width:1100px;
+  vertical-align: text-top;
+  align:left;
+}
+
 .arrowto{
   padding:300px 0 0 30px;
   font-size:80px;
