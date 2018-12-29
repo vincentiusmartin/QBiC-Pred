@@ -12,8 +12,14 @@ p{
   display:block;
 }
 
-.example-table > tbody > tr > th,td{
+.example-table > thead > tr > th{
   padding:0 15px 0 15px;
+  background-color:#f2f2f2;
+}
+
+.example-table > tbody > tr > td{
+  padding:0 15px 0 15px;
+  background-color:#f2f2f2;
 }
 
 .inline-img > img {

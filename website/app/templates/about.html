@@ -65,17 +65,19 @@
       ICGC simple somatic mutation file  (<a href="/download/icgc-example.tsv">download sample file</a>) <br />
       Please see the ICGC guidelines  for details about this tab-separated file format. The columns used by QBiC-Pred are: chromosome, chromosome_start, chromosome_end (which must be the same as chromosome_start for single nucleotide variants), mutation_type (QBiC-Pred will only use variants with this field set to “single base substitution”), mutated_from_allele, and mutated_to_allele.
     </p>
-    <table class="graybg example-table">
+    <table class="table table-borderless graybg example-table">
       <tr>
-        <th>...</th>
-        <th>chromosome</th>
-        <th>chromosome_start</th>
-        <th>chromosome_end</th>
-        <th>...</th>
-        <th>mutation_type</th>
-        <th>...</th>
-        <th>mutated_from_allele</th>
-        <th>mutated_to_allele</th>
+        <thead>
+          <th>...</th>
+          <th>chromosome</th>
+          <th>chromosome_start</th>
+          <th>chromosome_end</th>
+          <th>...</th>
+          <th>mutation_type</th>
+          <th>...</th>
+          <th>mutated_from_allele</th>
+          <th>mutated_to_allele</th>
+        </thead>
       </tr>
       <tr>
         <td>...</td>
@@ -128,37 +130,41 @@
       <p>
       Any tsv (tab-separated values) or csv (comma-separated values) file with the following columns: chromosome, chromosome_pos, mutated_from, mutated_to (<a href="/download/example3.tsv">download sample file</a>) <br />
       </p>
-      <table class="graybg example-table">
-        <tr>
-          <th>chromosome</th>
-          <th>chromosome_pos</th>
-          <th>mutated_from</th>
-          <th>mutated_to</th>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td>65152140</td>
-          <td>T</td>
-          <td>C</td>
-        </tr>
-        <tr>
-          <td>8</td>
-          <td>108596584</td>
-          <td>T</td>
-          <td>C</td>
-        </tr>
-        <tr>
-          <td>15</td>
-          <td>34737692</td>
-          <td>A</td>
-          <td>C</td>
-        </tr>
-        <tr>
-          <td>9</td>
-          <td>84841627</td>
-          <td>C</td>
-          <td>G</td>
-        </tr>
+      <table class="table table-borderless example-table">
+        <thead>
+          <tr>
+            <th scope="col">chromosome</th>
+            <th scope="col">chromosome_pos</th>
+            <th scope="col">mutated_from</th>
+            <th scope="col">mutated_to</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>6</td>
+            <td>65152140</td>
+            <td>T</td>
+            <td>C</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>108596584</td>
+            <td>T</td>
+            <td>C</td>
+          </tr>
+          <tr>
+            <td>15</td>
+            <td>34737692</td>
+            <td>A</td>
+            <td>C</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>84841627</td>
+            <td>C</td>
+            <td>G</td>
+          </tr>
+        </tbody>
       </table>
     </li>
   </ul>
