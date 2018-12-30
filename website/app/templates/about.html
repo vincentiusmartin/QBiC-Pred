@@ -194,12 +194,12 @@
         <b>TF proteins to be tested.</b>	TF proteins to be tested. The user can select either entire families of TFs (see   <span class="gray-inline-text">Select TFs by families</span>), or individual TFs by using <span class="gray-inline-text">Select transcription factors:</span>  or by providing an input file with TF gene names (see  <span class="gray-inline-text">upload a TF file</span>). <br />
         Individual TFs, as well as TF families, are searchable by the user: <br />
       </p>
-      <span class="example-select"><img src="/static/images/about_page/searchbytf.png" /></span>
-      <span class="example-select"><img src="/static/images/about_page/searchbyfam.png" /></span>
+      <span class="example-select"><img class="img-fluid" src="/static/images/about_page/searchbytf.png" /></span>
+      <span class="example-select"><img class="img-fluid" src="/static/images/about_page/searchbyfam.png" /></span>
       <p>
         QBiC-Pred uses the HGNC nomenclature for gene names. A full list of TF gene names for which QBiC-Pred contains predictive models is available here. In case the user provides a file containing gene names not recognized by QBiC-Pred, or for which we do not current have predictive models, an error message will alert the user:
       <p>
-      <span class="example-select"><img src="/static/images/about_page/tfsnotfound.png" /></span>
+      <span class="example-select"><img class="img-fluid" src="/static/images/about_page/tfsnotfound.png" /></span>
     </li>
     <li>
       <p>
@@ -230,7 +230,7 @@
 
   <a name="section3"><h3>3. QBiC-Pred output</h3></a>
   <p>QBiC-Pred reports results in the form of a table that the user can explore and interact with:</p>
-  <span class="screenshoot-img"><img src="/static/images/about_page/output1.png" /></span>
+  <span class="screenshoot-img"><img class="img-fluid" src="/static/images/about_page/output1.png" /></span>
 
   <p>
     In addition to reporting the TF(s) affected by each variant, QBiC provides information about the status of each allele, which can be “bound”, “unbound”, or “ambiguous”. This status is derived from the same PBM data sets used to train the OLS binding models. But, unlike the OLS model, defining the status of an allele is based on 8-mer enrichment scores (E-scores) commonly derived from PBM data (see, <a href="https://www.ncbi.nlm.nih.gov/pubmed/16998473">Berger et al. Nature Biotech, 2006</a>; <a href="https://www.cell.com/cell-systems/fulltext/S2405-4712(18)30062-0">Shen et al. Cell Systems 2018</a>). As in our previous work, we define an allele as specifically “bound” if it is contained in two overlapping 8-mers with E-score &gt; 0.4. Conversely, we define an allele as “unbound” if all 8-mers overlapping the allele have E-score &lt; 0.35. All other cases are considered “ambiguous”.
@@ -240,13 +240,13 @@
     QBiC provides this information to allow users to focus only on prediction that are of most interest to them, e.g. from “unbound” for the reference allele to “bound” for the alternative allele (“unbound&gt;bound” in the “Binding status” column). The users can easily filter the results by clicking on values in the “Binding status” column:
   </p>
 
-  <span class="combined-img"><img src="/static/images/about_page/output2.png" /></span>
+  <span class="combined-img"><img class="img-fluid" src="/static/images/about_page/output2.png" /></span>
 
   <p>
     Filters can be set in a similar manner for TF names, models, and PBM data sets. For example:
   </p>
 
-  <span class="combined-img"><img src="/static/images/about_page/output3.png" /></span>
+  <span class="combined-img"><img class="img-fluid" src="/static/images/about_page/output3.png" /></span>
 
   <p>
     For PBM data sets (column  <span class="gray-inline-text">pbmname</span>), the QBiC output table also provides an option to directly download the data and the model used to make the predictions. The output table also specifies which type of model, i.e. using gapped or ungapped k-mers is used (column  <span class="gray-inline-text">gapmodel</span>).
@@ -256,16 +256,16 @@
     Additional output processing options include filtering by p-value, z-score, sequence, or TF name using the “Search” functionality:
   </p>
 
-  <div class="screenshoot-img"><img src="/static/images/about_page/output4a.png" /></div>
+  <div class="screenshoot-img"><img class="img-fluid" src="/static/images/about_page/output4a.png" /></div>
   <p>
     For example, if the user is interested in visualizing only predictions with large increased in TF binding, he/she can set minimum z-score value such as depicted below:
   </p>
-  <div class="screenshoot-img"><img src="/static/images/about_page/output4b.png" /></div>
+  <div class="screenshoot-img"><img class="img-fluid" src="/static/images/about_page/output4b.png" /></div>
 
   <p>
   At any point during the visualization and processing of the QBiC-Pred results, users can download the current results in comma delimited format using <span class="gray-inline-text">download csv</span> link below the table. The downloaded results can be uploaded back into QBiC-Pred at any time for further processing and filtering, using the “Upload Result” page:
   </p>
-  <div class="screenshoot-img"><img src="/static/images/about_page/uploadpage.png" /></div>
+  <div class="screenshoot-img"><img class="img-fluid" src="/static/images/about_page/uploadpage.png" /></div>
   <p>This uploaded data will be saved for one hour, after that the user can upload the result again to use the website interface.</p>
   <br />
 </div>
