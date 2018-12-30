@@ -182,7 +182,7 @@
   </p>
 
   <p>
-    The input file size is currently limited to 100MB since each file is processed in our server. Since QBiC makes prediction based on base substitution mutation, if the user has rows contain other type of mutations, they can be filtered out first to enable more rows with base substitution to be processed.  Also, for large jobs containing a large number of variants, the user can check on the status of the job by using the <span class="inline-img"><img src="/static/images/about_page/recent_btn.png" /></span> button on the upper right corner of any QBiC page. The jobs have unique identifies and they are stored on the QBiC-Pred server for 24 hours. This page can be bookmarked for later visit.
+    The input file size is currently limited to 100MB since each file is processed in our server. Since QBiC makes prediction based on base substitution mutation, if the user has rows contain other type of mutations, they can be filtered out first to enable more rows with base substitution to be processed.  Also, for large jobs containing a large number of variants, the user can check on the status of the job by using the <span class="inline-img"><img src="/static/images/about_page/recent_btn.png" /></span> button on the upper right corner of any QBiC page. The jobs have unique identifies and they are stored on the QBiC-Pred server for 48 hours. This page can be bookmarked for later visit.
   </p>
 
   <p>
@@ -219,12 +219,23 @@
     </li>
   </ul>
 
-  <a name="section2"><h3>2. TF Binding Models</h3></a>
+  <a name="section2"><h3>2. TF binding models</h3></a>
   <p>QBiC predictions are based on quantitative TF binding models trained on universal protein binding microarray (PBM) data from the following databases:</p>
   <ul>
     <li>UniPROBE: <a href="http://thebrain.bwh.harvard.edu/uniprobe/">http://thebrain.bwh.harvard.edu/uniprobe/</a></li>
     <li>CisBP: <a href="http://cisbp.ccbr.utoronto.ca/">http://cisbp.ccbr.utoronto.ca/</a></li>
     <li>PBM data generated in the Gordan laboratory (reported in <a href="https://www.cell.com/cell-systems/fulltext/S2405-4712(18)30062-0">Shen et al. Cell Systems 2018</a>, or included with the release of QBiC)</li>
+  </ul>
+  <p>
+    We downloaded the entire database from CisBP (v1.02) consisting of 3,342 universal PBM data sets. Next, we added 245 PBM data sets from the UniPROBE database, which were not included in CisBP, and 22 PBM data sets generated in our lab, resulting in a total of 3,609 PBM data sets. Then we annotated the quality of each uPBM data based on: 1) the number of 8-mers with binding enrichment score (E-scores) exceeding 0.45; and 2) the performance of our models trained on the data, which enabled us to filter out low quality PBM data sets. After the filtering process, we utilized <a href="http://humantfs.ccbr.utoronto.ca/">The Human Transcription Factors Project</a>, as well as manual curation, to map PBM data sets to human TFs. By keeping only the best quality or the highest amino-acid identity PBM data sets for each TF, we finally arrived at a total of 666 data sets characterizing the binding of 577 human TFs. The full mapping of human TFs to available PBM data sets is available <a href="/download/mapping_gene_to_upbm_final.csv">here</a>.
+  </p>
+  <p>
+    Our TF binding models are linear regression models trained on <a href="https://www.ncbi.nlm.nih.gov/pubmed/28691125">universal PBM data<a/>. We use the counts of 6-mers or gapped 6-mers (with a gap of 1 or 2 bases) as features, and the binding intensity signal as the outcome variable. Then, we use ordinary least squares (OLS) to estimate the coefficients for all 6-mer features, as well as the distributions of these estimates. The effect of each mutation can be written as a linear combination of all the coefficients of 6-mers covering it and can therefore be estimated as well as tested for statistical significance, as described in detail in our <a href="https://www.ncbi.nlm.nih.gov/pubmed/28691125">previous work</a>. Thus, for each variant and each PBM data set for a TF protein, our model predicts:
+  </p>
+  <ul>
+    <li><b>Difference</b> = the difference in TF binding (i.e. in PBM signal) between the two alleles
+    <li><b>z-score</b> = the normalized difference in TF binding, computed based on the estimated parameter distributions; the z-scores are comparable among different TFs and data sets</li>
+    <li><b>p-value</b> = the significance of the predicted difference, computed based on the estimated parameter distributions; the p-values depend on the magnitude of difference, as well as the quality of the model and the training data.</li>
   </ul>
   <br />
 
@@ -249,7 +260,7 @@
   <span class="combined-img"><img class="img-fluid" src="/static/images/about_page/output3.png" /></span>
 
   <p>
-    For PBM data sets (column  <span class="gray-inline-text">pbmname</span>), the QBiC output table also provides an option to directly download the data and the model used to make the predictions. The output table also specifies which type of model, i.e. using gapped or ungapped k-mers is used (column  <span class="gray-inline-text">gapmodel</span>).
+    For PBM data sets (column  <span class="gray-inline-text">PBM filename</span>), the QBiC output table also provides an option to directly download the data and the model used to make the predictions. The output table also specifies which type of model, i.e. using gapped or ungapped k-mers is used (column  <span class="gray-inline-text">Gap model</span>).
   </p>
 
   <p>
@@ -263,10 +274,10 @@
   <div class="screenshoot-img"><img class="img-fluid" src="/static/images/about_page/output4b.png" /></div>
 
   <p>
-  At any point during the visualization and processing of the QBiC-Pred results, users can download the current results in comma delimited format using <span class="gray-inline-text">download csv</span> link below the table. The downloaded results can be uploaded back into QBiC-Pred at any time for further processing and filtering, using the “Upload Result” page:
+  At any point during the visualization and processing of the QBiC-Pred results, users can download the current results in comma delimited format using <span class="gray-inline-text">download <font color="blue">csv</font>/<font color="blue">tsv</font></span> link below the table. The downloaded results can be uploaded back into QBiC-Pred at any time for further processing and filtering, using the “Upload Result” page:
   </p>
   <div class="screenshoot-img"><img class="img-fluid" src="/static/images/about_page/uploadpage.png" /></div>
-  <p>This uploaded data will be saved for one hour, after that the user can upload the result again to use the website interface.</p>
+  <p>This uploaded data will be saved for 24 hours, after which the user can upload the result file again in order to use the website interface to explore the results.</p>
   <br />
 </div>
 {% endblock %}
