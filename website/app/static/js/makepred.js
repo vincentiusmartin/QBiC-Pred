@@ -261,7 +261,7 @@ function uploadTFFomFile(){
                         if(notAvail.length > 0 || nothgnc.length > 0){
                             alert("Not all TFs could be processed:\n" +
                             selected.length + " input TFs have PBM data and were selected.\n" +
-                            notAvail.length + " input TFs do no have PBM data:" + notAvail.toString() + "\n" +
+                            notAvail.length + " input TFs do not have PBM data:" + notAvail.toString() + "\n" +
                             nothgnc.length + " input TFs are probably not using the HGNC nomenclature for gene names: " +
                             nothgnc.toString()+
                             "\n(TF gene names must use HGNC nomenclature)");
