@@ -233,28 +233,49 @@ function uploadTFFomFile(){
         if (file) {
             var reader = new FileReader();
             reader.readAsText(file, "UTF-8");
-            var undefinedTFs = new Array();
             reader.onload = function (evt) {
                 var lines = evt.target.result.trim().split('\n');
-                var selected = [];
-                for(var i = 0; i < lines.length; i++) {
-                    var tfval = $('#predlist option').filter(function() {
-                        return (this.text.localeCompare(lines[i]) == 0);
-                    }).val(); // ugly jquery syntax...
-                    if (typeof tfval === "undefined") {
-                        undefinedTFs.push(lines[i]);
+                $.ajax({
+                    type: 'POST',
+                    url: '/checktfnames',
+                    contentType: 'application/json',
+                    dataType : 'json',
+                    data: JSON.stringify({'tfs':lines}),
+                    success: function(data,status,request){
+                        // parse the resulting json
+                        var nothgnc = request.getResponseHeader('notfound').split(",");
+                        var inhgnc = request.getResponseHeader('found').split(",");
+                        var notAvail = [];
+                        var selected = [];
+                        for(var i = 0; i < inhgnc.length; i++) {
+                            var tfname = inhgnc[i].trim();
+                            var tfval = $('#predlist option').filter(function() {
+                                return (this.text.localeCompare(tfname) == 0);
+                            }).val(); // ugly jquery syntax...
+                            if (typeof tfval === "undefined") {
+                                notAvail.push(inhgnc[i]);
+                            }else{
+                                selected.push(tfval);
+                            }
+                        }
+                        if(notAvail.length > 0 || nothgnc.length > 0){
+                            alert("Not all TFs could be processed:\n" +
+                            selected.length + " input TFs have PBM data and were selected.\n" +
+                            notAvail.length + " input TFs do no have PBM data:" + notAvail.toString() + "\n" +
+                            nothgnc.length + " input TFs are probably not using the HGNC nomenclature for gene names: " +
+                            nothgnc.toString()+
+                            "\n(TF gene names must use HGNC nomenclature)");
+                        }
+                        $('#predlist').selectpicker('val',selected);
+                        updateToFamilies();
+                    },
+                    error: function() {
+                        alert("error in reading the TF list");
                     }
-                    selected.push(tfval);
-                }
-                if(undefinedTFs.length > 0){
-                    alert("The following TFs do not have PBM data:\n  " + undefinedTFs +
-                    "\n(TF gene names must use HGNC nomenclature)");
-                }
-                $('#predlist').selectpicker('val',selected);
-                updateToFamilies();
+                });
             }
             reader.onerror = function (evt) {
-                alert("error");
+                alert("file error");
             }
         }
     });

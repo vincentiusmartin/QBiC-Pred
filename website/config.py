@@ -14,6 +14,10 @@ def parse_hugo_name_mapping(filepath):
     mapping = pd.Series(df.hugo_id.values,index=df.hugo_name).to_dict()
     return mapping
 
+def parse_tfgenes(filepath):
+    lines = open(filepath).read().splitlines()
+    return lines
+
 config = configparser.ConfigParser()
 config.read('qbic-conf.ini')
 
@@ -45,6 +49,7 @@ GAP_FILE = config["Directory Setting"]["GAP_FILE"]
 STATIC_EXAMPLE_DIR = config["Directory Setting"]["STATIC_EXAMPLE_DIR"]
 INPUT_EXAMPLE_DICT = import_from_file(config["Directory Setting"]["INPUT_EXAMPLE_LIST"]).examples
 HUGO_NAME_ID_MAPPING = parse_hugo_name_mapping(config["Directory Setting"]["HUGO_NAME_ID_MAPPING"])
+HGNC_GENE_NAMES = parse_tfgenes(config["Directory Setting"]["HGNC_GENE_NAMES"])
 
 ''' [User Session] '''
 USER_DATA_EXPIRY = int(config["User Session"]["USER_DATA_EXPIRY"])

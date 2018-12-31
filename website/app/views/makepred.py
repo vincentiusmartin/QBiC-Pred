@@ -152,6 +152,18 @@ def handle_upload():
 
 #========Filling dropdown==========
 
+@app.route('/checktfnames', methods=['GET','POST'])
+def check_tfnames():
+    tflist = request.get_json()['tfs']
+    found = []
+    notfound = []
+    for tf in tflist:
+        if tf in app.config['HGNC_GENE_NAMES']:
+            found.append(tf)
+        else:
+            notfound.append(tf)
+    return make_response(jsonify({}), 202, {'found':found,'notfound':notfound})
+
 @app.route('/predlist', methods=['GET'])
 def get_predlist():
     with open(app.config['HUGO_PBM_MAPPING'],'r') as f:
