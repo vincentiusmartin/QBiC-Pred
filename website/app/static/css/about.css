@@ -32,6 +32,12 @@ p{
   vertical-align: text-top;
 }
 
+.example-alert > img{
+  width:400px;
+  padding:0 2% 1% 0;
+  vertical-align: text-top;
+}
+
 .gray-inline-text{
   background-color:#d9d9d9;
 }

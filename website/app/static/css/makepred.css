@@ -23,6 +23,11 @@
   color:#e04619;
 }
 
+.grey-download{
+  color:gray;
+  text-decoration: underline;
+}
+
 .disabled-btn{
   text-align: justify;
   padding-left:0px;

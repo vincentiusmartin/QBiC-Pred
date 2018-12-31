@@ -82,13 +82,13 @@
             <label>Or upload a TF file: </label>
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
             data-toggle="popover" data-placement="right" data-trigger="hover"
-            data-content="Upload a file containing TF names separated by new lines. Input will automatically be added to
+            data-content="Upload a file containing TF gene names (in HGNC nomenclature) separated by new lines. Input will automatically be added to
                           the TFs dropdown.">
             </button>
             <br />
             <input type=file name="tf-file" id="tf-file"></input>
             <br />
-            <a id="download-tffile-example" href="/download/tflist-example.txt">download example TF file</a>
+            <a id="download-tffile-example" class="grey-download" href="/download/tflist-example.txt">Download example TF file</a>
           </div>
         </div>
 
@@ -111,7 +111,7 @@
           </div>
 
           <div class="col-12 col-lg-4 form-group form-elm">
-            <label for="outputradio">Select the desired output:</label>
+            <label for="outputradio">Select running mode:</label>
 
             <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
             data-toggle="popover" data-placement="right" data-trigger="hover"

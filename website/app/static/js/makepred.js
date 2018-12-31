@@ -11,7 +11,7 @@ function changeInputOptOnClick(){
 function changeInputDownloadLink(){
     var filename = $("#examplelist option:selected").attr("inputfile");
     if(filename){
-        $("#download-input-select").attr("href","/download/"+filename).html("download input file");
+        $("#download-input-select").attr("href","/download/"+filename).addClass("grey-download").html("Download mutation dataset");
     }else{
         $("#download-input-select").attr("href","").html("");
     }
@@ -153,7 +153,7 @@ function makeTFDownloadLink(){
             tfSelectedArr.push($(this).text());
         });
         if(tfSelectedArr.length>0){
-            $("#download-tfs-select").attr("href","/tfsdownload/"+JSON.stringify(tfSelectedArr)).html("download selected TFs");
+            $("#download-tfs-select").attr("href","/tfsdownload/"+JSON.stringify(tfSelectedArr)).addClass("grey-download").html("Download selected TFs");
         }else{
             $("#download-tfs-select").attr("href","").html("");
         }
