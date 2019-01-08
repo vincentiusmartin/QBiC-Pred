@@ -182,7 +182,12 @@ def htmlformat(invar,type,colname):
             cellvals = str_in.split(",")
             formatted = []
             for val in cellvals:
-                hgncstrbtn = buttonhgnc.format(hgnc=app.config['HUGO_NAME_ID_MAPPING'][val])
+                # if we don't have the entry for the gene, then just fill empty
+                # This is useful when we have gene that is used for testing only
+                if val in app.config['HUGO_NAME_ID_MAPPING']:
+                    hgncstrbtn = buttonhgnc.format(hgnc=app.config['HUGO_NAME_ID_MAPPING'][val])
+                else:
+                    hgncstrbtn = buttonhgnc.format(hgnc="")
                 formatted.append(buttonhtml.format(content=val,colname=colname,additional=hgncstrbtn))
             content = ""
             charinrow = 0
