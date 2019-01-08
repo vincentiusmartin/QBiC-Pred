@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}QBiC-Pred: Downloads{% endblock %}
+{% block body %}
+
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/downloads.css') }}">
+<script src="{{ url_for('static', filename='js/downloads.js') }}"></script>
+
+<div class="modal-body">
+  <p>Download list of human TFs that have associated PBM data and OLS models:  file.txt</p>
+  <p>Download list of human TFs with the corresponding mappings to PBM data and OLS models:  file.txt </p>
+  <p>Download all PBM data used to train QBiC OLS models: file.zip</p>
+  <p>Download list of all human TFs: file.txt</p>
+
+  <p>QBiC is available at: <a href="https://github.com/vincentiusmartin/QBiC-Pred" target="_blank">https://github.com/vincentiusmartin/QBiC-Pred</a></p>
+</div>
+
+
+{% endblock %}

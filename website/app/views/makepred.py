@@ -194,7 +194,3 @@ def get_examplelist():
 @app.route('/makeprediction', methods=['GET', 'POST'])
 def makepred():
     return render_template("makepred.html")
-
-@app.route('/about')
-def about():
-    return render_template("about.html")
