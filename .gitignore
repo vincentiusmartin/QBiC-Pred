@@ -19,3 +19,6 @@ generate_prediction/test*
 
 # ignore certificate file
 *.pem
+
+# ignore result from mapping_generator
+website/mapping_generator/mapping_data
