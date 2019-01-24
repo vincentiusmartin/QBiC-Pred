@@ -5,11 +5,13 @@ import itertools
 import time
 import os,sys
 import argparse
+import scipy.stats
+from decimal import Decimal
 
 #sys.path.append('../localpackage')
 import bio
 
-#python3 olskmer_old.py test-in/Mus_musculus\|NA\|Unpublished\|Zfp24.txt test-out -k 3 -d 1 -g 1 -p 1
+#python3 olskmer.py test-in/Mus_musculus\|NA\|Unpublished\|Zfp24.txt test-out -k 3 -d 1 -g 1 -p 1
 
 from sklearn import linear_model
 
@@ -60,8 +62,9 @@ if __name__ == "__main__": # python olskmer.py $filein $output -k $kmer -d $chun
 
     #mutated context
     mutated = dict()
-    for base in bio.nucleotides: # each is sequence of length 11 with the mutated in the middle
-        mutated[base] = [bio.insert_pos(x,base,args.kmer-1) for x in bio.seq_permutation(2*(args.kmer-1))]
+    #gapmer = args.kmer + args.gapsize
+    for base in bio.nucleotides: # each is sequence of length 2k-1 with the mutated in the middle
+        mutated[base] = [bio.insert_pos(seq,base,args.kmer-1) for seq in bio.seq_permutation(2*(args.kmer-1))]
     # we have 1048576 combinations from 4**10
 
     chunk = len(bio.nucleotides)**((args.kmer-1)*2) // args.div
@@ -113,7 +116,8 @@ if __name__ == "__main__": # python olskmer.py $filein $output -k $kmer -d $chun
 
         newout = pd.DataFrame({'dna_seq':[bio.itoseq(x) for x in dna_seq],
                                         'diff':diff_all,
-                                        't':t_all},columns=['dna_seq','diff','t'])
+                                        't':t_all
+                                },columns=['dna_seq','diff','t'])
         output_all = output_all.append(newout,ignore_index = True)
 
     na_entries = pd.DataFrame(columns=['dna_seq','diff','t'])
@@ -124,7 +128,14 @@ if __name__ == "__main__": # python olskmer.py $filein $output -k $kmer -d $chun
             't':np.nan
         },columns=['dna_seq','diff','t']))
     output_all = output_all.append(na_entries,ignore_index = True).sort_values(['dna_seq'],ascending=True) #replace(np.nan, 'NaN', regex=True)
+    #print([scipy.stats.norm.sf(abs(t))*2 for t in t_all]) # 'p':scipy.stats.norm.sf(abs(t_all))*2
     output_all.to_csv("{}/prediction{}mer.{}.csv".format(outpath,args.kmer,filename),columns=['diff','t'],sep=' ',index=None,float_format="%.5f")
+
+    pvals = [scipy.stats.norm.sf(abs(x))*2 for x in output_all['t'].tolist()]
+    if not os.path.exists("{}/pvals".format(outpath)):
+        os.makedirs("{}/pvals".format(outpath))
+    with open("{}/pvals/pval{}mer.{}.csv".format(outpath,args.kmer,filename),'w') as f:
+        f.write("\n".join('%.4e' % Decimal(p) for p in pvals))
 
     print("--- Total time: %s seconds ---" % (time.time() - start_time))
 #4372.6606secs

@@ -9,11 +9,13 @@
 #SBATCH --mail-user=vm76@duke.edu
 
 # Directory setting -- parallelize per TF
-#"/gpfs/fs0/data/gordanlab/vincentius" "/home/vincentius/Research/mutpred/Mutpred-all/preparator"
+#output="test-out"
 output="/data/gordanlab/vincentius/predmodel"
-# (/home/vincentius/Research/mutpred/mutation-predictor/all-test2/*) #(/home/vm76/tf/*)
+#input=(test-in/*)
 input=(/data/gordanlab/vincentius/pbmdata/*)
 # Parameter configuration
+#kmer=3
+#chunk=1
 kmer=6
 chunk=32
 
@@ -25,11 +27,15 @@ echo $filein
 echo "task_id: $SLURM_ARRAY_TASK_ID"
 
 # read gap parameters
-array=()
-while read line ; do
-  array+=($line)
-done < <(python3 predutils.py -g $filein)
-gappos=${array[0]}
-gapsize=${array[1]}
+#array=()
+#while read line ; do
+#  array+=($line)
+#done < <(python3 predutils.py -g $filein)
+#gappos=${array[0]}
+#gapsize=${array[1]}
+
+# use ungapped model for now
+gappos=0
+gapsize=0
 
 python olskmer.py $filein $output -k $kmer -d $chunk -g $gapsize -p $gappos
