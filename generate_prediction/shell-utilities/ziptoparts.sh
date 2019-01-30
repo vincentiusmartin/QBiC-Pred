@@ -27,7 +27,7 @@ do
     fi
 done
 if [ "$files" != "" ]; then
-    zip  ${curdir}/${zipname}.zip $files
+    zip  ${curdir}/${zipname}_${partnum}.zip $files
 fi
 
 
