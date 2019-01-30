@@ -129,12 +129,12 @@ if __name__ == "__main__": # python olskmer.py $filein $output -k $kmer -d $chun
         },columns=['dna_seq','diff','t']))
     output_all = output_all.append(na_entries,ignore_index = True).sort_values(['dna_seq'],ascending=True) #replace(np.nan, 'NaN', regex=True)
     #print([scipy.stats.norm.sf(abs(t))*2 for t in t_all]) # 'p':scipy.stats.norm.sf(abs(t_all))*2
-    output_all.to_csv("{}/prediction{}mer.{}.csv".format(outpath,args.kmer,filename),columns=['diff','t'],sep=' ',index=None,float_format="%.5f")
+    output_all.to_csv("{}/prediction{}mer.{}.txt".format(outpath,args.kmer,filename),columns=['diff','t'],sep=' ',index=None,float_format="%.5f")
 
     pvals = [scipy.stats.norm.sf(abs(x))*2 for x in output_all['t'].tolist()]
     if not os.path.exists("{}/pvals".format(outpath)):
         os.makedirs("{}/pvals".format(outpath))
-    with open("{}/pvals/pval{}mer.{}.csv".format(outpath,args.kmer,filename),'w') as f:
+    with open("{}/pvals/pval{}mer.{}.txt".format(outpath,args.kmer,filename),'w') as f:
         f.write("\n".join('%.4e' % Decimal(p) for p in pvals))
 
     print("--- Total time: %s seconds ---" % (time.time() - start_time))
