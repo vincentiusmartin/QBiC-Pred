@@ -13,6 +13,7 @@
     <li><a href="#section1">QBiC-Pred input</a></li>
     <li><a href="#section2">TF binding models</a></li>
     <li><a href="#section3">QBiC-Pred output</a></li>
+    <li><a href="#section4">QBiC 12-mer encoding</a></li>
   </ol>
 
   <a name="section1"><h3>1. QBiC-Pred input</h3></a>
@@ -274,10 +275,52 @@
   <div class="screenshoot-img"><img class="img-fluid" src="/static/images/about_page/output4b.png" /></div>
 
   <p>
-  At any point during the visualization and processing of the QBiC-Pred results, users can download the current results in comma delimited format using <span class="gray-inline-text">download <font color="blue">csv</font>/<font color="blue">tsv</font></span> link below the table. The downloaded results can be uploaded back into QBiC-Pred at any time for further processing and filtering, using the “Upload Result” page:
+    At any point during the visualization and processing of the QBiC-Pred results, users can download the current results in comma delimited format using <span class="gray-inline-text">download <font color="blue">csv</font>/<font color="blue">tsv</font></span> link below the table. The downloaded results can be uploaded back into QBiC-Pred at any time for further processing and filtering, using the “Upload Result” page:
   </p>
   <div class="screenshoot-img"><img class="img-fluid" src="/static/images/about_page/uploadpage.png" /></div>
   <p>This uploaded data will be saved for 24 hours, after which the user can upload the result file again in order to use the website interface to explore the results.</p>
   <br />
+
+  <a name="section4"><h3>4. QBiC 12-mer encoding</h3></a>
+  <p>
+    QBiC makes prediction of the impact of a single bp substitution mutation on
+    a TF binding by doing table lookup to our pretrained <i>prediction table.</i> This
+    table contains the change in binding due to the mutation (i.e. diff) and t-score calculated for
+    mutation in an 11-mer sequence. In fact, since we have a large number of
+    observations, the distribution of the test statistics is approximately
+    normal, and we can use the t-value obtained as a z-score.  For a more
+    detailed explanation on how these values are calculated, please refer to
+    section 2.3 to 2.5 from the <a href =
+    "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5501730/pdf/nihms873566.pdf">
+    original paper </a>. Below is an example of a mutation in an 11-mer sequence:
+  </p>
+  <img class="img-fluid" src="/static/images/about_page/mutexample.png" style="width:200px" />
+  <p>
+    Now we want to get the diff and z-score for the above mutation from the lookup
+    table. Below is an example for a lookup table: (in the prediction file, it
+    is represented as a space separated table.)
+  </p>
+  <img class="img-fluid" src="/static/images/about_page/12mer-tbl.png" style="width:500px" />
+  <p>
+    The lookup table contains an ordered 12-mer encoding of all possible mutations
+    in every 11-mer sequence. Basically, we append the nucleotide that is mutated
+    to in the end of the sequence. So for the above sequence, its 12-mer
+    representation will be:
+  </p>
+  <img class="img-fluid" src="/static/images/about_page/12mer-encoding.png" style="width:300px" />
+  <p>
+    So we can think of each row having the sequence and its index representation
+    without having to save it. Such representation is depicted below:
+  </p>
+  <img class="img-fluid" src="/static/images/about_page/12mer-tbl-extended.png" style="width:380px" />
+  <p>
+    By using this table, we can look for the 12-mer sequence given before.
+    By calculating its index, we get that it is located on index 2161441. Then
+    we can finally get the predictions we want:
+  </p>
+  <img class="img-fluid" src="/static/images/about_page/12mer-example.png" style="width:600px" />
+  Since we treat t-value as z-score, we can easily calculate p-value from it.
+  So, we don't save that in QBiC. However, for convenience, we also provide
+  12-mer lookup table to download in the <a href="/downloads"> Download page</a>.
 </div>
 {% endblock %}
