@@ -243,7 +243,7 @@ def get_res_tbl(task_id):
         rowdict['mutant'] = doc.mutant[:5] + '<span class="bolded-red">' + doc.mutant[5] + '</span>' + doc.mutant[6:]
         rowdict['z_score'] = customround(doc.z_score)
         rowdict['p_value'] = customround(doc.p_value)
-        rowdict['binding_status'] = htmlformat(doc.binding_status,"filter","binding_status")
+        #rowdict['binding_status'] = htmlformat(doc.binding_status,"filter","binding_status") #vmartin: binding-flag
         rowdict['gapmodel'] = htmlformat(doc.gapmodel,"filter","gapmodel")
         rowdict['TF_gene'] = htmlformat(doc.TF_gene,"filter","TF_gene")
         rowdict['pbmname'] = htmlformat(doc.pbmname,"filter","pbmname")

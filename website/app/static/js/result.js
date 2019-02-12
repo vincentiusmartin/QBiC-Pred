@@ -129,7 +129,7 @@ function displayResult(status_url){
             <select id="ressearch-select" name="ressearch-select" class="selectpicker" data-width="fit">
               <option selected>in sequence</option>
               <option>TF genes</option>
-              <option>Binding status</option>
+              <!--<option>Binding status</option>-->
               <option>p-value</option>
               <option>z-score</option>
             </select>
