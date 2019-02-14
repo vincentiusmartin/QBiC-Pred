@@ -74,7 +74,8 @@ def inittbl(self,filename,cpath):
 #==================================== Prediction Part ====================================
 
 # TODO: remove sharedlist if not needed anymore
-def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
+def predict(predlist, dataset, sharedlist,
+            filteropt=1, filterval=1, ecutoff="specific-binding"):
     '''
     for the container list, key is a tuple of: (rowidx,sequence,seqidx)
     and each element in value is a list if: [diff,z-score,pbmname]
@@ -83,6 +84,7 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
      filteropt=1: diff,z_score,tfname
      filteropt=2: diff,p_val,escore,tfname
     '''
+
     buggedtf = 0
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
     if filteropt == 1: #t-value
@@ -123,7 +125,14 @@ def predict(predlist,dataset,sharedlist,filteropt=1,filterval=1):
                     add = False
             if add:
                 isbound = utils.isbound_escore_18mer(row_key[2],pbmname,app.config['ESCORE_DIR'])
-                container[row_key].append([diff,zscore,pval,isbound,pbmname])
+                b1,b2 = isbound.split(">")
+                # E-score advanced filtering
+                if  (
+                    (ecutoff == "specific-binding" and (b1 == "bound" or b2 == "bound")) or
+                    (ecutoff == "nonspecific-binding" and (b1 == "ambiguous" or b1 == "bound" or b2 == "ambiguous" or b2 == "bound")) or
+                    (ecutoff == "no-filter")
+                    ):
+                    container[row_key].append([diff,zscore,pval,isbound,pbmname])
         sharedlist.append(pbmname) # TODO: delete this?
         print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
 
@@ -235,7 +244,8 @@ def savetoredis(req_id,colnames,datavalues,expired_time):
 
 #https://github.com/MehmetKaplan/Redis_Table
 @celery.task(bind=True)
-def do_prediction(self,intbl,selections,gene_names,filteropt=1,filterval=1):
+def do_prediction(self, intbl, selections, gene_names,
+                  filteropt=1, filterval=1, ecutoff="specific-binding"):
     '''
     intbl: preprocessed table
     filteropt: 1 for highest t-val, 2 for p-val cutoff
@@ -258,7 +268,7 @@ def do_prediction(self,intbl,selections,gene_names,filteropt=1,filterval=1):
     preds = utils.chunkify(predfiles,app.config['PCOUNT']) # chunks the predfiles for each process
 
     sharedlist = mp.Manager().list()
-    async_pools = [pool.apply_async(predict, (preds[i],intbl,sharedlist,filteropt,filterval)) for i in range(0,len(preds))]
+    async_pools = [pool.apply_async(predict, (preds[i],intbl,sharedlist,filteropt,filterval,ecutoff)) for i in range(0,len(preds))]
 
     # run the job, update progress bar
     total = len(predfiles)

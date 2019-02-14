@@ -122,9 +122,11 @@ def handle_upload():
             else:
                 filterval = float(request.form.get('output-selection-opt'))
 
+            ecutoff = request.form.get('ecutoff-select')
+
             task = chain(celerytask.inittbl.s(filepath,
                         app.config['CHRDIR'] +"/"+chrver),
-                        celerytask.do_prediction.s(unique_pbms,genes_selected,filteropt,filterval)).apply_async() # put genes_selected here
+                        celerytask.do_prediction.s(unique_pbms,genes_selected,filteropt,filterval,ecutoff)).apply_async() # put genes_selected here
 
             # ==== STORING IN REDIS PART ====
             # it is important to store these in redis so information can be

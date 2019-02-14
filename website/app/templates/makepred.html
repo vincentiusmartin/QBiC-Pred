@@ -10,7 +10,7 @@
   <div class="container-fluid" id="input-form-wrapper">
     <form method="post" enctype="multipart/form-data" id="input-form">
       <div class="row">
-        <div class="form-title"><span>DATA SUBMISSION FORM</span></div>
+        <div class="text-hr"><span>DATA SUBMISSION FORM</span></div>
       </div>
       <div id="form-input">
         <div class="row pt-1">
@@ -169,6 +169,32 @@
           </div>-->
         </div>
 
+        <hr class="divider-line" />
+
+        <div class="row">
+          <div class="col-12 form-group form-elm">
+            <a id="adv-opt-btn" class="btn btn-light btn-sm adv-opt" data-toggle="collapse" href="#adv-opt-collapse" role="button" aria-expanded="false" aria-controls="adv-opt-collapse"><b><span id="adv-opt-label">&#9658; Advanced option</span></b></a>
+            <div class="collapse multi-collapse" id="adv-opt-collapse">
+              <div class="card card-body">
+                <div class="row">
+                  <div class="col-12 col-lg-4 form-elm">
+                    <label for="genomelist">PBM E-score cutoff:</label>
+                    <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+                    data-toggle="popover" data-placement="right" data-trigger="hover"
+                    data-content="PBM e-score">
+                    </button>
+                    <br />
+                    <select id="ecutoff-select" name="ecutoff-select" class="selectpicker">
+                      <option selected>specific-binding</option>
+                      <option>nonspecific-binding</option>
+                      <option>no-filter</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div id="upload-form">
@@ -191,6 +217,7 @@
         </a>
     </div>
   </div>
+
 </div>
 
 <br />

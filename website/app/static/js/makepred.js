@@ -226,6 +226,18 @@ function updateOutputLabel(newlabel){
     }
 }
 
+function advOptCollapse(){
+    $('#adv-opt-btn').click(function(){
+        $(this).text(function(i,old){
+            if (old=='► Advanced option') {
+                $("#adv-opt-label").html("&#9660; Advanced option");
+            }else{
+                $("#adv-opt-label").html("&#9658; Advanced option");
+            }
+        });
+    });
+}
+
 /* get TF uploaded from file */
 function uploadTFFomFile(){
     $("#tf-file").on('change', function(){
@@ -326,6 +338,7 @@ $(function() {
     changeOptOnFileSelected();
     listExampleInput();
     changeInputOptOnClick();
+    advOptCollapse();
 
     updateOutputLabelWrapper(); // check change on output options
     updateFromFamilies();
