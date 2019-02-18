@@ -30,6 +30,21 @@ Installation is taken from [here](https://thomassileo.name/blog/2012/08/20/how-t
 - Since we are using RediSearch, from RediSearch/build: redis-server --loadmodule ./redisearch.so --daemonize yes
 
 ## Roadmap (since Feb 2019)
-- [x] advanced option
-- [ ] accept input 15mer sequences
+- [x] advanced option for E-score
+- [ ] accept input 15mer sequences + mutated
+- [ ] handle expiry after items are deleted in Redis
 - [ ] put timestamp on recent jobs and enable deletion on them
+
+## Finished Previous Roadmaps
+- [x] loading message
+- [x] save user data in redis instead of cookie
+- [x] parse chromosome another versions
+- [x] delete restbl in /tmp after expired time
+- [x] integrate e-score calculation
+- [x] search in result DataTable
+- [x] input verification
+- [x] show user input configuration
+- [x] show gene in the output
+- [x] family - gene field must match
+- [x] things to output -- BEST EFFORT
+- [x] match redis session expired date and user recent job list -- FINAGLED W/ CELERY (still need work tho)
