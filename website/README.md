@@ -13,8 +13,21 @@
        Each line contains mapping in the format of
        `familyname->tf1:pbm1,pbm2,...;tf2:pbm1,pbm2,...`
 
-## Roadmap
-- [x] roadmap1
-- [x] roadmap2
-- [x] roadmap3
-- [ ] roadmap4
+## Web server command
+
+### Apache
+1. systemctl reload apache2
+2. systemctl restart apache2
+
+### Celery (using systemctl)
+- Run supervisord: venv2/bin/supervisord
+- Log: supervisorctl tail celeryd
+- Restart: supervisorctl restart celeryd
+
+### Daemonize redis
+- Since we are using RediSearch, from RediSearch/build: redis-server --loadmodule ./redisearch.so --daemonize yes
+
+## Roadmap (since Feb 2018)
+- [x] advanced option
+- [ ] accept input 15mer sequences
+- [ ] put timestamp on recent jobs and enable deletion on them
