@@ -10,8 +10,9 @@ from celery import Celery,chain
 from app import app,db
 
 import app.controller.celerytask as celerytask
+import app.controller.utils as utils
 
-ALLOWED_EXTENSIONS = set(['csv','tsv','vcf'])
+ALLOWED_EXTENSIONS = set(['csv','tsv','vcf','txt'])
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # view specific utils
@@ -41,6 +42,19 @@ def is_valid_cols(filepath):
             else:
                 os.remove(filepath)
                 return False
+    elif file_extension == ".txt":
+        with open(filepath) as f:
+            for line in f:
+                line = f.readline().strip()
+                if "\t" in line:
+                    line = line.split("\t")
+                else:
+                    line = line.split()
+                valid = len(line) == 2 and utils.is_dna(line[0],length=17) and utils.is_dna(line[1],length=1)
+                if not valid:
+                    os.remove(filepath)
+                    return False
+        return True
     return False
 
 
@@ -57,6 +71,8 @@ def prepare_request(request):
     specbind_thres =  float(request.form.get("specific-binding-thres"))
     if specbind_thres < 0.3 or specbind_thres > 0.5:
         return 'error','specific binding threshold should be between 0.3 and 0.5'
+    if nonspecbind_thres >= specbind_thres:
+        return 'error','nonspecific binding threshold should be less than specific binding threshold'
     # First, check if the input file is valid, this depends on the input-mode
     if request.form.get('input-mode') == "1": # not example
         if 'input-file' not in request.files:
@@ -71,7 +87,7 @@ def prepare_request(request):
         file.seek(0) # seek back
         # Can only accept tsv or csv or vcf
         if not allowed_file(file.filename):
-            return 'error','please upload only tsv/csv or vcf file'
+            return 'error','please upload only tsv/csv, vcf, or txt (with sequences) file'
         # No file selected:
         if file.filename == '':
             return 'error','no selected file'
@@ -80,7 +96,7 @@ def prepare_request(request):
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         if not is_valid_cols(filepath):
-            return 'error','some required fields are missing from the input file'
+            return 'error','some required fields are missing from the input file or some values are incorrect'
         returnstatus = "success"
     else: #input-mode==2
         if not request.form.get('examplelist'):
@@ -91,7 +107,6 @@ def prepare_request(request):
     # No TFs selected
     if not request.form.getlist('pred-select'):
         return 'error','please select transcription factors'
-
     # Check if p-value is in the valid range
     filteropt = int(request.form.get('optradio'))
     if filteropt == 2:

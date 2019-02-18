@@ -29,6 +29,13 @@ def seqtoi(seq):
         binrep |= nucleotides[seq[i]]
     return binrep
 
+def is_dna(sequence,length=0):
+    valid_dna = 'ACGT'
+    check = all(i in valid_dna for i in sequence.upper())
+    if check and length > 0:
+        check = (len(sequence) == length)
+    return check
+
 def isbound_escore(seq,etable,kmer=8,bsite_cutoff=0.4,nbsite_cutoff=0.35):
     nucleotides = {'A':0,'C':1,'G':2,'T':3}
     grapper = (2<<(8*2-1))-1

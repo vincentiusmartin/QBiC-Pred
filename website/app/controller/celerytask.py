@@ -22,43 +22,61 @@ def inittbl(self,filename,cpath):
     kmer = 6
     start = time.time()
     file_extension = os.path.splitext(filename)[1]
-    if file_extension == ".vcf":
-        df = pd.read_csv(filename,sep="\t",header=None).drop(2,1)
-        df = df.rename(columns={0:"chromosome",1:"pos",3:"mutated_from",4:"mutated_to"})
-        df['chromosome'] = df['chromosome'].map(lambda x:x.replace("chr",""))
-    else:
-        if file_extension == ".tsv":
-            separator = "\t"
-        else: # must be csv since we checked it
-            separator = ","
-        df = pd.read_csv(filename,
-                    sep=separator,
-                    usecols=['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele'])
-        df = df[df['mutation_type'].apply(lambda x: "single base substitution" == x)].drop('mutation_type',1).drop_duplicates() # only take single base mutation
-        df = df.rename(columns={"chromosome_start":"pos","mutated_from_allele":"mutated_from","mutated_to_allele":"mutated_to"})
-    grouped = df.groupby('chromosome',sort=True)
-    dataset = {key:item for key,item in grouped}
 
-    result = list()
+    result = []
     error = ""
-    for cidx in [str(a) for a in range(1,23)] + ['X','Y']:
-        self.update_state(state='PROGRESS',
-                  meta={'current': 0, 'total': 1, 'status': 'Preprocessing input for chromosome {}...'.format(cidx)})
-        if cidx not in dataset:
-            continue
-        print("Iterating dataset for chromosome {}...".format(cidx))
-        chromosome = utils.get_chrom(cpath + "/chr." + str(cidx) + '.fa.gz')
-        for idx,row in dataset[cidx].iterrows():
-            pos = row['pos'] - 1
-            if row['mutated_from'] != chromosome[pos]:
-                error = "Found mismatch in the mutation: \n{}".format(row)
+
+    # TODO: if fast enough, we can also put error checking in here
+    if file_extension == ".txt":
+        with open(filename) as f:
+            idx = 0
+            for line in f:
+                if "\t" in line:
+                    line = line.split("\t")
+                else:
+                    line = line.split()
+                idx += 1
+                # line[1] is the base mid nucleotide mutated to
+                escore_seq = line[0] + line[1]
+                mid_seq = escore_seq[len(escore_seq)//2-6:len(escore_seq)//2+5] + line[1] # the 12mer seq
+                result.append([idx,mid_seq,escore_seq,utils.seqtoi(mid_seq),0,0,"None"])
+    else:
+        if file_extension == ".vcf":
+            df = pd.read_csv(filename,sep="\t",header=None).drop(2,1)
+            df = df.rename(columns={0:"chromosome",1:"pos",3:"mutated_from",4:"mutated_to"})
+            df['chromosome'] = df['chromosome'].map(lambda x:x.replace("chr",""))
+        else:
+            if file_extension == ".tsv":
+                separator = "\t"
+            else: # must be csv since we checked it, TODO: can also return error here
+                separator = ","
+            df = pd.read_csv(filename,
+                        sep=separator,
+                        usecols=['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele'])
+            df = df[df['mutation_type'].apply(lambda x: "single base substitution" == x)].drop('mutation_type',1).drop_duplicates() # only take single base mutation
+            df = df.rename(columns={"chromosome_start":"pos","mutated_from_allele":"mutated_from","mutated_to_allele":"mutated_to"})
+
+        grouped = df.groupby('chromosome',sort=True)
+        dataset = {key:item for key,item in grouped}
+
+        for cidx in [str(a) for a in range(1,23)] + ['X','Y']:
+            self.update_state(state='PROGRESS',
+                      meta={'current': 0, 'total': 1, 'status': 'Preprocessing input for chromosome {}...'.format(cidx)})
+            if cidx not in dataset:
+                continue
+            print("Iterating dataset for chromosome {}...".format(cidx))
+            chromosome = utils.get_chrom(cpath + "/chr." + str(cidx) + '.fa.gz')
+            for idx,row in dataset[cidx].iterrows():
+                pos = row['pos'] - 1
+                if row['mutated_from'] != chromosome[pos]:
+                    error = "Found mismatch in the mutation: \n{}".format(row)
+                    break
+                seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to'] #-5,+6
+                # for escore, just use 8?
+                escore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to']
+                result.append([idx,seq,escore_seq,utils.seqtoi(seq),0,0,"None"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
+            if error:
                 break
-            seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to'] #-5,+6
-            # for escore, just use 8?
-            esccore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to']
-            result.append([idx,seq,esccore_seq,utils.seqtoi(seq),0,0,"None"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
-        if error:
-            break
 
     # finish parsing the file, delete it
     if filename.startswith(app.config['UPLOAD_FOLDER']):
@@ -68,6 +86,7 @@ def inittbl(self,filename,cpath):
         return error
     else:
         result = sorted(result,key=lambda result:result[0])
+        # example row in result: [73, 'CCAACCAACCCA', 'ATTCCAACCAACCCCCTA', 5263444, 0, 0, 'None']
         print("Time to preprocess: {:.2f}secs".format(time.time()-start))
         return result
 

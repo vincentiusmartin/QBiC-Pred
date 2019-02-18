@@ -16,26 +16,32 @@
 ## Daemonize web server command
 
 ### Apache (used mainly to restart Flask)
-1. systemctl reload apache2
-2. systemctl restart apache2
+- Reload: `systemctl reload apache2`
+- Restart: `systemctl restart apache2`
 
 ### Celery (using systemctl)
 Installation is taken from [here](https://thomassileo.name/blog/2012/08/20/how-to-keep-celery-running-with-supervisor/)
 
-- Run supervisord: venv2/bin/supervisord
-- Log: supervisorctl tail celeryd
-- Restart: supervisorctl restart celeryd
+- Run `supervisord: venv2/bin/supervisord`
+- Log: `supervisorctl tail celeryd`
+- Restart: `supervisorctl restart celeryd`
 
 ### Daemonize redis
-- Since we are using RediSearch, from RediSearch/build: redis-server --loadmodule ./redisearch.so --daemonize yes
+- Since we are using RediSearch, from RediSearch/build: `redis-server --loadmodule ./redisearch.so --daemonize yes`
 
 ## Roadmap (since Feb 2019)
 - [x] advanced option for E-score
-- [ ] accept input 15mer sequences + mutated
+- [ ] accept input 17mer sequences + mutated
+- [ ] fix bug on the upload
+- [ ] job name to be the name of the file
+- [ ] acknowledgment section
+- [ ] download, only the filtered
 - [ ] handle expiry after items are deleted in Redis
 - [ ] put timestamp on recent jobs and enable deletion on them
+- [ ] email notification
+- [ ] remove sharedlist variable from predict if truly unecessary
 
-## Finished Previous Roadmaps
+## Finished (2018) Roadmap
 - [x] loading message
 - [x] save user data in redis instead of cookie
 - [x] parse chromosome another versions
