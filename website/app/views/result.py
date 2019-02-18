@@ -70,13 +70,13 @@ def get_res_col(task_id):
     "z_score":"z score",
     "TF_gene":"TF gene",
     "binding_status":"Binding status",
-    "gapmodel":"Gap model",
+    #"gapmodel":"Gap model", #vmartin: comment this
     "pbmname":"PBM filename"
     }
     if db.exists(col_id):
         cols_fromdb = ast.literal_eval(db.hgetall(col_id)['cols'])
-        #with open("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)) as f:
-        cols = [{"title":colmap[title]} for title in cols_fromdb]
+        # add conditional to ignore if there is any undefined column
+        cols = [{"title":colmap[title]} for title in cols_fromdb if title in colmap] #vmartin: hide gap model
     # else just return an empty list
     return jsonify(cols)
 
@@ -244,7 +244,7 @@ def get_res_tbl(task_id):
         rowdict['z_score'] = customround(doc.z_score)
         rowdict['p_value'] = customround(doc.p_value)
         #rowdict['binding_status'] = htmlformat(doc.binding_status,"filter","binding_status") #vmartin: binding-flag
-        rowdict['gapmodel'] = htmlformat(doc.gapmodel,"filter","gapmodel")
+        #rowdict['gapmodel'] = htmlformat(doc.gapmodel,"filter","gapmodel")
         rowdict['TF_gene'] = htmlformat(doc.TF_gene,"filter","TF_gene")
         rowdict['pbmname'] = htmlformat(doc.pbmname,"filter","pbmname")
         retlist.append([rowdict[col] for col in cols])

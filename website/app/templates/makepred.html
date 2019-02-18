@@ -178,17 +178,32 @@
               <div class="card card-body">
                 <div class="row">
                   <div class="col-12 col-lg-4 form-elm">
-                    <label for="genomelist">PBM E-score cutoff:</label>
+                    <label for="genomelist">PBM E-score cutoff for nonspecific-binding (should be between 0.2-0.4):</label>
                     <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
                     data-toggle="popover" data-placement="right" data-trigger="hover"
-                    data-content="PBM e-score">
+                    data-content="A sequence is considered as non-significant (i.e. unbound) if its maximum 8-mer e-score is below this cutoff value.">
                     </button>
                     <br />
-                    <select id="ecutoff-select" name="ecutoff-select" class="selectpicker">
-                      <option selected>specific-binding</option>
-                      <option>nonspecific-binding</option>
-                      <option>no-filter</option>
-                    </select>
+                    <div id="nonspecific-binding-wrapper" class="col-12 col-lg-4">
+                      <input class="form-control" type="text"
+                         id="nonspecific-binding-thres" name="nonspecific-binding-thres"
+                         value="0.35" placeholder="nonspecific-binding cutoff" />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-lg-4 form-elm">
+                    <label for="genomelist">PBM E-score cutoff for specific-binding (should be between 0.3-0.5):</label>
+                    <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+                    data-toggle="popover" data-placement="right" data-trigger="hover"
+                    data-content="A sequence is considered as significant (i.e. bound) if there are two consecutive 8-mers with e-scores above this value. If this condition is not met but there are 8-mer e-scores above nonspecific-binding cutoff, then it will be considered as &quot;ambiguous&quot;.">
+                    </button>
+                    <br />
+                    <div id="specific-binding-wrapper" class="col-12 col-lg-4">
+                      <input class="form-control" type="text"
+                         id="specific-binding-thres" name="specific-binding-thres"
+                         value="0.4" placeholder="specific-binding cutoff" />
+                    </div>
                   </div>
                 </div>
               </div>

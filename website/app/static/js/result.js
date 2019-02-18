@@ -290,7 +290,8 @@ function getInputParam(status_url){
         $('#inputpanel').prepend(
             '<p><b> File input:</b><br />' + data['filename'] + '</p>' +
             '<p><b> Running mode:</b><br />' + filterstr + '</p>' +
-            '<p><b> Genome version:</b><br />' + data['chrver'] + '</p>'
+            '<p><b> Genome version:</b><br />' + data['chrver'] + '</p>' +
+            '<p><b> E-score threshold (specific / nonspecific):</b><br />' + data['spec_escore_thres'] + ' / ' + data['nonspec_escore_thres'] + '</p>'
         )
     });
 }

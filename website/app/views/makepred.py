@@ -51,6 +51,12 @@ return: status, msg
 msg = filename if success
 '''
 def prepare_request(request):
+    nonspecbind_thres =  float(request.form.get("nonspecific-binding-thres"))
+    if nonspecbind_thres < 0.2 or nonspecbind_thres > 0.4:
+        return 'error','nonspecific binding threshold should be between 0.2 and 0.4'
+    specbind_thres =  float(request.form.get("specific-binding-thres"))
+    if specbind_thres < 0.3 or specbind_thres > 0.5:
+        return 'error','specific binding threshold should be between 0.3 and 0.5'
     # First, check if the input file is valid, this depends on the input-mode
     if request.form.get('input-mode') == "1": # not example
         if 'input-file' not in request.files:
@@ -85,6 +91,7 @@ def prepare_request(request):
     # No TFs selected
     if not request.form.getlist('pred-select'):
         return 'error','please select transcription factors'
+
     # Check if p-value is in the valid range
     filteropt = int(request.form.get('optradio'))
     if filteropt == 2:
@@ -122,11 +129,12 @@ def handle_upload():
             else:
                 filterval = float(request.form.get('output-selection-opt'))
 
-            ecutoff = request.form.get('ecutoff-select')
+            spec_escore_thres = float(request.form.get('specific-binding-thres'))
+            nonspec_escore_thres = float(request.form.get('nonspecific-binding-thres'))
 
             task = chain(celerytask.inittbl.s(filepath,
                         app.config['CHRDIR'] +"/"+chrver),
-                        celerytask.do_prediction.s(unique_pbms,genes_selected,filteropt,filterval,ecutoff)).apply_async() # put genes_selected here
+                        celerytask.do_prediction.s(unique_pbms,genes_selected,filteropt,filterval,spec_escore_thres,nonspec_escore_thres)).apply_async() # put genes_selected here
 
             # ==== STORING IN REDIS PART ====
             # it is important to store these in redis so information can be
@@ -137,7 +145,10 @@ def handle_upload():
                             "genes_selected":genes_selected,
                             "filteropt":filteropt,
                             "filterval":filterval,
-                            "chrver":request.form.get('genome-select')}
+                            "chrver":request.form.get('genome-select'),
+                            "spec_escore_thres":spec_escore_thres,
+                            "nonspec_escore_thres":nonspec_escore_thres
+                            }
             if db.exists(task.id):
                 db.delete(task.id)
             db.hmset(task.id,session_info)

@@ -75,7 +75,7 @@ def inittbl(self,filename,cpath):
 
 # TODO: remove sharedlist if not needed anymore
 def predict(predlist, dataset, sharedlist,
-            filteropt=1, filterval=1, ecutoff="specific-binding"):
+            filteropt=1, filterval=1, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
     '''
     for the container list, key is a tuple of: (rowidx,sequence,seqidx)
     and each element in value is a list if: [diff,z-score,pbmname]
@@ -124,15 +124,8 @@ def predict(predlist, dataset, sharedlist,
             elif pval > filterval:
                     add = False
             if add:
-                isbound = utils.isbound_escore_18mer(row_key[2],pbmname,app.config['ESCORE_DIR'])
-                b1,b2 = isbound.split(">")
-                # E-score advanced filtering
-                if  (
-                    (ecutoff == "specific-binding" and (b1 == "bound" or b2 == "bound")) or
-                    (ecutoff == "nonspecific-binding" and (b1 == "ambiguous" or b1 == "bound" or b2 == "ambiguous" or b2 == "bound")) or
-                    (ecutoff == "no-filter")
-                    ):
-                    container[row_key].append([diff,zscore,pval,isbound,pbmname])
+                isbound = utils.isbound_escore_18mer(row_key[2],pbmname,app.config['ESCORE_DIR'],spec_ecutoff,nonspec_ecutoff)
+                container[row_key].append([diff,zscore,pval,isbound,pbmname])
         sharedlist.append(pbmname) # TODO: delete this?
         print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
 
@@ -160,7 +153,7 @@ def format2tbl(tbl,gene_names,filteropt=1):
             linemap = line.strip().split(":")
             pbmtohugo[linemap[0]] = linemap[1].split(",")
 
-    gapdata = read_gapfile(app.config['GAP_FILE'])
+    #gapdata = read_gapfile(app.config['GAP_FILE'])
 
     sorted_key = sorted(tbl.keys())
     datavalues = []
@@ -181,14 +174,15 @@ def format2tbl(tbl,gene_names,filteropt=1):
             if pbmname  == 'None':
                 rowdict['TF_gene'] = ""
                 rowdict['pbmname'] = "None"
-                rowdict['gapmodel'] = "None"
+                #rowdict['gapmodel'] = "None" # vmartin: comment for now
             else:
                 rowdict['TF_gene'] = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
                 rowdict['pbmname'] = pbmname
-                rowdict['gapmodel'] = gapdata[pbmname]
+                #rowdict['gapmodel'] = gapdata[pbmname] # vmartin: comment for now
             datavalues.append(rowdict)
 
-    colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"]
+    #colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"]
+    colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
     return colnames,datavalues
 
 def postprocess(datalist,gene_names,filteropt=1,filterval=1):
@@ -245,7 +239,7 @@ def savetoredis(req_id,colnames,datavalues,expired_time):
 #https://github.com/MehmetKaplan/Redis_Table
 @celery.task(bind=True)
 def do_prediction(self, intbl, selections, gene_names,
-                  filteropt=1, filterval=1, ecutoff="specific-binding"):
+                  filteropt=1, filterval=1, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
     '''
     intbl: preprocessed table
     filteropt: 1 for highest t-val, 2 for p-val cutoff
@@ -268,7 +262,7 @@ def do_prediction(self, intbl, selections, gene_names,
     preds = utils.chunkify(predfiles,app.config['PCOUNT']) # chunks the predfiles for each process
 
     sharedlist = mp.Manager().list()
-    async_pools = [pool.apply_async(predict, (preds[i],intbl,sharedlist,filteropt,filterval,ecutoff)) for i in range(0,len(preds))]
+    async_pools = [pool.apply_async(predict, (preds[i],intbl,sharedlist,filteropt,filterval,spec_ecutoff,nonspec_ecutoff)) for i in range(0,len(preds))]
 
     # run the job, update progress bar
     total = len(predfiles)

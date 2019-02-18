@@ -29,9 +29,7 @@ def seqtoi(seq):
         binrep |= nucleotides[seq[i]]
     return binrep
 
-def isbound_escore(seq,etable,kmer=8):
-    bsite_cutoff = 0.4
-    nbsite_cutoff = 0.3
+def isbound_escore(seq,etable,kmer=8,bsite_cutoff=0.4,nbsite_cutoff=0.35):
     nucleotides = {'A':0,'C':1,'G':2,'T':3}
     grapper = (2<<(8*2-1))-1
     binrep = seqtoi(seq[0:kmer])
@@ -56,7 +54,7 @@ def isbound_escore(seq,etable,kmer=8):
 """
 return: "is bound wild > is bound mut"
 """
-def isbound_escore_18mer(seq18mer,pbm_name,escore_dir):
+def isbound_escore_18mer(seq18mer,pbm_name,escore_dir,spec_ecutoff=0.35,nonspec_ecutoff=0.4):
     eshort_path = "%s/%s_escore.txt" % (escore_dir,pbm_name)
     # TODO: avoid IO, maybe using global var?
     short2long_map = "%s/index_short_to_long.csv" % (escore_dir)
@@ -73,7 +71,8 @@ def isbound_escore_18mer(seq18mer,pbm_name,escore_dir):
     wild = seq18mer[:-1]
     mut = seq18mer[:8] + seq18mer[-1] + seq18mer[9:-1]
 
-    return "%s>%s" % (isbound_escore(wild,elong),isbound_escore(mut,elong))
+    return "%s>%s" % (isbound_escore(wild,elong,bsite_cutoff=spec_ecutoff,nbsite_cutoff=nonspec_ecutoff),
+                      isbound_escore(mut,elong,bsite_cutoff=spec_ecutoff,nbsite_cutoff=nonspec_ecutoff))
 
 def delete_file(filename):
     '''

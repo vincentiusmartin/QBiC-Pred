@@ -58,11 +58,13 @@ def submit_pred_upload():
 
     session_info = {"parent_id":"uploadpred",
                     "task_id":rand_id,
-                    "filename":"",
+                    "filename":"-",
                     "genes_selected":genes_selected,
                     "filteropt":filteropt,
                     "filterval":filterval,
-                    "chrver":""}
+                    "chrver":"-",
+                    "spec_escore_thres":"-",
+                    "nonspec_escore_thres":"-"}
     if db.exists(rand_id):
         db.delete(rand_id)
     db.hmset(rand_id,session_info)
