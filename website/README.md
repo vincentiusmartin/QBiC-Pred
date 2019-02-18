@@ -13,13 +13,15 @@
        Each line contains mapping in the format of
        `familyname->tf1:pbm1,pbm2,...;tf2:pbm1,pbm2,...`
 
-## Web server command
+## Daemonize web server command
 
-### Apache
+### Apache (used mainly to restart Flask)
 1. systemctl reload apache2
 2. systemctl restart apache2
 
 ### Celery (using systemctl)
+Installation is taken from [here](https://thomassileo.name/blog/2012/08/20/how-to-keep-celery-running-with-supervisor/)
+
 - Run supervisord: venv2/bin/supervisord
 - Log: supervisorctl tail celeryd
 - Restart: supervisorctl restart celeryd
@@ -27,7 +29,7 @@
 ### Daemonize redis
 - Since we are using RediSearch, from RediSearch/build: redis-server --loadmodule ./redisearch.so --daemonize yes
 
-## Roadmap (since Feb 2018)
+## Roadmap (since Feb 2019)
 - [x] advanced option
 - [ ] accept input 15mer sequences
 - [ ] put timestamp on recent jobs and enable deletion on them
