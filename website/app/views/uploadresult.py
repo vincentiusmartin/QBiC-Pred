@@ -23,14 +23,22 @@ def prepare_predfile(request):
     filename = secure_filename(file.filename)
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(filepath)
+    file_extension = os.path.splitext(filepath)[1]
+
+    if file_extension == ".tsv":
+        sep = "\t"
+    else:
+        sep = ","
 
     try:
-        df = pd.read_csv(filepath,dtype=str)
+        df = pd.read_csv(filepath,dtype=str,sep=sep)
     except:
         return 'error', 'input is not supported'
     utils.delete_file(filepath) #delete once read
-    check_cols = set(["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"])
+    #check_cols = set(["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"])
+    check_cols = set(["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"])
     df_cols = set(df.columns)
+    print(df_cols)
     if not check_cols.issubset(df_cols):
         return 'error', 'could not find all required fields'
     return 'success',df

@@ -31,15 +31,18 @@ Installation is taken from [here](https://thomassileo.name/blog/2012/08/20/how-t
 
 ## Roadmap (since Feb 2019)
 - [x] advanced option for E-score
-- [ ] accept input 17mer sequences + mutated
-- [ ] fix bug on the upload
-- [ ] job name to be the name of the file
-- [ ] acknowledgment section
+- [x] accept input 17mer sequences + mutated
+- [x] fix bug on the upload
 - [ ] download, only the filtered
+- [ ] job name to be the name of the file
+- [ ] acknowledgment and ownership section
 - [ ] handle expiry after items are deleted in Redis
 - [ ] put timestamp on recent jobs and enable deletion on them
 - [ ] email notification
 - [ ] remove sharedlist variable from predict if truly unecessary
+
+## Things to discuss
+- about the moving image, make something similar to the lab website
 
 ## Finished (2018) Roadmap
 - [x] loading message
