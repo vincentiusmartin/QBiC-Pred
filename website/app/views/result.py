@@ -27,8 +27,36 @@ def process_request(job_id):
     #session.clear() # clear the session given from index
     return render_template("result.html",stats_url=url_for('task_status',task_id=job_id),parents=parents)
 
-@app.route('/files/<filetype>/<taskid>')
-def get_file(filetype,taskid):
+# /<taskid>/<filters>
+@app.route('/files/<filetype>/<task_id>/<filters>')
+def get_file_fromtbl(filetype,task_id,filters): #taskid,filters
+    #filtered_db = filter_fromdb(task_id,searchFilter,start,length,cols[order_col],order_asc)
+    search_filter = ast.literal_eval(filters); # [{"searchOpt":"in sequence","searchKey":"AAT","searchCol":"sequence"}
+    filtered = filter_fromdb(task_id,search_filter,start=0,length=-1)
+
+    ftype = filetype.lower()
+    if ftype == "tsv":
+        sep = "\t"
+    else:
+        sep = ","
+
+    cols = ast.literal_eval(db.hgetall("%s:cols"%task_id)['cols'])
+    tblret = sep.join(cols) + "\n"
+    for doc in filtered['data']:
+        try: # TODO: handle this
+            row = [getattr(doc,col) for col in cols]
+            tblret += sep.join(row) + "\n"
+        except: #now: if not found, just return 404
+            abort(404)
+    print(tblret)
+    return Response(
+        tblret,
+        mimetype="text/csv",
+        headers={"Content-disposition":
+                 "attachment; filename=prediction_result-%s.%s"%(task_id,ftype)})
+
+@app.route('/filesdb/<filetype>/<taskid>')
+def get_file_fromdb(filetype,taskid):
     """Download a file."""
     task = db.hgetall("%s:cols"%taskid)
     cols = ast.literal_eval(task['cols'])
@@ -127,18 +155,31 @@ def dofilter(infilter,doc):
         break
     return flag
 
-def filter_fromdb(task_id,search_filter,start,length,order_col="row",order_asc=True):
+def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_asc=True):
+    '''
+    task_id,
+    search_filter,
+    start,length = -1,
+    order_col="row",
+    order_asc=True
+    '''
     result = {}
     client = redisearch.Client(task_id)
     result['recordsTotal'] = int(client.info()['num_docs'])
 
     #manual = False # manually made because redisearch sucks
+
+    # if there is filter or length == -1 we return everything
+    # hay que devolver todo porque necesitamos contar el número de filas
     if search_filter:
         query = redisearch.Query("*").sort_by(order_col,order_asc).paging(0,result['recordsTotal'])
         documents = client.search(query).docs
         filtered_docs = list(filter(lambda doc: dofilter(search_filter,doc),documents))
         result['recordsFiltered'] = len(filtered_docs)
-        result['data'] = filtered_docs[start:start+length]
+        if length == -1:
+            result['data'] = filtered_docs
+        else:
+            result['data'] = filtered_docs[start:start+length]
     else:
         query = redisearch.Query("*").sort_by(order_col,order_asc).paging(start,length)
         res = client.search(query)
@@ -230,6 +271,7 @@ def get_res_tbl(task_id):
     cols = ast.literal_eval(db.hgetall("%s:cols"%task_id)['cols'])
 
     filtered_db = filter_fromdb(task_id,searchFilter,start,length,cols[order_col],order_asc)
+
     retlist = []
 
     for doc in filtered_db['data']:

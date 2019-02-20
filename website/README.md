@@ -1,5 +1,7 @@
 # QBiC-Pred (Quantitative predictions of transcription factor binding changes due to sequence variants)
 
+![alt text](http://qbic.gcb.duke.edu/static/images/headerlogo.png)
+
 ## To generate TF mapping:
 1. Go to `mapping_generator` folder.
 2. Open `mapping_generator.py`. Then edit path in `gene2upbm` and `tfdb`.
@@ -23,8 +25,8 @@
 Installation is taken from [here](https://thomassileo.name/blog/2012/08/20/how-to-keep-celery-running-with-supervisor/)
 
 - Run `supervisord: venv2/bin/supervisord`
-- Log: `supervisorctl tail celeryd`
-- Restart: `supervisorctl restart celeryd`
+- Log: `venv2/bin/supervisorctl tail celeryd`
+- Restart: `venv2/bin/supervisorctl restart celeryd`
 
 ### Daemonize redis
 - Since we are using RediSearch, from RediSearch/build: `redis-server --loadmodule ./redisearch.so --daemonize yes`
@@ -33,7 +35,8 @@ Installation is taken from [here](https://thomassileo.name/blog/2012/08/20/how-t
 - [x] advanced option for E-score
 - [x] accept input 17mer sequences + mutated
 - [x] fix bug on the upload
-- [ ] download, only the filtered
+- [x] download, only the filtered
+- [ ] loading message/icon when downloaded file is being prepared
 - [ ] job name to be the name of the file
 - [ ] acknowledgment and ownership section
 - [ ] handle expiry after items are deleted in Redis

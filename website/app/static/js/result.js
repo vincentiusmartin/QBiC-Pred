@@ -233,18 +233,29 @@ function updateProgress(status_url,parents){
        if (data['state'] != 'PENDING' && data['state'] != 'PROGRESS') { // it's finish
            if ('result' in data) {
                //var res = data['result'];
-               $('#status').hide();
-               $(".progress").hide();
-               displayResult(status_url);
-               $('#csv-download').css('display','block').html("Download <a href=\"/files/csv/" + data['taskid'] + "\" >CSV</a>/<a href=\"/files/tsv/" + data['taskid'] + "\">TSV</a>");
-           }
-           else if ('error' in data) {
-               // found an error
-               $('#status').html('Error: ' + data['error']);
-           }else{
-               // something unexpected happened
-               $('#status').html('Result: ' + data['state']);
-           }
+              $('#status').hide();
+              $(".progress").hide();
+              displayResult(status_url);
+              $('#tbl-download').css('display','block').html(`
+                  Download:
+                  <button type=\"button\" class=\"btn btn-link tbl-download-link \">CSV</button> /
+                  <button type=\"button\" class=\"btn btn-link tbl-download-link \">TSV</button>
+              `);
+              // Download <a href=\"/files/csv/" + data['taskid'] + "/" + filterList + "\" >CSV</a>/<a href=\"/files/tsv/" + data['taskid'] + "/" + filterList + "\">TSV</a>
+              $(".tbl-download-link").click(function() {
+                  //alert(JSON.stringify(filterList));
+                  fileType = $(this).html();
+                  filterList = JSON.stringify(getFilterList());
+                  //alert(JSON.stringify(filterList));
+                  document.location.href = "/files/" + fileType + "/" + data['taskid'] + "/" + filterList;
+              });
+          }else if ('error' in data) {
+              // found an error
+              $('#status').html('Error: ' + data['error']);
+          }else{
+              // something unexpected happened
+              $('#status').html('Result: ' + data['state']);
+          }
        }
        else {
            // rerun in 2 seconds
