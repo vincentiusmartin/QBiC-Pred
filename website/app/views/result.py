@@ -48,7 +48,6 @@ def get_file_fromtbl(filetype,task_id,filters): #taskid,filters
             tblret += sep.join(row) + "\n"
         except: #now: if not found, just return 404
             abort(404)
-    print(tblret)
     return Response(
         tblret,
         mimetype="text/csv",
@@ -168,6 +167,8 @@ def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_as
     result['recordsTotal'] = int(client.info()['num_docs'])
 
     #manual = False # manually made because redisearch sucks
+    if length == -1:
+        length = result['recordsTotal'] - start
 
     # if there is filter or length == -1 we return everything
     # hay que devolver todo porque necesitamos contar el número de filas
@@ -176,10 +177,7 @@ def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_as
         documents = client.search(query).docs
         filtered_docs = list(filter(lambda doc: dofilter(search_filter,doc),documents))
         result['recordsFiltered'] = len(filtered_docs)
-        if length == -1:
-            result['data'] = filtered_docs
-        else:
-            result['data'] = filtered_docs[start:start+length]
+        result['data'] = filtered_docs[start:start+length]
     else:
         query = redisearch.Query("*").sort_by(order_col,order_asc).paging(start,length)
         res = client.search(query)

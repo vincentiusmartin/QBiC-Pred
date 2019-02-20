@@ -37,7 +37,7 @@ Installation is taken from [here](https://thomassileo.name/blog/2012/08/20/how-t
 - [x] fix bug on the upload
 - [x] download, only the filtered
 - [ ] loading message/icon when downloaded file is being prepared
-- [ ] job name to be the name of the file
+- [ ] job name to be the name of the downloaded prediction file
 - [ ] acknowledgment and ownership section
 - [ ] handle expiry after items are deleted in Redis
 - [ ] put timestamp on recent jobs and enable deletion on them
