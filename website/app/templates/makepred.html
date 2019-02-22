@@ -177,8 +177,8 @@
             <div class="collapse multi-collapse" id="adv-opt-collapse">
               <div class="card card-body">
                 <div class="row">
-                  <div class="col-12 col-lg-4 form-elm">
-                    <label for="genomelist">PBM E-score cutoff for nonspecific-binding (should be between 0.2-0.4):</label>
+                  <div class="col-12 col-lg-5 form-elm">
+                    <label for="genomelist">PBM E-score cutoff for nonspecific-binding <br /> (should be between 0.2-0.4):</label>
                     <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
                     data-toggle="popover" data-placement="right" data-trigger="hover"
                     data-content="A sequence is considered as non-significant (i.e. unbound) if its maximum 8-mer e-score is below this cutoff value.">
@@ -192,8 +192,8 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-12 col-lg-4 form-elm">
-                    <label for="genomelist">PBM E-score cutoff for specific-binding (should be between 0.3-0.5):</label>
+                  <div class="col-12 col-lg-5 form-elm">
+                    <label for="genomelist">PBM E-score cutoff for specific-binding <br /> (should be between 0.3-0.5):</label>
                     <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
                     data-toggle="popover" data-placement="right" data-trigger="hover"
                     data-content="A sequence is considered as significant (i.e. bound) if there are two consecutive 8-mers with e-scores above this value. If this condition is not met but there are 8-mer e-scores above nonspecific-binding cutoff, then it will be considered as &quot;ambiguous&quot;.">
@@ -229,6 +229,11 @@
     <div class="col-2">
         <a href="/download/vcf-example.vcf">
           VCF format
+        </a>
+    </div>
+    <div class="col-2">
+        <a href="/download/seq_input_example.txt">
+          Sequence format
         </a>
     </div>
   </div>
