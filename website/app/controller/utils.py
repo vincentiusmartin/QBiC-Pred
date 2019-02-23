@@ -5,7 +5,7 @@ def get_chrom(cfile):
     with gzip.open(cfile,'rb') as f:
         next(f)
         chrom = f.read().decode('utf-8').replace('\n','')
-    return chrom
+    return chrom.upper()
 
 def itoseq(seqint,kmer):
     nucleotides = {0:'A',1:'C',2:'G',3:'T'}

@@ -66,71 +66,73 @@
         </table>
       </div>
     </li><br />
-    <li><p>
-      ICGC simple somatic mutation file  (<a href="/download/icgc-example.tsv">download sample file</a>) <br />
-      Please see the ICGC guidelines  for details about this tab-separated file format. The columns used by QBiC-Pred are: chromosome, chromosome_start, chromosome_end (which must be the same as chromosome_start for single nucleotide variants), mutation_type (QBiC-Pred will only use variants with this field set to “single base substitution”), mutated_from_allele, and mutated_to_allele.
-    </p>
-    <div class="table-responsive">
-      <table class="table table-borderless example-table">
-        <thead>
+
+    <li>
+      <p>
+        ICGC simple somatic mutation file  (<a href="/download/icgc-example.tsv">download sample file</a>) <br />
+        Please see the ICGC guidelines  for details about this tab-separated file format. The columns used by QBiC-Pred are: chromosome, chromosome_start, chromosome_end (which must be the same as chromosome_start for single nucleotide variants), mutation_type (QBiC-Pred will only use variants with this field set to “single base substitution”), mutated_from_allele, and mutated_to_allele.
+      </p>
+      <div class="table-responsive">
+        <table class="table table-borderless example-table">
+          <thead>
+            <tr>
+              <th>...</th>
+              <th>chromosome</th>
+              <th>chromosome_start</th>
+              <th>chromosome_end</th>
+              <th>...</th>
+              <th>mutation_type</th>
+              <th>...</th>
+              <th>mutated_from_allele</th>
+              <th>mutated_to_allele</th>
+            </tr>
+          </thead>
           <tr>
-            <th>...</th>
-            <th>chromosome</th>
-            <th>chromosome_start</th>
-            <th>chromosome_end</th>
-            <th>...</th>
-            <th>mutation_type</th>
-            <th>...</th>
-            <th>mutated_from_allele</th>
-            <th>mutated_to_allele</th>
+            <td>...</td>
+            <td>6</td>
+            <td>65152140</td>
+            <td>65152140</td>
+            <td>...</td>
+            <td>single base substitution</td>
+            <td>...</td>
+            <td>T</td>
+            <td>C</td>
           </tr>
-        </thead>
-        <tr>
-          <td>...</td>
-          <td>6</td>
-          <td>65152140</td>
-          <td>65152140</td>
-          <td>...</td>
-          <td>single base substitution</td>
-          <td>...</td>
-          <td>T</td>
-          <td>C</td>
-        </tr>
-        <tr>
-          <td>...</td>
-          <td>8</td>
-          <td>108596584</td>
-          <td>108596584</td>
-          <td>...</td>
-          <td>single base substitution</td>
-          <td>...</td>
-          <td>T</td>
-          <td>C</td>
-        </tr>
-        <tr>
-          <td>...</td>
-          <td>15</td>
-          <td>34737692</td>
-          <td>34737692</td>
-          <td>...</td>
-          <td>single base substitution</td>
-          <td>...</td>
-          <td>A</td>
-          <td>C</td>
-        </tr>
-        <tr>
-          <td>...</td>
-          <td>9</td>
-          <td>84841627</td>
-          <td>84841627</td>
-          <td>...</td>
-          <td>single base substitution</td>
-          <td>...</td>
-          <td>C</td>
-          <td>G</td>
-        </tr>
-      </table>
-    </div>
+          <tr>
+            <td>...</td>
+            <td>8</td>
+            <td>108596584</td>
+            <td>108596584</td>
+            <td>...</td>
+            <td>single base substitution</td>
+            <td>...</td>
+            <td>T</td>
+            <td>C</td>
+          </tr>
+          <tr>
+            <td>...</td>
+            <td>15</td>
+            <td>34737692</td>
+            <td>34737692</td>
+            <td>...</td>
+            <td>single base substitution</td>
+            <td>...</td>
+            <td>A</td>
+            <td>C</td>
+          </tr>
+          <tr>
+            <td>...</td>
+            <td>9</td>
+            <td>84841627</td>
+            <td>84841627</td>
+            <td>...</td>
+            <td>single base substitution</td>
+            <td>...</td>
+            <td>C</td>
+            <td>G</td>
+          </tr>
+        </table>
+      </div>
     </li>
     <br />
     <li>
@@ -170,6 +172,34 @@
               <td>9</td>
               <td>84841627</td>
               <td>C</td>
+              <td>G</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </li>
+    <br />
+    <li>
+      <p>
+        File that contains 17-mer sequences with the mutated from nucleotide in the middle and the mutated to nucleotide on  the right, separated by a space.
+      </p>
+      <div class="table-responsive">
+        <table class="table table-borderless example-table">
+          <tbody>
+            <tr>
+              <td>CAGAGAAT<font color="red">T</font>GTAGAACT</td>
+              <td>C</td>
+            </tr>
+            <tr>
+              <td>CCCCACGA<font color="red">T</font>ATTGTGTG</td>
+              <td>A</td>
+            </tr>
+            <tr>
+              <td>ATGAAAAA<font color="red">A</font>AAAATGAG</td>
+              <td>C</td>
+            </tr>
+            <tr>
+              <td>AATGTTCT<font color="red">C</font>CCATTCTG</td>
               <td>G</td>
             </tr>
           </tbody>
