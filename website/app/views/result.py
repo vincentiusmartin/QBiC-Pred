@@ -44,12 +44,17 @@ def get_file_fromtbl(filetype,task_id,filters): #taskid,filters
     tblret = sep.join(cols) + "\n"
     for doc in filtered['data']:
         try: # TODO: handle this
-            row = [getattr(doc,col) for col in cols]
+            row = []
+            for col in cols: #  getattr(doc,col) for col in cols
+                if col == "TF_gene":
+                    row.append("\"%s\""%getattr(doc,col))
+                else:
+                    row.append(getattr(doc,col))
             tblret += sep.join(row) + "\n"
         except: #now: if not found, just return 404
             abort(404)
     return Response(
-        tblret,
+        tblret[:-1],
         mimetype="text/csv",
         headers={"Content-disposition":
                  "attachment; filename=prediction_result-%s.%s"%(task_id,ftype)})
