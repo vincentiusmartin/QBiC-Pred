@@ -275,7 +275,7 @@
   <span class="screenshoot-img"><img class="img-fluid" src="/static/images/about_page/output1.png" /></span>
 
   <p>
-    In addition to reporting the TF(s) affected by each variant, QBiC provides information about the status of each allele, which can be “bound”, “unbound”, or “ambiguous”. This status is derived from the same PBM data sets used to train the OLS binding models. But, unlike the OLS model, defining the status of an allele is based on 8-mer enrichment scores (E-scores) commonly derived from PBM data (see, <a href="https://www.ncbi.nlm.nih.gov/pubmed/16998473">Berger et al. Nature Biotech, 2006</a>; <a href="https://www.cell.com/cell-systems/fulltext/S2405-4712(18)30062-0">Shen et al. Cell Systems 2018</a>). As in our previous work, we define an allele as specifically “bound” if it is contained in two overlapping 8-mers with E-score &gt; 0.4. Conversely, we define an allele as “unbound” if all 8-mers overlapping the allele have E-score &lt; 0.35. All other cases are considered “ambiguous”.
+    In addition to reporting the TF(s) affected by each variant, QBiC provides information about the status of each allele, which can be “bound”, “unbound”, or “ambiguous”. This status is derived from the same PBM data sets used to train the OLS binding models. But, unlike the OLS model, defining the status of an allele is based on 8-mer enrichment scores (E-scores) commonly derived from PBM data (see, <a href="https://www.ncbi.nlm.nih.gov/pubmed/16998473">Berger et al. Nature Biotech, 2006</a>; <a href="https://www.cell.com/cell-systems/fulltext/S2405-4712(18)30062-0">Shen et al. Cell Systems 2018</a>). As in our previous work, we define an allele as specifically “bound” if it is contained in two overlapping 8-mers with E-score &gt; 0.4. Conversely, we define an allele as “unbound” if all 8-mers overlapping the allele have E-score &lt; 0.35. All other cases are considered “ambiguous”. These values however, can be adjusted by using "Advanced Option" dropdown  when making predictions.
   </p>
 
   <p>
@@ -291,7 +291,8 @@
   <span class="combined-img"><img class="img-fluid" src="/static/images/about_page/output3.png" /></span>
 
   <p>
-    For PBM data sets (column  <span class="gray-inline-text">PBM filename</span>), the QBiC output table also provides an option to directly download the data and the model used to make the predictions. The output table also specifies which type of model, i.e. using gapped or ungapped k-mers is used (column  <span class="gray-inline-text">Gap model</span>).
+    For PBM data sets (column  <span class="gray-inline-text">PBM filename</span>), the QBiC output table also provides an option to directly download the data and the model used to make the predictions.
+    <!--The output table also specifies which type of model, i.e. using gapped or ungapped k-mers is used (column  <span class="gray-inline-text">Gap model</span>).-->
   </p>
 
   <p>
