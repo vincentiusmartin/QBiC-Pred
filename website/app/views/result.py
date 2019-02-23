@@ -45,7 +45,7 @@ def get_file_fromtbl(filetype,task_id,filters): #taskid,filters
     for doc in filtered['data']:
         try: # TODO: handle this
             row = []
-            for col in cols: #  getattr(doc,col) for col in cols
+            for col in cols: # need to do this because we can have multiple TF_genes
                 if col == "TF_gene":
                     row.append("\"%s\""%getattr(doc,col))
                 else:
@@ -288,7 +288,7 @@ def get_res_tbl(task_id):
         rowdict['mutant'] = doc.mutant[:5] + '<span class="bolded-red">' + doc.mutant[5] + '</span>' + doc.mutant[6:]
         rowdict['z_score'] = customround(doc.z_score)
         rowdict['p_value'] = customround(doc.p_value)
-        #rowdict['binding_status'] = htmlformat(doc.binding_status,"filter","binding_status") #vmartin: binding-flag
+        rowdict['binding_status'] = htmlformat(doc.binding_status,"filter","binding_status") #vmartin: binding-flag
         #rowdict['gapmodel'] = htmlformat(doc.gapmodel,"filter","gapmodel")
         rowdict['TF_gene'] = htmlformat(doc.TF_gene,"filter","TF_gene")
         rowdict['pbmname'] = htmlformat(doc.pbmname,"filter","pbmname")
