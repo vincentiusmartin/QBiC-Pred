@@ -69,7 +69,7 @@ def inittbl(self,filename,cpath):
             for idx,row in dataset[cidx].iterrows():
                 pos = row['pos'] - 1
                 if row['mutated_from'] != chromosome[pos]:
-                    error = "Found mismatch in the mutation: \n{}".format(row)
+                    error = "Found mismatch in the mutation: chromosome %s pos %s mutated_from: %s; but expected: %s. Please check again your mutation coordinate.\n" % (row['chromosome'],row['pos'],row['mutated_from'],chromosome[pos])
                     break
                 seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to'] #-5,+6
                 # for escore, just use 8?
