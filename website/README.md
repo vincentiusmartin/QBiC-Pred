@@ -20,6 +20,7 @@
 ### Apache (used mainly to restart Flask)
 - Reload: `systemctl reload apache2`
 - Restart: `systemctl restart apache2`
+- Debugging: `tail /var/log/apache2/error.log`
 
 ### Celery (using systemctl)
 Installation is taken from [here](https://thomassileo.name/blog/2012/08/20/how-to-keep-celery-running-with-supervisor/)

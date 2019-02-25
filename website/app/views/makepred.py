@@ -50,7 +50,7 @@ def is_valid_cols(filepath):
                     line = line.split("\t")
                 else:
                     line = line.split()
-                valid = len(line) == 2 and utils.is_dna(line[0],length=17) and utils.is_dna(line[1],length=1)
+                valid = len(line) >= 2 and utils.is_dna(line[0],length=17) and utils.is_dna(line[1],length=1)
                 if not valid:
                     os.remove(filepath)
                     return False

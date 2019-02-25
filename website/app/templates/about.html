@@ -22,7 +22,7 @@
   <ul>
     <li>
       <p>
-        VCF format (<a href="/download/vcf-example.vcf">download sample file</a>) <br />
+        VCF format (<a href="/download/QBiC-vcf-example-MAFK-ASB-variants.vcf">download sample file</a>) <br />
         Each line has at least 5 tab-separated fields. <br />
         Column 1: chromosome name (hg19 or hg38) <br />
         Column 2: position (hg19 or hg38); must be a positive integer within chromosome length <br />
@@ -69,7 +69,7 @@
 
     <li>
       <p>
-        ICGC simple somatic mutation file  (<a href="/download/icgc-example.tsv">download sample file</a>) <br />
+        ICGC simple somatic mutation file  (<a href="/download/QBiC-icgc-example-breast-cancer-mutations-small.tsv">download sample file</a>). <br />
         Please see the ICGC guidelines  for details about this tab-separated file format. The columns used by QBiC-Pred are: chromosome, chromosome_start, chromosome_end (which must be the same as chromosome_start for single nucleotide variants), mutation_type (QBiC-Pred will only use variants with this field set to “single base substitution”), mutated_from_allele, and mutated_to_allele.
       </p>
       <div class="table-responsive">
@@ -137,7 +137,7 @@
     <br />
     <li>
       <p>
-      Any tsv (tab-separated values) or csv (comma-separated values) file with the following columns: chromosome, chromosome_pos, mutated_from, mutated_to (<a href="/download/example3.tsv">download sample file</a>) <br />
+      Any tsv (tab-separated values) or csv (comma-separated values) file with the following columns: chromosome, chromosome_pos, mutated_from, mutated_to (<a href="/download/QBiC-custom-tsv-example.tsv">download sample file</a>). <br />
       </p>
       <div class="table-responsive">
         <table class="table table-borderless example-table">
@@ -181,7 +181,7 @@
     <br />
     <li>
       <p>
-        File that contains 17-mer sequences with the mutated from nucleotide in the middle and the mutated to nucleotide on  the right, separated by a space.
+        Text file that contains 17-mer DNA sequences with the "mutated from" nucleotide in the middle and the "mutated to" nucleotide on the right, separated by a space or tab character. Text file that contains 17-mer DNA sequences with the "mutated from" nucleotide in the middle and the "mutated to" nucleotide on the right, separated by a space or tab character (<a href="/download/QBiC-sequence-format-example-ELK1_17mers.txt">download sample file</a>).
       </p>
       <div class="table-responsive">
         <table class="table table-borderless example-table">
@@ -209,11 +209,11 @@
   </ul>
 
   <p>
-    QBiC-Pred will process each input file to extract the genomic sequence contexts for all variants (please ensure that the correct version of the genome is selected on the “Make Predictions” page). The extracted sequence context will be visible to the user when the output results are displayed.
+    QBiC-Pred will process each input file to extract the genomic sequence contexts for all variants (<b>please ensure that the correct version of the genome is selected on the “Make Predictions” page."</b>). The extracted sequence context will be visible to the user when the output results are displayed.
   </p>
 
   <p>
-    The input file size is currently limited to 100MB since each file is processed in our server. Since QBiC makes prediction based on base substitution mutation, if the user has rows contain other type of mutations, they can be filtered out first to enable more rows with base substitution to be processed.  Also, for large jobs containing a large number of variants, the user can check on the status of the job by using the <span class="inline-img"><img src="/static/images/about_page/recent_btn.png" /></span> button on the upper right corner of any QBiC page. The jobs have unique identifies and they are stored on the QBiC-Pred server for 48 hours. This page can be bookmarked for later visit.
+    The input file size is currently limited to <b>100MB</b> since each file is processed on our server. Since QBiC makes predictions for single nucleotide variants, if the user has rows containing other type of variants, we recommend filtering them out  in order to allow more rows with single nucleotide variants to be processed. Also, for large jobs containing a large number of variants, the user can check the status of the job by using the <span class="inline-img"><img src="/static/images/about_page/recent_btn.png" /></span> button on the upper right corner of any QBiC page. The jobs have unique identifiers and they are stored on the QBiC-Pred server for 48 hours. The job page can be bookmarked for later visits.
   </p>
 
   <p>
@@ -222,13 +222,14 @@
   <ul>
     <li>
       <p>
-        <b>TF proteins to be tested.</b>	TF proteins to be tested. The user can select either entire families of TFs (see   <span class="gray-inline-text">Select TFs by families</span>), or individual TFs by using <span class="gray-inline-text">Select transcription factors:</span>  or by providing an input file with TF gene names (see  <span class="gray-inline-text">upload a TF file</span>). <br />
+        <b>TF proteins to be tested.</b>. The user can select either entire families of TFs (see   <span class="gray-inline-text">Select TFs by families</span>), or individual TFs by using <span class="gray-inline-text">Select transcription factors:</span>  or by providing an input file with TF gene names (see  <span class="gray-inline-text">upload a TF file</span>). <br />
         Individual TFs, as well as TF families, are searchable by the user: <br />
       </p>
-      <span class="example-select"><img class="img-fluid" src="/static/images/about_page/searchbytf.png" /></span>
+      <span class="example-select"><img class="img-fluid" src="/static/images/about_page/searchbytf1.png" /></span>
+      <span class="example-select"><img class="img-fluid" src="/static/images/about_page/searchbytf2.png" /></span>
       <span class="example-select"><img class="img-fluid" src="/static/images/about_page/searchbyfam.png" /></span>
       <p>
-        QBiC-Pred uses the <a href="https://www.genenames.org">HGNC</a> nomenclature for gene names. A full list of TF gene names for which QBiC-Pred contains predictive models is available <a href="/download/genelist.txt">here</a>. In case the user provides a file containing gene names not recognized by QBiC-Pred, or for which we do not current have predictive models, an error message will alert the user:
+        QBiC-Pred uses the <a href="https://www.genenames.org">HGNC</a> nomenclature for gene names. A full list of TF gene names for which QBiC-Pred contains predictive models is available <a href="/download/QBiC_gene_names_for_supported_TFs.txt">here</a>. In case the user provides a file containing gene names not recognized by QBiC-Pred, or for which we do not current have predictive models, an error message will alert the user:
       <p>
       <span class="example-alert"><img class="img-fluid" src="/static/images/about_page/tfsnotfound.png" /></span>
     </li>
@@ -241,7 +242,7 @@
       <b>Desired output</b> for the QBiC-Pred results, which can be either:
       <ul>
         <li>
-          <b>p-value threshold</b> (default option). In this case QBiC-Pred will return, for each input variant, all input TFs predicted to be affected by that variant at a significance (p-value) of less than the value set of the user (default 0.0001). Predictions of both increased and decreased TF binding will be returned.
+          <b>p-value threshold</b> (default option). In this case QBiC-Pred will return, for each input variant, all input TFs predicted to be affected by that variant at a significance (p-value) of less than the value set by the user (default 0.0001). Predictions of both increased and decreased TF binding will be returned.
         </li>
         <li>
           <b>largest absolute z-score</b>. In this case QBiC-Pred will return, for each input variant, the input TF (or the top 2 or 3 input TFs) for which the variant has the largest effect (i.e. largest z-score in absolute value). Z-scores represent normalized binding changes, and thus they are comparable among TFs. Positive z-scores reflect increased TF binding due to the variant. Negative z-scores reflect decreased binding.
@@ -258,10 +259,14 @@
     <li>PBM data generated in the Gordan laboratory (reported in <a href="https://www.cell.com/cell-systems/fulltext/S2405-4712(18)30062-0">Shen et al. Cell Systems 2018</a>, or included with the release of QBiC)</li>
   </ul>
   <p>
-    We downloaded the entire database from CisBP (v1.02) consisting of 3,342 universal PBM data sets. Next, we added 245 PBM data sets from the UniPROBE database, which were not included in CisBP, and 22 PBM data sets generated in our lab, resulting in a total of 3,609 PBM data sets. Then we annotated the quality of each uPBM data based on: 1) the number of 8-mers with binding enrichment score (E-scores) exceeding 0.45; and 2) the performance of our models trained on the data, which enabled us to filter out low quality PBM data sets. After the filtering process, we utilized <a href="http://humantfs.ccbr.utoronto.ca/">The Human Transcription Factors Project</a>, as well as manual curation, to map PBM data sets to human TFs. By keeping only the best quality or the highest amino-acid identity PBM data sets for each TF, we finally arrived at a total of 666 data sets characterizing the binding of 577 human TFs. The full mapping of human TFs to available PBM data sets is available <a href="/download/mapping_gene_to_upbm_final.csv">here</a>.
+    We downloaded the entire database from CisBP (v1.02) consisting of 3,342 universal PBM data sets. Next, we added 245 PBM data sets from the UniPROBE database, which were not included in CisBP, and 22 PBM data sets generated in our lab, resulting in a total of 3,609 PBM data sets. Then we annotated the quality of each uPBM data based on: 1) the number of 8-mers with binding enrichment score (E-scores) exceeding 0.45; and 2) the performance of our models trained on the data, which enabled us to filter out low quality PBM data sets. After the filtering process, we utilized <a href="http://humantfs.ccbr.utoronto.ca/">The Human Transcription Factors Project</a>, as well as manual curation, to map PBM data sets to human TFs. By keeping only the best quality or the highest amino-acid identity PBM data sets for each TF, we finally arrived at a total of 666 data sets characterizing the binding of 577 human TFs. The full mapping of human TFs to available PBM data sets is available <a href="/download/QBiC_mapping_577_TFgenes_to_666_uPBM_datasets.csv">here</a>.
   </p>
   <p>
-    Our TF binding models are linear regression models trained on <a href="https://www.ncbi.nlm.nih.gov/pubmed/28691125">universal PBM data<a/>. We use the counts of 6-mers or gapped 6-mers (with a gap of 1 or 2 bases) as features, and the binding intensity signal as the outcome variable. Then, we use ordinary least squares (OLS) to estimate the coefficients for all 6-mer features, as well as the distributions of these estimates. The effect of each mutation can be written as a linear combination of all the coefficients of 6-mers covering it and can therefore be estimated as well as tested for statistical significance, as described in detail in our <a href="https://www.ncbi.nlm.nih.gov/pubmed/28691125">previous work</a>. Thus, for each variant and each PBM data set for a TF protein, our model predicts:
+    Each of the 577 TFs used by QBiC-Pred has up to 6 PBM datasets mapped to it: the top 1-3 data sets for which the tested TF has the largest amino-acid identify to the human TF, and the top 1-3 data sets for which the OLS models have the highest cross-validation accuracy. <b>Complete information on the cross-validation accuracy and the amino-acid identity is available <a href="/download/QBiC_mapping_577_TFgenes_to_666_uPBM_datasets_FULL_INFORMATION.csv">here</a></b>. When the user selects a particular TF as input, OLS models trained on all PBM datasets mapped to that TF are used for predictions. After the predictions are returned, users can post-process the results to focus on particular models/PBM datasets of interest.
+  </p>
+  <p>
+    <!-- We use the counts of 6-mers or gapped 6-mers (with a gap of 1 or 2 bases) as features-->
+    Our TF binding models are linear regression models trained on <a href="https://www.ncbi.nlm.nih.gov/pubmed/28691125">universal PBM data<a/>. We use the counts of 6-mers as features,, and the binding intensity signal as the outcome variable. Then, we use ordinary least squares (OLS) to estimate the coefficients for all 6-mer features, as well as the distributions of these estimates. The effect of each mutation can be written as a linear combination of all the coefficients of 6-mers covering it and can therefore be estimated as well as tested for statistical significance, as described in detail in our <a href="https://www.ncbi.nlm.nih.gov/pubmed/28691125">previous work</a>. Thus, for each variant and each PBM data set for a TF protein, our model predicts:
   </p>
   <ul>
     <li><b>Difference</b> = the difference in TF binding (i.e. in PBM signal) between the two alleles

@@ -10,6 +10,7 @@ p{
   font-size:14px;
   text-align:left;
   display:block;
+  font-family:"Courier New";
 }
 
 .example-table > thead > tr > th{

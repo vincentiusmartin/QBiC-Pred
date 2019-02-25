@@ -252,7 +252,7 @@ def savetoredis(req_id,colnames,datavalues,expired_time):
         fields = {colnames[j]:datavalues[i][colnames[j]] for j in range(0,len(colnames))}
         client.add_document(i, **fields)
     # ---- set expiry for columns and documents ----
-    db.expire("%s:cols"%req_id,expired_time)
+    #db.expire("%s:cols"%req_id,expired_time) let's comment for now and see how it goes
     drop_index.apply_async((req_id,), countdown=expired_time)
 
 #https://github.com/MehmetKaplan/Redis_Table
