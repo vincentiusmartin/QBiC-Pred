@@ -220,7 +220,7 @@ def htmlformat(invar,type,colname):
             </span>
         """
         buttonhgnc = """<a href="https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/{hgnc}" target="_blank"  class="btn btn-link dropdown-item" role="button">See gene entry on HGNC website</a>"""
-        buttonpbm =  """<a href="/download/pbmdata/{pbmname}"  class="btn btn-link dropdown-item" role="button">Download pbm data</a>"""
+        buttonpbm =  """<a href="/download/pbmdata/{pbmname}"  class="btn btn-link dropdown-item" role="button">Download PBM data</a>"""
 
         if colname == "TF_gene":
             cellvals = str_in.split(",")
@@ -277,15 +277,28 @@ def get_res_tbl(task_id):
 
     retlist = []
 
+    # for now, if nothing found then return an empty table
+    if filtered_db['data'] and not hasattr(filtered_db['data'][0],'row'):
+        return jsonify({
+            "draw": 0,
+            "recordsTotal": 0,
+            "recordsFiltered": 0,
+            "data": [],
+            "status":"false"
+        })
+
     for doc in filtered_db['data']:
         #if not filter_search(row,csKey,csField):
         #    continue
-        try: # TODO: handle this
-            rowdict = {col:getattr(doc,col) for col in cols}
-        except: #now: if not found, just return 404
-            abort(404)
+        #try: # TODO: handle this
+        #    rowdict = {col:getattr(doc,col) for col in cols}
+        #except: #now: if not found, just return 404
+        #    abort(404)
+        rowdict = {}
+        rowdict['row'] = doc.row
         rowdict['wild'] = doc.wild[:5] + '<span class="bolded-red">' + doc.wild[5] + '</span>' + doc.wild[6:]
         rowdict['mutant'] = doc.mutant[:5] + '<span class="bolded-red">' + doc.mutant[5] + '</span>' + doc.mutant[6:]
+        rowdict['diff'] = doc.diff
         rowdict['z_score'] = customround(doc.z_score)
         rowdict['p_value'] = customround(doc.p_value)
         rowdict['binding_status'] = htmlformat(doc.binding_status,"filter","binding_status") #vmartin: binding-flag
@@ -298,9 +311,9 @@ def get_res_tbl(task_id):
         "draw": draw,
         "recordsTotal": filtered_db['recordsTotal'],
         "recordsFiltered": filtered_db['recordsFiltered'],
-        "data": retlist
+        "data": retlist,
+        "status":"success"
     })
-
 
 '''
 task_id: specifies unique url for each chain, this is the same with the id of

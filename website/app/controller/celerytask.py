@@ -14,6 +14,8 @@ import os
 sys.path.insert(0, 'app')
 import controller.utils as utils
 
+from timeit import default_timer as timer
+
 # input: table
 @celery.task(bind=True)
 def inittbl(self,filename,cpath):
@@ -112,6 +114,7 @@ def predict(predlist, dataset, sharedlist,
         # leave this empty as for p-value, we don't have to compare and the size is dynamic
         container = {tuple(row[:4]):[] for row in dataset}
 
+    test_total_time = 0
     # iterate for each transcription factor
     for i in range(0,len(predlist)):
         start = time.time()
@@ -142,9 +145,22 @@ def predict(predlist, dataset, sharedlist,
             # filteropt = 2, if z-score is chosen then filterval is the p-val threshold
             elif pval > filterval:
                     add = False
+            # E-score calculation is here
             if add:
-                isbound = utils.isbound_escore_18mer(row_key[2],pbmname,app.config['ESCORE_DIR'],spec_ecutoff,nonspec_ecutoff)
-                container[row_key].append([diff,zscore,pval,isbound,pbmname])
+                if spec_ecutoff == -1 or nonspec_ecutoff == -1:
+                    container[row_key].append([diff,zscore,pval,"N/A",pbmname])
+                else:
+                    test_start = timer()
+                    # E-score calculation: 0.05 seconds each
+                    # For 10k rows, total: 141.34secs, from e-score 128.56331secs
+                    # For 50k rows, total: 771.42 secs, from e-score: 752.123secs
+                    # another example: 2547.41secs, from e-score: 2523.96897secs
+                    isbound = utils.isbound_escore_18mer(row_key[2],pbmname,app.config['ESCORE_DIR'],spec_ecutoff,nonspec_ecutoff)
+                    container[row_key].append([diff,zscore,pval,isbound,pbmname])
+                    test_end = timer()
+                    test_total_time += (test_end-test_start)
+
+        print("Total e-score time %.5f" % test_total_time)
         sharedlist.append(pbmname) # TODO: delete this?
         print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
 

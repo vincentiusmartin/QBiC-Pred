@@ -52,7 +52,7 @@ def is_valid_cols(filepath):
                     line = line.split()
                 valid = len(line) >= 2 and utils.is_dna(line[0],length=17) and utils.is_dna(line[1],length=1)
                 if not valid:
-                    os.remove(filepath)
+                #    os.remove(filepath) # TODO: move this somewhere else
                     return False
         return True
     return False
@@ -67,69 +67,73 @@ msg = filename if success
 def prepare_request(request):
     nonspecbind_thres =  float(request.form.get("nonspecific-binding-thres"))
     if nonspecbind_thres < 0.2 or nonspecbind_thres > 0.4:
-        return 'error','nonspecific binding threshold should be between 0.2 and 0.4'
+        return {"status":'error',"message":'nonspecific binding threshold should be between 0.2 and 0.4'}
     specbind_thres =  float(request.form.get("specific-binding-thres"))
     if specbind_thres < 0.3 or specbind_thres > 0.5:
-        return 'error','specific binding threshold should be between 0.3 and 0.5'
+        return {"status":'error',"message":'specific binding threshold should be between 0.3 and 0.5'}
     if nonspecbind_thres >= specbind_thres:
-        return 'error','nonspecific binding threshold should be less than specific binding threshold'
+        return {"status":'error',"message":'nonspecific binding threshold should be less than specific binding threshold'}
     # First, check if the input file is valid, this depends on the input-mode
     if request.form.get('input-mode') == "1": # not example
         if 'input-file' not in request.files:
-            return 'error','no input file part'
+            return {"status":'error',"message":'no input file part'}
         file = request.files['input-file']
         # Check file size
         file.seek(0, os.SEEK_END)
         file_length = file.tell()
         if file_length > app.config['MAX_FILE_LENGTH']:
             maxsize = app.config['MAX_FILE_LENGTH'] / (1024*1024)
-            return 'error','uploaded file is larger than the allowed maximum size of %dMB' % maxsize
+            return {"status":'error',"message":'uploaded file is larger than the allowed maximum size of %dMB' % maxsize}
         file.seek(0) # seek back
         # Can only accept tsv or csv or vcf
         if not allowed_file(file.filename):
-            return 'error','please upload only tsv/csv, vcf, or txt (with sequences) file'
+            return {"status":'error',"message":'please upload only tsv/csv, vcf, or txt (with sequences) file'}
         # No file selected:
         if file.filename == '':
-            return 'error','no selected file'
+            return {"status":'error',"message":'no selected file'}
         # Check if we have all the columns we need
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         if not is_valid_cols(filepath):
-            return 'error','some required fields are missing from the input file or some values are incorrect'
+            utils.delete_file(filepath)
+            return {"status":'error',"message":'some required fields are missing from the input file or some values are incorrect'}
         returnstatus = "success"
     else: #input-mode==2
         if not request.form.get('examplelist'):
-            return 'error','no input file part'
+            return  {"status":'error',"message":'no input file part'}
         returnstatus = "example"
         egkey = request.form.get('examplelist')
         filename = app.config['INPUT_EXAMPLE_DICT'][egkey]['inputfile']
     # No TFs selected
     if not request.form.getlist('pred-select'):
-        return 'error','please select transcription factors'
+        return {"status":'error',"message":'please select transcription factors'}
     # Check if p-value is in the valid range
     filteropt = int(request.form.get('optradio'))
     if filteropt == 2:
         pval = float(request.form.get('output-selection-opt'))
         if pval > 1 or pval < 0:
-            return 'error','p-value should be between 0 and 1'
+            return {"status":'error',"message":'p-value should be between 0 and 1'}
     # Finally, everything is okay
-    return returnstatus,filename
-
+    retdict = {"status":returnstatus,"filename":filename}
+    if request.form.get('input-mode') == "1":
+        retdict["linecount"] = utils.line_count(filepath)
+    return retdict
 
 @app.route('/upload', methods=['POST'])
 def handle_upload():
+    MAX_LINES = 50000
     tfpref = "prediction6mer." # for rapid, need to be empty for now
     tfext = ".txt"
     if request.method == 'POST':
-        status,msg = prepare_request(request)
-        if status=='error':
-            return jsonify({'Message':msg}), 500
+        req = prepare_request(request)
+        if req["status"] == 'error':
+            return jsonify({'Message':req["message"]}), 500
         else:
-            if status == "example":
-                filepath = app.config['STATIC_EXAMPLE_DIR'] + msg
+            if req["status"] == "example":
+                filepath = app.config['STATIC_EXAMPLE_DIR'] + req["filename"]
             else:
-                filepath = app.config['UPLOAD_FOLDER'] + msg
+                filepath = app.config['UPLOAD_FOLDER'] +req["filename"]
             # request.form.getlist('pred-select'):['Arid3a:Arid3a_3875.1_v1_deBruijn', 'Bhlhb2:Bhlhb2_4971.1_v1_deBruijn']
             genes_selected = [elm.split(":")[0] for elm in request.form.getlist('pred-select')]
 
@@ -144,8 +148,13 @@ def handle_upload():
             else:
                 filterval = float(request.form.get('output-selection-opt'))
 
-            spec_escore_thres = float(request.form.get('specific-binding-thres'))
-            nonspec_escore_thres = float(request.form.get('nonspecific-binding-thres'))
+
+            if req["linecount"] > MAX_LINES or request.form.get("escore-toggle") == "off":
+                spec_escore_thres = -1
+                nonspec_escore_thres = -1
+            else:
+                spec_escore_thres = float(request.form.get('specific-binding-thres'))
+                nonspec_escore_thres = float(request.form.get('nonspecific-binding-thres'))
 
             task = chain(celerytask.inittbl.s(filepath,
                         app.config['CHRDIR'] +"/"+chrver),
@@ -156,7 +165,7 @@ def handle_upload():
             # passed to different browsers/machines.
             session_info = {"parent_id":task.parent.id,
                             "task_id":task.id,
-                            "filename":msg,
+                            "filename":req["filename"],
                             "genes_selected":genes_selected,
                             "filteropt":filteropt,
                             "filterval":filterval,
@@ -171,7 +180,11 @@ def handle_upload():
             # ================================
             task.forget() # not sure if needed???
 
-            resp = make_response(jsonify({}), 202, {'Location': url_for('process_request',job_id=task.id)})
+            warning = ""
+            print(req["linecount"] , MAX_LINES)
+            if req["linecount"] > MAX_LINES:
+                warning = "Notice: We turned off PBM E-score binding prediction since the number of lines is larger than %d. Please contact qbic-pred@duke.edu if you really need the E-score binding prediction." % MAX_LINES
+            resp = make_response(jsonify({"warning":warning}), 202, {'Location': url_for('process_request',job_id=task.id)})
 
             job_name = request.form.get("job-name") if request.form.get("job-name") else task.id
             # we can put this in cookie to let browser save the recent jobs

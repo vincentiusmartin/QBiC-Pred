@@ -44,9 +44,7 @@ Installation is taken from [here](https://thomassileo.name/blog/2012/08/20/how-t
 - [ ] put timestamp on recent jobs and enable deletion on them
 - [ ] email notification
 - [ ] remove sharedlist variable from predict if truly unecessary
-
-## Things to discuss
-- about the moving image, make something similar to the lab website
+- [ ] implement Download OLS model (coefficients) and option to make predictions from model
 
 ## Finished (2018) Roadmap
 - [x] loading message

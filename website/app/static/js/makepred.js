@@ -226,6 +226,17 @@ function updateOutputLabel(newlabel){
     }
 }
 
+function escoreToggle(){
+    $("#escore-toggle").change(function(){
+        var opt = $('#escore-toggle option:selected').val();
+        if(opt === "on"){
+            $("#escore-opt").show();
+        }else{
+            $("#escore-opt").hide();
+        }
+    })
+}
+
 function advOptCollapse(){
     $('#adv-opt-btn').click(function(){
         $(this).text(function(i,old){
@@ -310,6 +321,8 @@ function uploadFile(){
         processData: false,  // tell jQuery not to process the data
         contentType: false,   // tell jQuery not to set contentType
         success: function(data, status, request) { // jsonified return from handle_upload in views.py
+            var parsed = JSON.parse(JSON.stringify(data));
+            alert(parsed["warning"]);
             // upload is successful
             $('#upload-msg').html(""); // empty error message
             status_url = request.getResponseHeader('Location');
@@ -338,6 +351,7 @@ $(function() {
     changeOptOnFileSelected();
     listExampleInput();
     changeInputOptOnClick();
+    escoreToggle();
     advOptCollapse();
 
     updateOutputLabelWrapper(); // check change on output options

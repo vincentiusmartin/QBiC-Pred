@@ -92,6 +92,12 @@ def delete_file(filename):
     else:
         print("%s doesn't exist for deletion"%filename)
 
+def line_count(filename):
+    with open(filename) as f:
+        for i, l in enumerate(f):
+            pass
+    return i + 1
+
 # https://stackoverflow.com/questions/2130016/splitting-a-list-into-n-parts-of-approximately-equal-length
 def chunkify(lst,n):
     return [lst[i::n] for i in range(n)]

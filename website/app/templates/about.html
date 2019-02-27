@@ -266,7 +266,7 @@
   </p>
   <p>
     <!-- We use the counts of 6-mers or gapped 6-mers (with a gap of 1 or 2 bases) as features-->
-    Our TF binding models are linear regression models trained on <a href="https://www.ncbi.nlm.nih.gov/pubmed/28691125">universal PBM data<a/>. We use the counts of 6-mers as features,, and the binding intensity signal as the outcome variable. Then, we use ordinary least squares (OLS) to estimate the coefficients for all 6-mer features, as well as the distributions of these estimates. The effect of each mutation can be written as a linear combination of all the coefficients of 6-mers covering it and can therefore be estimated as well as tested for statistical significance, as described in detail in our <a href="https://www.ncbi.nlm.nih.gov/pubmed/28691125">previous work</a>. Thus, for each variant and each PBM data set for a TF protein, our model predicts:
+    Our TF binding models are linear regression models trained on <a href="https://www.ncbi.nlm.nih.gov/pubmed/28691125">universal PBM data<a/>. We use the counts of 6-mers as features, and the binding intensity signal as the outcome variable. Then, we use ordinary least squares (OLS) to estimate the coefficients for all 6-mer features, as well as the distributions of these estimates. The effect of each mutation can be written as a linear combination of all the coefficients of 6-mers covering it and can therefore be estimated as well as tested for statistical significance, as described in detail in our <a href="https://www.ncbi.nlm.nih.gov/pubmed/28691125">previous work</a>. Thus, for each variant and each PBM data set for a TF protein, our model predicts:
   </p>
   <ul>
     <li><b>Difference</b> = the difference in TF binding (i.e. in PBM signal) between the two alleles
@@ -280,7 +280,7 @@
   <span class="screenshoot-img"><img class="img-fluid" src="/static/images/about_page/output1.png" /></span>
 
   <p>
-    In addition to reporting the TF(s) affected by each variant, QBiC provides information about the status of each allele, which can be “bound”, “unbound”, or “ambiguous”. This status is derived from the same PBM data sets used to train the OLS binding models. But, unlike the OLS model, defining the status of an allele is based on 8-mer enrichment scores (E-scores) commonly derived from PBM data (see, <a href="https://www.ncbi.nlm.nih.gov/pubmed/16998473">Berger et al. Nature Biotech, 2006</a>; <a href="https://www.cell.com/cell-systems/fulltext/S2405-4712(18)30062-0">Shen et al. Cell Systems 2018</a>). As in our previous work, we define an allele as specifically “bound” if it is contained in two overlapping 8-mers with E-score &gt; 0.4. Conversely, we define an allele as “unbound” if all 8-mers overlapping the allele have E-score &lt; 0.35. All other cases are considered “ambiguous”. These values however, can be adjusted by using "Advanced Option" dropdown  when making predictions.
+    In addition to reporting the TF(s) affected by each variant, QBiC provides information about the status of each allele, which can be “bound”, “unbound”, or “ambiguous”. This status is derived from the same PBM data sets used to train the OLS binding models. But, unlike the OLS model, defining the status of an allele is based on 8-mer enrichment scores (E-scores) commonly derived from PBM data (see, <a href="https://www.ncbi.nlm.nih.gov/pubmed/16998473">Berger et al. Nature Biotech, 2006</a>; <a href="https://www.cell.com/cell-systems/fulltext/S2405-4712(18)30062-0">Shen et al. Cell Systems 2018</a>). As in our previous work, we define an allele as specifically “bound” if it is contained in two overlapping 8-mers with E-score &gt; 0.4. Conversely, we define an allele as “unbound” if all 8-mers overlapping the allele have E-score &lt; 0.35. All other cases are considered “ambiguous”. These values however, can be adjusted by using the "Advanced options" dropdown from the "Make Predictions" page.
   </p>
 
   <p>
@@ -306,7 +306,7 @@
 
   <div class="screenshoot-img"><img class="img-fluid" src="/static/images/about_page/output4a.png" /></div>
   <p>
-    For example, if the user is interested in visualizing only predictions with large increased in TF binding, he/she can set minimum z-score value such as depicted below:
+    For example, if the user is interested in visualizing only predictions with large increases in TF binding, he/she can set minimum z-score value such as depicted below:
   </p>
   <div class="screenshoot-img"><img class="img-fluid" src="/static/images/about_page/output4b.png" /></div>
 
@@ -319,47 +319,29 @@
 
   <a name="section4"><h3>4. QBiC-Pred 12-mer encoding</h3></a>
   <p>
-    QBiC makes prediction of the impact of a single bp substitution mutation on
-    a TF binding by doing table lookup to our pretrained <i>prediction table.</i> This
-    table contains the change in binding due to the mutation (i.e. diff) and t-score calculated for
-    mutation in an 11-mer sequence. In fact, since we have a large number of
-    observations, the distribution of the test statistics is approximately
-    normal, and we can use the t-value obtained as a z-score.  For a more
-    detailed explanation on how these values are calculated, please refer to
-    section 2.3 to 2.5 from the <a href =
+    In order to make fast predictions of the impact of single nucleotide variants/mutation on TF binding, QBiC performs table lookup in pre-computed prediction files covering all possible mutations in all possible contexts. Each lookup table coresponds to one OLS model, and it contains information on the binding change ("difference") and the test statistic ("z-score") for each possible mutation. For a detailed explanation of how these values are calculated, please refer to section 2.3 to 2.5 from the original paper <a href =
     "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5501730/pdf/nihms873566.pdf">
-    original paper </a>. Below is an example of a mutation in an 11-mer sequence:
+    original paper </a>.
+  </p>
+  <p>
+    We refer to the pre-computed files as <b>12-mer files</b>. Each row in a 12-mer file corresponds to an 11-bp DNA sequence for which the middle nucleotide is mutated:
   </p>
   <img class="img-fluid" src="/static/images/about_page/mutexample.png" style="width:200px" />
   <p>
-    Now we want to get the diff and z-score for the above mutation from the lookup
-    table. Below is an example for a lookup table: (in the prediction file, it
-    is represented as a space separated table.)
-  </p>
-  <img class="img-fluid" src="/static/images/about_page/12mer-tbl.png" style="width:500px" />
-  <p>
-    The lookup table contains an ordered 12-mer encoding of all possible mutations
-    in every 11-mer sequence. Basically, we append the nucleotide that is mutated
-    to in the end of the sequence. So for the above sequence, its 12-mer
-    representation will be:
+    We use the wild-type and mutated 11-mer sequences to generate a 12-mer by adding the "mutated_to" nucleotide at the end of the wild-type sequence:
   </p>
   <img class="img-fluid" src="/static/images/about_page/12mer-encoding.png" style="width:300px" />
   <p>
-    So we can think of each row having the sequence and its index representation
-    without having to save it. Such representation is depicted below:
+    Next, we use a binary encoding of the nucleotides (A=00, C=01, G=10, T=11) to transform each 12-mer into an integer index. The 12-mer sequences and integer indices are not explicitely stored in the 12-mer files. Instead, we use the computed index for a 12-mer sequence to access the corresponding row in a 12-mer file where the predicted binding difference and z-score are stored:
   </p>
-  <img class="img-fluid" src="/static/images/about_page/12mer-tbl-extended.png" style="width:380px" />
+  <img class="img-fluid" src="/static/images/about_page/12mer-tbl-extended.png" style="width:800px" />
   <p>
-    By using this table, we can look for the 12-mer sequence given before.
-    By calculating its index, we get that it is located on index 2161441. Then
-    we can finally get the predictions we want:
+    For example, for the 12-mer sequence shown above (AGAATTGTAGAC) the integer index is 2161441.
   </p>
-  <img class="img-fluid" src="/static/images/about_page/12mer-example.png" style="width:600px" />
+  <img class="img-fluid" src="/static/images/about_page/12mer-example.png" style="width:700px" />
   <p>
-  Since we treat t-value as z-score, we can easily calculate p-value from it.
-  So, we don't save that in the QBiC web server. However, for convenience, we
-  also provide 12-mer lookup table for the p value and it can be downloaded in the
-  <a href="/downloads"> Download</a> page.
+    After extracting the difference and z-score, we use the z-score to compute the statistical significance of the change (i.e. p-value). For convenience, the 12-mer tables containing binding differences and z-scores, as well as tables containing the corresponding p-values, are available for download from the Download <a href="/download/QBiC-vcf-example-MAFK-ASB-variants.vcf">here</a> page. The pre-computed files are organized into 14 zip files, each containg predictions from 50 OLS models. A mapping between the OLS models and the zip files is available <a href="/download/mapping_aa_identity_cisbp_and_uniprobe.csv">here</a>.
   </p>
+
 </div>
 {% endblock %}
