@@ -266,8 +266,8 @@ function uploadTFFomFile(){
                     data: JSON.stringify({'tfs':lines}),
                     success: function(data,status,request){
                         // parse the resulting json
-                        var nothgnc = request.getResponseHeader('notfound').split(",");
-                        var inhgnc = request.getResponseHeader('found').split(",");
+                        var nothgnc = JSON.parse(request.getResponseHeader('notfound').split(","));
+                        var inhgnc = JSON.parse(request.getResponseHeader('found').split(","));
                         var notAvail = [];
                         var selected = [];
                         for(var i = 0; i < inhgnc.length; i++) {

@@ -5,6 +5,7 @@ sys.path.insert(0, '..')
 from flask import request,render_template,make_response,jsonify,url_for,send_from_directory,Response
 from werkzeug.utils import secure_filename
 import ast
+import json
 
 from celery import Celery,chain
 from app import app,db
@@ -203,7 +204,7 @@ def check_tfnames():
             found.append(tf)
         else:
             notfound.append(tf)
-    return make_response(jsonify({}), 202, {'found':found,'notfound':notfound})
+    return make_response(jsonify({}), 202, {'found':json.dumps(found),'notfound':json.dumps(notfound)})
 
 @app.route('/predlist', methods=['GET'])
 def get_predlist():
