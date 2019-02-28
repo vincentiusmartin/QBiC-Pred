@@ -322,7 +322,9 @@ function uploadFile(){
         contentType: false,   // tell jQuery not to set contentType
         success: function(data, status, request) { // jsonified return from handle_upload in views.py
             var parsed = JSON.parse(JSON.stringify(data));
-            alert(parsed["warning"]);
+            if(parsed["warning"].length > 0){
+                alert(parsed["warning"]);
+            }
             // upload is successful
             $('#upload-msg').html(""); // empty error message
             status_url = request.getResponseHeader('Location');

@@ -1,5 +1,6 @@
 import gzip
 import os
+import subprocess
 
 def get_chrom(cfile):
     with gzip.open(cfile,'rb') as f:
@@ -92,11 +93,10 @@ def delete_file(filename):
     else:
         print("%s doesn't exist for deletion"%filename)
 
-def line_count(filename):
-    with open(filename) as f:
-        for i, l in enumerate(f):
-            pass
-    return i + 1
+def line_count(file_path):
+    num = subprocess.check_output(['wc', '-l', file_path])
+    num = num.split()
+    return int(num[0])
 
 # https://stackoverflow.com/questions/2130016/splitting-a-list-into-n-parts-of-approximately-equal-length
 def chunkify(lst,n):
