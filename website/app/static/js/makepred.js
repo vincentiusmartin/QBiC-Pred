@@ -240,10 +240,10 @@ function escoreToggle(){
 function advOptCollapse(){
     $('#adv-opt-btn').click(function(){
         $(this).text(function(i,old){
-            if (old=='► Advanced option') {
-                $("#adv-opt-label").html("&#9660; Advanced option");
+            if (old=='► Advanced options') {
+                $("#adv-opt-label").html("&#9660; Advanced options");
             }else{
-                $("#adv-opt-label").html("&#9658; Advanced option");
+                $("#adv-opt-label").html("&#9658; Advanced options");
             }
         });
     });
