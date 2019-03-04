@@ -71,7 +71,7 @@ def get_file_fromdb(filetype,taskid):
     num_docs = int(client.info()['num_docs'])
 
     for i in range(0,num_docs):
-        doc = client.load_document(i)
+        doc = client.load_document("%s_%d"%(taskid,i))
         listparam = []
         for col in cols:
             if col == "TF_gene":
@@ -194,7 +194,6 @@ def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_as
     #    querystr = "-(@%s:\"%s\")" % (colname,searchquery)
     #else: #searchtype == "exact"
     #    querystr = "@%s:\"%s\"" % (colname,searchquery)
-
     return result
 
 def customround(num):
@@ -359,9 +358,7 @@ def task_status(task_id):
                 response['result'] = task.info['result']
                 response['taskid'] = task.info['taskid']
             # TODO: need to forget task
-
         #task.forget() #??? not sure if needed
-        # pkill -9 -f 'celery worker'
     return jsonify(response)
 
 @app.route('/getinputparam/<job_id>', methods=['GET'])

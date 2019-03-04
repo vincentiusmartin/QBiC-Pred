@@ -257,16 +257,21 @@ def drop_index(task_id):
 def savetoredis(req_id,colnames,datavalues,expired_time):
     db.hmset("%s:cols"%req_id,{'cols':colnames})
     client = redisearch.Client(req_id)
+    print("reqqq",req_id)
     indexes = []
     for col in colnames:
         if "score" in col or "diff" in col or "row" in col or "z_score" in col or "p_value" in col:
             indexes.append(redisearch.NumericField(col,sortable=True))
+            print("redisearch.NumericField(%s,sortable=True)"%col)
         else:
             indexes.append(redisearch.TextField(col,sortable=True))
+            print("redisearch.TextField(%s,sortable=True)"%col)
+    print("iiiinndd",indexes)
     client.create_index(indexes)
     for i in range(0,len(datavalues)):
         fields = {colnames[j]:datavalues[i][colnames[j]] for j in range(0,len(colnames))}
-        client.add_document(i, **fields)
+        print("fields",i,fields)
+        client.add_document("%s_%d"%(req_id,i), **fields)
     # ---- set expiry for columns and documents ----
     #db.expire("%s:cols"%req_id,expired_time) let's comment for now and see how it goes
     drop_index.apply_async((req_id,), countdown=expired_time)
