@@ -94,8 +94,7 @@ def inittbl(self,filename,cpath):
 
 #==================================== Prediction Part ====================================
 
-# TODO: remove sharedlist if not needed anymore
-def predict(predlist, dataset, sharedlist,
+def predict(predlist, dataset, ready_count,
             filteropt=1, filterval=1, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
     '''
     for the container list, key is a tuple of: (rowidx,sequence,seqidx)
@@ -105,7 +104,6 @@ def predict(predlist, dataset, sharedlist,
      filteropt=1: diff,z_score,tfname
      filteropt=2: diff,p_val,escore,tfname
     '''
-
     buggedtf = 0
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
     if filteropt == 1: #t-value
@@ -161,7 +159,7 @@ def predict(predlist, dataset, sharedlist,
                     test_total_time += (test_end-test_start)
 
         print("Total e-score time %.5f" % test_total_time)
-        sharedlist.append(pbmname) # TODO: delete this?
+        ready_count.value += 1
         print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
 
     # remove seqidx and 18mer as it is not needed anymore
@@ -257,20 +255,15 @@ def drop_index(task_id):
 def savetoredis(req_id,colnames,datavalues,expired_time):
     db.hmset("%s:cols"%req_id,{'cols':colnames})
     client = redisearch.Client(req_id)
-    print("reqqq",req_id)
     indexes = []
     for col in colnames:
         if "score" in col or "diff" in col or "row" in col or "z_score" in col or "p_value" in col:
             indexes.append(redisearch.NumericField(col,sortable=True))
-            print("redisearch.NumericField(%s,sortable=True)"%col)
         else:
             indexes.append(redisearch.TextField(col,sortable=True))
-            print("redisearch.TextField(%s,sortable=True)"%col)
-    print("iiiinndd",indexes)
     client.create_index(indexes)
     for i in range(0,len(datavalues)):
         fields = {colnames[j]:datavalues[i][colnames[j]] for j in range(0,len(colnames))}
-        print("fields",i,fields)
         client.add_document("%s_%d"%(req_id,i), **fields)
     # ---- set expiry for columns and documents ----
     #db.expire("%s:cols"%req_id,expired_time) let's comment for now and see how it goes
@@ -301,20 +294,21 @@ def do_prediction(self, intbl, selections, gene_names,
     predfiles = [app.config['PREDDIR'] + "/" + s for s in selections] # os.listdir(preddir)
     preds = utils.chunkify(predfiles,app.config['PCOUNT']) # chunks the predfiles for each process
 
-    sharedlist = mp.Manager().list()
-    async_pools = [pool.apply_async(predict, (preds[i],intbl,sharedlist,filteropt,filterval,spec_ecutoff,nonspec_ecutoff)) for i in range(0,len(preds))]
+    # need to use manager here
+    shared_ready_sum = mp.Manager().Value('i', 0)
+
+    async_pools = [pool.apply_async(predict, (preds[i], intbl, shared_ready_sum, filteropt, filterval, spec_ecutoff, nonspec_ecutoff)) for i in range(0,len(preds))]
 
     # run the job, update progress bar
     total = len(predfiles)
     while not all([p.ready() for p in async_pools]):
-        ready_sum = len(sharedlist)
         time.sleep(2) # super important to avoid checking every loop
         self.update_state(state='PROGRESS',
-                          meta={'current': ready_sum, 'total': total, 'status': 'Processing input data...'})
+                          meta={'current': shared_ready_sum.value, 'total': total, 'status': 'Processing input data...'})
 
     res = [p.get() for p in async_pools]
     self.update_state(state='PROGRESS',
-                          meta={'current': ready_sum, 'total': total, 'status': 'post-processing'})
+                          meta={'current': shared_ready_sum.value, 'total': total, 'status': 'post-processing'})
     print("Terminate all children process..")
     pool.terminate() # terminate to kill all child processes !!! Like.. super important,
                      # to avoid memory leak, seriously...
@@ -326,6 +320,6 @@ def do_prediction(self, intbl, selections, gene_names,
 
     #db.expire("%s:vals:*" % self.request.id, app.config['USER_DATA_EXPIRY'])
 
-    return {'current': len(sharedlist), 'total': len(predfiles), 'status': 'Task completed!',
+    return {'current': shared_ready_sum.value, 'total': len(predfiles), 'status': 'Task completed!',
             'result': 'done', 'taskid': self.request.id,
             'time':(time.time()-start_time)} # -- somehow cannot do jsonify(postproc)
