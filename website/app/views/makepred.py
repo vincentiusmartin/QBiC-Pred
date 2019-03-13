@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 import ast
 import json
 
-from celery import Celery,chain
+from celery import Celery,chain,group,chord
 from app import app,db
 
 import app.controller.celerytask as celerytask
@@ -134,7 +134,7 @@ def handle_upload():
             if req["status"] == "example":
                 filepath = app.config['STATIC_EXAMPLE_DIR'] + req["filename"]
             else:
-                filepath = app.config['UPLOAD_FOLDER'] +req["filename"]
+                filepath = app.config['UPLOAD_FOLDER'] + req["filename"]
             # request.form.getlist('pred-select'):['Arid3a:Arid3a_3875.1_v1_deBruijn', 'Bhlhb2:Bhlhb2_4971.1_v1_deBruijn']
             genes_selected = [elm.split(":")[0] for elm in request.form.getlist('pred-select')]
 
@@ -149,30 +149,40 @@ def handle_upload():
             else:
                 filterval = float(request.form.get('output-selection-opt'))
 
-
             if req["linecount"] > MAX_LINES or request.form.get("escore-toggle") == "off":
-                spec_escore_thres = -1
-                nonspec_escore_thres = -1
+                spec_ecutoff = -1
+                nonspec_ecutoff = -1
             else:
-                spec_escore_thres = float(request.form.get('specific-binding-thres'))
-                nonspec_escore_thres = float(request.form.get('nonspecific-binding-thres'))
+                spec_ecutoff = float(request.form.get('specific-binding-thres'))
+                nonspec_ecutoff = float(request.form.get('nonspecific-binding-thres'))
 
-            task = chain(celerytask.inittbl.s(filepath,
-                        app.config['CHRDIR'] +"/"+chrver),
-                        celerytask.do_prediction.s(unique_pbms,genes_selected,filteropt,filterval,spec_escore_thres,nonspec_escore_thres)).apply_async() # put genes_selected here
+            # PRED
+            predfiles = [app.config['PREDDIR'] + "/" + s for s in unique_pbms] # os.listdir(preddir)
+            preds = utils.chunkify(predfiles,app.config['PCOUNT']) # chunks the predfiles for each process
+
+            #shared_ready_sum = 0 ###
+            task = chain(celerytask.inittbl.s(filepath,app.config['CHRDIR'] + "/" + chrver),
+                         group(celerytask.predict.s(preds[i], filteropt, filterval, spec_ecutoff, nonspec_ecutoff) for i in range(0,len(preds))),
+                         celerytask.postprocess.s(genes_selected, filteropt, filterval)
+                         ).apply_async()
+                         #celerytask.do_prediction.s(unique_pbms,genes_selected,filteropt,filterval,spec_escore_thres,nonspec_escore_thres)).apply_async() # put genes_selected here
+            #print(task.state)
+            task.parent.save() # GroupResult
+            #print(task.parent.parent.state)
 
             # ==== STORING IN REDIS PART ====
             # it is important to store these in redis so information can be
             # passed to different browsers/machines.
-            session_info = {"parent_id":task.parent.id,
+            session_info = {"preproc_id":task.parent.parent.id,
+                            "mapproc_id":task.parent.id,
                             "task_id":task.id,
                             "filename":req["filename"],
                             "genes_selected":genes_selected,
                             "filteropt":filteropt,
                             "filterval":filterval,
                             "chrver":request.form.get('genome-select'),
-                            "spec_escore_thres":spec_escore_thres,
-                            "nonspec_escore_thres":nonspec_escore_thres
+                            "spec_escore_thres":spec_ecutoff,
+                            "nonspec_escore_thres":nonspec_ecutoff
                             }
             if db.exists(task.id):
                 db.delete(task.id)
@@ -182,7 +192,6 @@ def handle_upload():
             task.forget() # not sure if needed???
 
             warning = ""
-            print(req["linecount"] , MAX_LINES)
             if req["linecount"] > MAX_LINES:
                 warning = "Notice: We turned off PBM E-score binding prediction since the number of lines is larger than %d. Please contact qbic-pred@duke.edu if you really need the E-score binding prediction." % MAX_LINES
             resp = make_response(jsonify({"warning":warning}), 202, {'Location': url_for('process_request',job_id=task.id)})
