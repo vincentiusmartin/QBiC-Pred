@@ -345,7 +345,7 @@ def task_status(task_id):
                 total += ar.info.get('total', 1)
 
         # handle cases when cur and total are not updated
-        if curr == 0 and total == 0:
+        if cur == 0 and total == 0:
             total = 1
         if not all(ar.state=="SUCCESS" for ar in task):
             status = "Processing input data..."
