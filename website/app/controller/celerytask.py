@@ -5,7 +5,7 @@ from app import app,celery,db
 import redisearch
 import time,sys
 import pandas as pd
-import billiard as mp #multiprocessing substitute to enable daemon
+#import billiard as mp #multiprocessing substitute to enable daemon
 import scipy.stats
 import numpy as np
 
@@ -286,17 +286,16 @@ def predict(self, dataset, predlist,
         newcontainer[strkey] = container[row_key]
     return newcontainer # give this error "keys must be str, int, float, bool or None, not tuple" if not converted
 
+'''
 # https://github.com/MehmetKaplan/Redis_Table
 # https://blog.miguelgrinberg.com/post/using-celery-with-flask
 # !DEPRECATED!
 @celery.task(bind=True)
 def do_prediction(self, intbl, selections, gene_names,
                   filteropt=1, filterval=1, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
-    '''
-    intbl: preprocessed table
-    filteropt: 1 for highest t-val, 2 for p-val cutoff
-    filterval: # TFs for opt 1 and p-val cutoff for opt 2
-    '''
+    #intbl: preprocessed table
+    #filteropt: 1 for highest t-val, 2 for p-val cutoff
+    #filterval: # TFs for opt 1 and p-val cutoff for opt 2
 
     if type(intbl) is str: # got an error in the pipeline from inittbl
         return {'current': 1, 'total': 1, 'error': intbl}
@@ -333,7 +332,7 @@ def do_prediction(self, intbl, selections, gene_names,
                      # to avoid memory leak, seriously...
     colnames,datavalues = postprocess(res,gene_names,filteropt,filterval)
 
-    ''' SET the values in redis '''
+    # SET the values in redis 
     savetoredis(self.request.id,colnames,datavalues,app.config['USER_DATA_EXPIRY'])
     # significance_score can be z-score or p-value depending on the out_type
 
@@ -342,3 +341,4 @@ def do_prediction(self, intbl, selections, gene_names,
     return {'current': shared_ready_sum.value, 'total': len(predfiles), 'status': 'Task completed!',
             'result': 'done', 'taskid': self.request.id,
             'time':(time.time()-start_time)} # -- somehow cannot do jsonify(postproc)
+'''
