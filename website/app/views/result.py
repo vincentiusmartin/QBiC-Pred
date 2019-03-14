@@ -338,14 +338,15 @@ def task_status(task_id):
         cur = 0
         total = 0
         status = ""
-        print("debug",task.results)
-        
+
         for ar in task.results:
-            print("arrrr:",ar,ar.info)
-            if ar.info:
+            if ar.info: # info is not directly available
                 cur += ar.info.get('current', 0)
                 total += ar.info.get('total', 1)
 
+        # handle cases when cur and total are not updated
+        if curr == 0 and total == 0:
+            total = 1
         if not all(ar.state=="SUCCESS" for ar in task):
             status = "Processing input data..."
         response = {
