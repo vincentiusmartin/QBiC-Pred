@@ -338,11 +338,16 @@ def task_status(task_id):
         cur = 0
         total = 0
         status = ""
+        print("debug",task.results)
         for ar in task.results:
-            cur += ar.info.get('current', 0)
-            total += ar.info.get('total', 1)
-            if not all(ar.state=="SUCCESS" for ar in task):
-                status = "Processing input data..."
+            if ar:
+                cur += ar.info.get('current', 0)
+                total += ar.info.get('total', 1)
+                if not all(ar.state=="SUCCESS" for ar in task):
+                    status = "Processing input data..."
+        if total == 0:
+            total = 1
+            cur = 0
         response = {
             'state': 'PROGRESS',
             'current': cur,
