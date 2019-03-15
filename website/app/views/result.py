@@ -341,7 +341,6 @@ def task_status(task_id):
         status = ""
 
         for ar in task.results:
-            print("tyepepepe",type(ar),type(ar.info), isinstance(ar.info, billiard.exceptions.WorkerLostError))
             if ar.info and not isinstance(ar.info, billiard.exceptions.WorkerLostError): # info is not directly available
                 cur += ar.info.get('current', 0)
                 total += ar.info.get('total', 1)
@@ -349,6 +348,8 @@ def task_status(task_id):
         # handle cases when cur and total are not updated
         if cur == 0 and total == 0:
             total = 1
+        for ar in task:
+            print("arrr state",ar,ar.state,type(ar),type(ar.info))
         if not all(ar.state=="SUCCESS" for ar in task):
             status = "Processing input data..."
         response = {
