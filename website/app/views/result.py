@@ -11,6 +11,7 @@ import redisearch
 import json,ast
 
 import pandas as pd
+import billiard
 
 '''
 job_id: from last task in the pipeline
@@ -340,8 +341,8 @@ def task_status(task_id):
         status = ""
 
         for ar in task.results:
-            print("tyepepepe",type(ar),type(ar.info), isinstance(ar.info, "billiard.exceptions.WorkerLostError"))
-            if ar.info and not isinstance(ar.info, "billiard.exceptions.WorkerLostError"): # info is not directly available
+            print("tyepepepe",type(ar),type(ar.info), isinstance(ar.info, billiard.exceptions.WorkerLostError))
+            if ar.info and not isinstance(ar.info, billiard.exceptions.WorkerLostError): # info is not directly available
                 cur += ar.info.get('current', 0)
                 total += ar.info.get('total', 1)
 
