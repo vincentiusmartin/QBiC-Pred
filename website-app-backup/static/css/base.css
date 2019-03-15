@@ -1,0 +1,63 @@
+body{
+  padding-top: 90px; /* need to do this to avoid overlap with navbar */
+  background-color:#f8f9fb;
+}
+
+@font-face {
+  font-family: Luthier;
+  src: url('luthier-regular.ttf');
+}
+
+body{
+  font-family: Luthier;
+}
+
+html,body {
+  height: 100%;
+}
+
+#header-logo{
+  width: 78%;
+}
+
+#footer-img{
+  width:100%;
+}
+
+#footer-caption{
+  position: absolute;
+  bottom: 8px;
+  left: 16px;
+}
+
+.navbar-nav > .nav-item > a.active{
+  color:#33adff !important;
+}
+
+.navbar-nav > li > a {
+  color: black;
+}
+
+.qbic-nav{
+  border-bottom:2px solid #e6e6e6;
+  padding-bottom:10px;
+}
+
+.qbic-body{
+  background-color:white;
+}
+
+
+.footer-thumbnail {
+    position: relative;
+}
+
+.footer-caption {
+  color:white;
+  text-align:left;
+  position: absolute;
+  font-size:12px;
+  top: 35%;
+  left: 0;
+  width: 100%;
+}

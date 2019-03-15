@@ -1,0 +1,83 @@
+#ressearch {
+  float:right;
+}
+
+#filterpanel{
+  margin-top: 5%;
+}
+
+
+@font-face {
+  font-family: Raleway;
+  src: url('raleway-regular.ttf');
+}
+
+#tablewrap{
+    font-family: Raleway !important;
+}
+
+.list-group-custom{
+  max-height: 200px;
+  margin-bottom: 10px;
+  overflow:scroll;
+  word-wrap: break-word;
+  -webkit-overflow-scrolling: touch;
+}
+
+.list-group-item-custom{
+    font-size:10pt;
+}
+
+.unstyled-button {
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+.clickable-cell.dropdown-toggle::after {
+    display:none;
+}
+
+.dataTables_scroll{
+  overflow:auto;
+  position:relative;
+}
+
+.bolded-red {
+  color: red;
+  font-weight: bold;
+}
+
+.left-content {
+  border: 1px solid;
+  padding:10px 10px 10px 10px;
+  //border-color:  #D3D3D3;
+}
+
+.indata-text{
+  margin:0;
+}
+
+.dataTables_wrapper .dataTables_processing {
+  top:40%;
+  z-index: 1;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+/* Style the close button (span) */
+.close {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: 0%;
+  padding: 12px 16px;
+  transform: translate(0%, -50%);
+  font-size:12pt;
+}
+
+.close:hover {background: #bbb;}

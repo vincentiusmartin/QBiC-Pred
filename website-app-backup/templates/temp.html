@@ -1,0 +1,38 @@
+<!-- index.html
+
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block body %}
+<div class="jumbotron">
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    
+    <form method=post enctype=multipart/form-data id="input-form">
+      <input type=file name=file>
+      <div id="upload-form">
+      <button id="submit-job" type="submit" class="btn btn-primary">Submit</button>
+      </div>  
+    </form>
+    <div id="progress"></div>
+     
+</div>
+{% endblock %}-->
+
+<html>
+<head>
+    <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/nanobar.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+<body>
+    <h1>Upload new File</h1>
+    
+    <form method=post enctype=multipart/form-data id="input-form">
+      <input type=file name=file>
+      <div id="upload-form">
+      <button id="submit-job" type="submit" class="btn btn-primary">Submit</button>
+      </div>  
+    </form>
+    <div id="progress"></div>
+</body>
+</html>

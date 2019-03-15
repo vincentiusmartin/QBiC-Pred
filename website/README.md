@@ -32,6 +32,11 @@ Installation is taken from [here](https://thomassileo.name/blog/2012/08/20/how-t
 ### Daemonize redis
 - Since we are using RediSearch, from RediSearch/build: `redis-server --loadmodule ./redisearch.so --daemonize yes`
 
+## Configuration Issues:
+
+### Redis output buffer size
+- To debug memory usage: `sudo tail -n 100 /var/log/kern.log` [here](https://stackoverflow.com/questions/22805079/celery-workerlosterror-worker-exited-prematurely-signal-9-sigkill)
+
 ## Roadmap (since Feb 2019)
 - [x] advanced option for E-score
 - [x] accept input 17mer sequences + mutated

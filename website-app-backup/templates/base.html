@@ -1,0 +1,81 @@
+<!-- base.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" href="/static/images/logo.ico">
+    <!-- Bootstrap core CSS -->
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "https://cdn.datatables.net/1.10.18/css/jquery.dataTables.min.css">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/bootstrap-select.min.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/base.css') }}">
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <!-- script from static folder -->
+    <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+    <script src="https://unpkg.com/popper.js@1.14.3/dist/umd/popper.min.js"></script> <!-- required for bootstrap drop-down -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-select.min.js') }}"></script>
+    <!-- internal js script -->
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+  </head>
+  <body>
+    <div class="container qbic-body"> <!-- to make full width, just remove container inside-->
+      <nav class="navbar fixed-top navbar-expand-lg bg-light navbar-light qbic-nav py-0 mt-0">
+        <div class="container">
+          <ul class="navbar-nav mr-auto">
+              <li>
+                <a class="nav-link py-0" href="/">
+                  <img src="/static/images/headerlogo.png" id="header-logo">
+                </a>
+              </li>
+          </ul>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#header-toggler" aria-controls="header-toggler" aria-expanded="false" aria-label="Click to toggle menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="header-toggler">
+            <ul class="navbar-nav mx-auto"> <!-- ml-auto  -->
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}" id="nav-1">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('makepred') }}" id="nav-2">Make Predictions</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('upload_result') }}" id="nav-3">Upload Results</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('about') }}" id="nav-4">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('downloads') }}" id="nav-5">Downloads</a>
+              </li>
+            </ul>
+            <div class="dropdown ml-auto">
+              <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Recent jobs
+              </button>
+              <div id="dropdown-header" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"></div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {% block body %}
+      {% endblock %}
+      <footer class="footer">
+        <div class="row" id="box-search">
+            <div class="footer-thumbnail text-center">
+                <img src="/static/images/footer.png" alt="" class="img-responsive" id="footer-img">
+                <div class="footer-caption col-md-8">
+                    <p>© 2018 For question, feedback, or bugs please send an email to qbic-pred@duke.edu</p>
+                </div>
+            </div>
+        </div>
+      </footer>
+    </div> <!-- /container -->
+  </body>
+</html>

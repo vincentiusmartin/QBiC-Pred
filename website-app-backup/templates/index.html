@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}QBiC-Pred: Home{% endblock %}
+{% block body %}
+
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/index.css') }}">
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+<div class="modal-body">
+  <div id="carousel-qbic-index" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carousel-qbic-index" data-slide-to="0" class="active"></li>
+      <li data-target="#carousel-qbic-index" data-slide-to="1"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="d-block w-100 slideshow-img" src="/static/images/mut2.jpg">
+        <div class="carousel-caption">
+            <h1 class="home-banner"><span class="blue-text home-banner">QBiC</span>-Pred</h1>
+            <h4 class="lead home-banner"><span class="blue-text">Quantitative predictions of transcription factor binding changes</span> due to sequence variants</h4>
+            <a href="{{ url_for('makepred') }}" class="btn btn-lg btn-primary index-button-text">MAKE PREDICTIONS</a>
+            <a href="{{ url_for('upload_result') }}" class="btn btn-lg btn-outline-light index-button-text" style="margin-left:2%;">UPLOAD RESULTS</a>
+        </div><!-- end carousel-caption -->
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100 slideshow-img" src="/static/images/mut1.jpeg">
+      </div>
+    </div>
+  </div>
+  <div class="row" style="padding-top:2%;">
+    <div class="col-md-8">
+      <h2>Welcome to QBiC!</h2>
+      <p>
+          Genetic variants and mutations play important roles in cancer and other complex human diseases. The overwhelming majority of these variants occur in non-coding portions of the genome, where they can have a functional impact by disrupting regulatory interactions between transcription factors (TFs) and DNA. We have recently introduced a method for assessing the impact of non-coding mutations on TF-DNA interactions, based on regression models of DNA-binding specificity trained on high-throughput in vitro data [1]. We used ordinary least squares (OLS) to estimate the parameters of the binding model for each TF, and we showed that our predictions of TF-binding changes due to DNA mutations correlate well with measured changes in gene expression. In addition, by leveraging distributional results associated with OLS estimation, for each predicted change in TF binding we also compute a normalized score (z-score) and a significance value (p-value) reflecting our confidence that the mutation affects TF binding. Here, we introduce QBiC-Pred (Quantitative TF Binding Change Predictions Due to Sequence Variants), or QBiC for short, a web service that allows users to run our OLS models for over 600 human TFs, and analyze the results to focus on specific TFs and/or variants of interest.
+      </p>
+      <p>
+          [1] Zhao J, Li D, Seo J, Allen AS, Gordân R. <a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/28691125">Quantifying the Impact of Non-coding Variants on Transcription Factor-DNA Binding.</a> Res Comput Mol Biol. 10229:336-352
+      </p>
+      <a href="{{ url_for('about') }}" class="btn btn-lg btn-outline-primary index-button-text">LEARN MORE</a>
+    </div>
+    <div class="col-md-4">
+      <img src="/static/images/mut3.png" style="width: 85%;float:right;">
+    </div>
+  </div>
+
+<div id="testing"></div>
+<br />
+
+{% endblock %}

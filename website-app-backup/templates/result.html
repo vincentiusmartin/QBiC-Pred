@@ -1,0 +1,57 @@
+<!-- about.html-->
+
+{% extends "base.html" %}
+{% block title %}QBiC-Pred: Prediction Result{% endblock %}
+{% block body %}
+
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/result.css') }}">
+<script src="{{ url_for('static', filename='js/result.js') }}"></script>
+
+<div class="modal-body row">
+  <script>
+    // need to call this from html so Flask variable can be passed
+    $(function() {
+      inputProgress('{{ stats_url }}','{{ parents|safe }}'); // safe -> needed to process json
+      getInputParam('{{ stats_url }}');
+    });
+  </script>
+  <div class = "col-md-3">
+    <div class="left-content" style="top: 56px;" id="inputpanel">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">Selected TFs
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu scrollable-menu" id="genes-dropdown">
+        </ul>
+      </div>
+    </div>
+
+    <div class="left-content" id="filterpanel">
+      <p><b> Filters: </b></p>
+      <ul class="list-group list-group-custom" id="filter-list">
+        <!--<li class="list-group-item">Cras justo odio</li>-->
+      </ul>
+    </div>
+  </div>
+  <div class = "col-md-9">
+    <div class="progress" style="display: none;"></div>
+    <div id="status" style="display: none;"></div>
+    <!-- Search form -->
+    <div id="tablewrap"  style="display: none;">
+      <table class="table table-bordered table-hover table-striped display nowrap" id="restbl">
+        <thead>
+          <tr>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="tbl-download" style="display: none;"></div>
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+{% block title %}QBiC-Pred: Make Prediction{% endblock %}
+{% block body %}
+
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/makepred.css') }}">
+<script src="{{ url_for('static', filename='js/makepred.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap-filestyle.min.js') }}"></script>
+
+<div class="modal-body">
+  <div class="container-fluid" id="input-form-wrapper">
+    <form method="post" enctype="multipart/form-data" id="input-form">
+      <div class="row">
+        <div class="text-hr"><span>DATA SUBMISSION FORM</span></div>
+      </div>
+      <div id="form-input">
+        <div class="row pt-1">
+          <div class="col-5 col-lg-3 form-elm">
+            <label id="input-lbl-1" value="active">
+                Upload mutation dataset:
+            </label>
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+              data-toggle="popover" data-placement="right" data-trigger="hover"
+              data-content="Input a variant/mutation dataset (VCF format, icgc simple somatic mutation file, or any tsv/csv
+                            with columns: chromosome, chromosome_pos, mutated_from, mutated_to. QBiC also accepts input of 17-mer sequence file with the mutated from nucleotide in the middle and the mutated to nucleotide on  the right, separated by a space. See About page for details.)">
+            </button>
+            <input type=file class="form-control-file" name="input-file" id="input-file" />
+            <p style="padding:5px 0 0 0;font-size:12px;">(don't have mutation data? some example mutation files are provided at the bottom of this page; or select full input examples from the right)</p>
+            <input type="text" id="input-mode" value="1" name="input-mode" style="visibility: hidden;" readonly /> <!-- mark the input mode -->
+          </div>
+          <div class="col-1 col-lg-1 form-elm1" id="filein-separator">
+            <h3>OR</h3>
+          </div>
+          <div class="clearfix visible-xs visible-sm"></div>
+          <div class="col-6 col-lg-4 form-elm">
+            <label id="input-lbl-2" value="active">
+                <button class="btn disabled-btn" value="2" type="button">
+                    Select an example use case <br /> (this will fill all necessary fields):
+                </button>
+            </label>
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+              data-toggle="popover" data-placement="right" data-trigger="hover"
+              data-content="Select an example use case.">
+            </button>
+            <br />
+            <select id="examplelist" name="examplelist" class="selectpicker"></select>
+            <br />
+            <a id="download-input-select"></a>
+          </div>
+        </div>
+
+        <div class="row form-elm">
+          <div class="col-12 col-lg-4 form-elm">
+            <label>Select TFs by families:</label>
+
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="All TFs in the selected families will be selected. Modifications in this dropdown will be reflected in
+                          the transcription factors dropdown.">
+            </button>
+            <br />
+            <select id="familylist" name="family-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true" data-dropup-auto="false"></select>
+          </div>
+
+          <div class="d-lg-none d-xl-block"><br /></div>
+
+          <div class="col-12 col-lg-4 form-elm">
+            <label>Select transcription factors:</label>
+
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="Select by TF names">
+            </button>
+            <br />
+            <select id="predlist" name="pred-select" class="selectpicker" multiple data-live-search="true" data-actions-box="true" data-dropup-auto="false"></select>
+            <br />
+            <a id="download-tfs-select"></a>
+          </div>
+
+          <div class="d-lg-none d-xl-block"><br /></div>
+
+          <div class="col-12 col-lg-3 form-elm">
+            <label>Or upload a TF file: </label>
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="Upload a file containing TF gene names (in HGNC nomenclature) separated by new lines. Input will automatically be added to
+                          the TFs dropdown.">
+            </button>
+            <br />
+            <input type=file name="tf-file" id="tf-file"></input>
+            <br />
+            <a id="download-tffile-example" class="grey-download" href="/download/tflist-example.txt">Download example TF file</a>
+          </div>
+        </div>
+
+        <hr class="divider-line" />
+
+        <div class="row">
+          <div class="col-12 col-lg-4 form-group form-elm">
+            <label for="genomelist">Select a genome version:</label>
+
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="For input files containing genomic coordinates, this version of the human genome
+                          will be used.">
+            </button>
+            <br />
+            <select id="genomelist" name="genome-select" class="selectpicker">
+              <option selected>hg19</option>
+              <option>hg38</option>
+            </select>
+          </div>
+
+          <div class="col-12 col-lg-4 form-group form-elm">
+            <label for="outputradio">Select running mode:</label>
+
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="Output will include, for each variant, either all TFs with p-value below the cutoff or
+                          the top TF genes accroding to the largest absolute value of the normalized binding
+                          difference (i.e. z-score).">
+            </button>
+
+            <div id="outputradio" name="output-select">
+              <div class="radio">
+                <input type="radio" name="optradio" value="2" checked="">&nbsp;p-value threshold </input>
+              </div>
+              <div class="radio">
+                <input type="radio" name="optradio" value="1">&nbsp;largest absolute z-score </input>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-lg-4 output-col form-group form-elm">
+            <label for="output-option" id="output-option">p-value cutoff:</label>
+            <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+            data-toggle="popover" data-placement="right" data-trigger="hover"
+            data-content="This represents the value that corresponds to the radio button on the left.">
+            </button>
+            <br />
+            <div id="output-selection-wrapper" class="col-lg-6">
+                <input class="form-control" type="text"
+                 id="output-selection-opt" name="output-selection-opt"
+                 value="0.0001" placeholder="input p-value cutoff" />
+            </div>
+          </div>
+        </div> <!-- from row form-elm -->
+
+        <hr class="divider-line" />
+
+        <div class="row">
+          <div class="col-12 col-lg-4 form-elm">
+            <label for="job-name">Job name (optional)</label>
+              <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+                data-toggle="popover" data-placement="right" data-trigger="hover"
+                data-content="Job name for this prediction job.">
+              </button>
+            <br />
+            <input type="text" class="form-group" id="job-name" name="job-name" placeholder="Enter job name">
+          </div>
+
+          <!--<div class="col-md-4">
+            <label for="email-name">Email address (optional)</label>
+              <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+                data-toggle="popover" data-placement="right" data-trigger="hover"
+                data-content="Will be used to give notification about the job status.">
+              </button>
+            <br />
+            <input type="text" class="form-group" id="email-name" placeholder="Enter your email (optional)">
+          </div>-->
+        </div>
+
+        <hr class="divider-line" />
+
+        <div class="row">
+          <div class="col-12 form-group form-elm">
+            <a id="adv-opt-btn" class="btn btn-light btn-sm adv-opt" data-toggle="collapse" href="#adv-opt-collapse" role="button" aria-expanded="false" aria-controls="adv-opt-collapse"><b><span id="adv-opt-label">&#9658; Advanced options</span></b></a>
+
+            <div class="collapse multi-collapse" id="adv-opt-collapse">
+              <div class="card card-body">
+
+                <div class="row">
+                  <div class="col-12 col-lg-5 form-elm">
+                    <label for="escore-toggle">Binding prediction with PBM E-score: &nbsp;</label>
+                    <select id="escore-toggle" name="escore-toggle">
+                      <option value="on">On</option>
+                      <option value="off">Off</option>
+                    </select>
+                    <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+                    data-toggle="popover" data-placement="right" data-trigger="hover"
+                    data-content="Toggle binding prediction with PBM E-score.">
+                    </button>
+                  </div>
+                </div>
+
+                <div id="escore-opt" style="display:block;">
+                  <div class="row">
+                    <div class="col-12 col-lg-5 form-elm">
+                      <label for="genomelist">PBM E-score cutoff for nonspecific-binding <br /> (should be between 0.2-0.4):</label>
+                      <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+                      data-toggle="popover" data-placement="right" data-trigger="hover"
+                      data-content="A sequence is considered as non-significant (i.e. unbound) if its maximum 8-mer e-score is below this cutoff value.">
+                      </button>
+                      <br />
+                      <div id="nonspecific-binding-wrapper" class="col-12 col-lg-4">
+                        <input class="form-control" type="text"
+                           id="nonspecific-binding-thres" name="nonspecific-binding-thres"
+                           value="0.35" placeholder="nonspecific-binding cutoff" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-lg-5 form-elm">
+                      <label for="genomelist">PBM E-score cutoff for specific-binding <br /> (should be between 0.3-0.5):</label>
+                      <button type="button" class="btn btn-sm btn-primary-outline far fa-question-circle help-icon"
+                      data-toggle="popover" data-placement="right" data-trigger="hover"
+                      data-content="A sequence is considered as significant (i.e. bound) if there are two consecutive 8-mers with e-scores above this value. If this condition is not met but there are 8-mer e-scores above nonspecific-binding cutoff, then it will be considered as &quot;ambiguous&quot;.">
+                      </button>
+                      <br />
+                      <div id="specific-binding-wrapper" class="col-12 col-lg-4">
+                        <input class="form-control" type="text"
+                           id="specific-binding-thres" name="specific-binding-thres"
+                           value="0.4" placeholder="specific-binding cutoff" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="upload-form">
+        <button id="submit-job" type="button" class="btn btn-primary">Submit</button>
+      </div>
+      <span class="text-danger" role="alert" id="upload-msg"></span>
+    </form>
+  </div>
+
+  <div class="row example-input">
+    <div class="col-3">Sample mutation input files:</div>
+    <div class="col-2">
+        <a href="/download/QBiC-icgc-example-breast-cancer-mutations-small.tsv">
+          ICGC format
+        </a>
+    </div>
+    <div class="col-2">
+        <a href="/download/QBiC-vcf-example-MAFK-ASB-variants.vcf">
+          VCF format
+        </a>
+    </div>
+    <div class="col-2">
+        <a href="/download/QBiC-sequence-format-example-ELK1_17mers.txt">
+          Sequence format
+        </a>
+    </div>
+  </div>
+
+</div>
+
+<br />
+
+{% endblock %}

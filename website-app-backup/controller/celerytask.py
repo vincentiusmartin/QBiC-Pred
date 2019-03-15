@@ -5,7 +5,7 @@ from app import app,celery,db
 import redisearch
 import time,sys
 import pandas as pd
-#import billiard as mp #multiprocessing substitute to enable daemon
+import billiard as mp #multiprocessing substitute to enable daemon
 import scipy.stats
 import numpy as np
 
@@ -94,116 +94,7 @@ def inittbl(self,filename,cpath):
 
 #==================================== Prediction Part ====================================
 
-def read_gapfile(gapfile):
-    df = pd.read_csv(gapfile)
-    return dict(zip(df.upbm_filenames, df.gapmodel))
-
-def format2tbl(tbl,gene_names,filteropt=1):
-    '''
-    This function saves tbl as csvstring
-
-    Input:
-      tbl is a dictionary of (rowidx,seq):[diff,zscore,tfname] or [diff,p-val,escore,tfname]
-    '''
-
-    with open(app.config['PBM_HUGO_MAPPING']) as f:
-        pbmtohugo = {}
-        for line in f:
-            linemap = line.strip().split(":")
-            pbmtohugo[linemap[0]] = linemap[1].split(",")
-
-    #gapdata = read_gapfile(app.config['GAP_FILE'])
-
-    sorted_key = sorted(tbl.keys())
-    datavalues = []
-    for row_key in sorted_key:
-        if not tbl[row_key]: # probably empty row
-            continue
-        row, seq = row_key.split(",")
-        wild = seq[0:5] + seq[5] + seq[6:11]
-        mut = seq[0:5] + seq[11] + seq[6:11]
-        sorted_val = sorted(tbl[row_key],reverse=True,key=lambda x:abs(x[1]))
-        for row_val in sorted_val: # [diff,zscore,pval,isbound,pbmname]
-            rowdict = {'row':row,'wild':wild,'mutant':mut,'diff':row_val[0]}
-            pbmname = row_val[4]
-            rowdict['z_score'] =  row_val[1]
-            rowdict['p_value'] =  row_val[2]
-            rowdict['binding_status'] = row_val[3]
-            if pbmname  == 'None':
-                rowdict['TF_gene'] = ""
-                rowdict['pbmname'] = "None"
-                #rowdict['gapmodel'] = "None" # vmartin: comment for now
-            else:
-                rowdict['TF_gene'] = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
-                rowdict['pbmname'] = pbmname
-                #rowdict['gapmodel'] = gapdata[pbmname] # vmartin: comment for now
-            datavalues.append(rowdict)
-
-    #colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"]
-    colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
-    return colnames,datavalues
-
-#==========================================================
-@celery.task(bind=True)
-def postprocess(self,datalist,gene_names,filteropt=1,filterval=1):
-    '''
-    Aggregate the result from the different processes.
-    '''
-    self.update_state(state='PROGRESS',
-                      meta={'current': 1, 'total': 1, 'status': 'Postprocessing...'})
-    maintbl = {}
-    for ddict in datalist:
-        if not maintbl:
-            maintbl = ddict
-        else:
-            if filteropt == 1: # z-score
-                for row_key in ddict:
-                    for row_val in ddict[row_key]:
-                        least_idx = min(enumerate(maintbl[row_key]),key=lambda x:abs(x[1][1]))[0]
-                        # row_val[1] is the t-value
-                        if abs(row_val[1]) > abs(maintbl[row_key][least_idx][1]):
-                            del maintbl[row_key][least_idx]
-                            maintbl[row_key].append(row_val)
-            else: # filteropt == 2 -- p-value
-                for row_key in ddict:
-                    maintbl[row_key].extend(ddict[row_key])
-
-    colnames,datavalues = format2tbl(maintbl,gene_names,filteropt)
-    savetoredis(self.request.id,colnames,datavalues,app.config['USER_DATA_EXPIRY'])
-    return {'current': 1, 'total': 1, 'status': 'Task completed!',
-            'result': 'done', 'taskid': self.request.id} # -- somehow cannot do jsonify(postproc)
-
-
-@celery.task()
-def drop_index(task_id):
-    '''
-    Make this a celery task so we can schedule it
-    '''
-    print("Remove key/index for %s from redis"%task_id)
-    client = redisearch.Client(task_id)
-    client.drop_index()
-    db.delete(task_id)
-    db.delete("%s:cols"%task_id)
-
-def savetoredis(req_id,colnames,datavalues,expired_time):
-    db.hmset("%s:cols"%req_id,{'cols':colnames})
-    client = redisearch.Client(req_id)
-    indexes = []
-    for col in colnames:
-        if "score" in col or "diff" in col or "row" in col or "z_score" in col or "p_value" in col:
-            indexes.append(redisearch.NumericField(col,sortable=True))
-        else:
-            indexes.append(redisearch.TextField(col,sortable=True))
-    client.create_index(indexes)
-    for i in range(0,len(datavalues)):
-        fields = {colnames[j]:datavalues[i][colnames[j]] for j in range(0,len(colnames))}
-        client.add_document("%s_%d"%(req_id,i), **fields)
-    # ---- set expiry for columns and documents ----
-    #db.expire("%s:cols"%req_id,expired_time) let's comment for now and see how it goes
-    drop_index.apply_async((req_id,), countdown=expired_time)
-
-@celery.task(bind=True)
-def predict(self, dataset, predlist,
+def predict(predlist, dataset, ready_count,
             filteropt=1, filterval=1, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
     '''
     for the container list, key is a tuple of: (rowidx,sequence,seqidx)
@@ -213,11 +104,6 @@ def predict(self, dataset, predlist,
      filteropt=1: diff,z_score,tfname
      filteropt=2: diff,p_val,escore,tfname
     '''
-
-    self.update_state(state='PROGRESS',
-                      meta={'current': 0, 'total': len(predlist), 'status': 'Processing input data...'})
-
-
     buggedtf = 0
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
     if filteropt == 1: #t-value
@@ -267,38 +153,131 @@ def predict(self, dataset, predlist,
                     # For 10k rows, total: 141.34secs, from e-score 128.56331secs
                     # For 50k rows, total: 771.42 secs, from e-score: 752.123secs
                     # another example: 2547.41secs, from e-score: 2523.96897secs
-                    isbound = utils.isbound_escore_18mer(row_key[2], pbmname, app.config['ESCORE_DIR'], spec_ecutoff,  nonspec_ecutoff)
+                    isbound = utils.isbound_escore_18mer(row_key[2],pbmname,app.config['ESCORE_DIR'],spec_ecutoff,nonspec_ecutoff)
                     container[row_key].append([diff,zscore,pval,isbound,pbmname])
                     test_end = timer()
                     test_total_time += (test_end-test_start)
 
-        self.update_state(state='PROGRESS',
-                          meta={'current': i + 1, 'total': len(predlist), 'status': 'Processing input data...'})
         print("Total e-score time %.5f" % test_total_time)
+        ready_count.value += 1
         print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
 
-    self.update_state(state='PROGRESS',
-                      meta={'current': i + 1, 'total': len(predlist), 'status': 'Processing input data...'})
     # remove seqidx and 18mer as it is not needed anymore
     newcontainer = {}
     for row_key in container:
-        strkey = ",".join([str(x) for x in row_key[:-2]])
-        newcontainer[strkey] = container[row_key]
-    return newcontainer # give this error "keys must be str, int, float, bool or None, not tuple" if not converted
+        newcontainer[row_key[:-2]] = container[row_key]
+    return newcontainer
 
+def read_gapfile(gapfile):
+    df = pd.read_csv(gapfile)
+    return dict(zip(df.upbm_filenames, df.gapmodel))
 
-# https://github.com/MehmetKaplan/Redis_Table
-# https://blog.miguelgrinberg.com/post/using-celery-with-flask
-'''
-# https://github.com/MehmetKaplan/Redis_Table
-# https://blog.miguelgrinberg.com/post/using-celery-with-flask
-# !DEPRECATED!
+def format2tbl(tbl,gene_names,filteropt=1):
+    '''
+    This function saves tbl as csvstring
+
+    Input:
+      tbl is a dictionary of (rowidx,seq):[diff,zscore,tfname] or [diff,p-val,escore,tfname]
+    '''
+
+    with open(app.config['PBM_HUGO_MAPPING']) as f:
+        pbmtohugo = {}
+        for line in f:
+            linemap = line.strip().split(":")
+            pbmtohugo[linemap[0]] = linemap[1].split(",")
+
+    #gapdata = read_gapfile(app.config['GAP_FILE'])
+
+    sorted_key = sorted(tbl.keys())
+    datavalues = []
+    for row_key in sorted_key:
+        if not tbl[row_key]: # probably empty row
+            continue
+        row = row_key[0]
+        seq = row_key[1]
+        wild = seq[0:5] + seq[5] + seq[6:11]
+        mut = seq[0:5] + seq[11] + seq[6:11]
+        sorted_val = sorted(tbl[row_key],reverse=True,key=lambda x:abs(x[1]))
+        for row_val in sorted_val: # [diff,zscore,pval,isbound,pbmname]
+            rowdict = {'row':row,'wild':wild,'mutant':mut,'diff':row_val[0]}
+            pbmname = row_val[4]
+            rowdict['z_score'] =  row_val[1]
+            rowdict['p_value'] =  row_val[2]
+            rowdict['binding_status'] = row_val[3]
+            if pbmname  == 'None':
+                rowdict['TF_gene'] = ""
+                rowdict['pbmname'] = "None"
+                #rowdict['gapmodel'] = "None" # vmartin: comment for now
+            else:
+                rowdict['TF_gene'] = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
+                rowdict['pbmname'] = pbmname
+                #rowdict['gapmodel'] = gapdata[pbmname] # vmartin: comment for now
+            datavalues.append(rowdict)
+
+    #colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"]
+    colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
+    return colnames,datavalues
+
+def postprocess(datalist,gene_names,filteropt=1,filterval=1):
+    '''
+    Aggregate the result from the different processes.
+    '''
+    maintbl = {}
+    for ddict in datalist:
+        if not maintbl:
+            maintbl = ddict
+        else:
+            if filteropt == 1: # z-score
+                for row_key in ddict:
+                    for row_val in ddict[row_key]:
+                        least_idx = min(enumerate(maintbl[row_key]),key=lambda x:abs(x[1][1]))[0]
+                        # row_val[1] is the t-value
+                        if abs(row_val[1]) > abs(maintbl[row_key][least_idx][1]):
+                            del maintbl[row_key][least_idx]
+                            maintbl[row_key].append(row_val)
+            else: # filteropt == 2 -- p-value
+                for row_key in ddict:
+                    maintbl[row_key].extend(ddict[row_key])
+    return format2tbl(maintbl,gene_names,filteropt)
+
+#==========================================================
+@celery.task()
+def drop_index(task_id):
+    '''
+    Make this a celery task so we can schedule it
+    '''
+    print("Remove key/index for %s from redis"%task_id)
+    client = redisearch.Client(task_id)
+    client.drop_index()
+    db.delete(task_id)
+    db.delete("%s:cols"%task_id)
+
+def savetoredis(req_id,colnames,datavalues,expired_time):
+    db.hmset("%s:cols"%req_id,{'cols':colnames})
+    client = redisearch.Client(req_id)
+    indexes = []
+    for col in colnames:
+        if "score" in col or "diff" in col or "row" in col or "z_score" in col or "p_value" in col:
+            indexes.append(redisearch.NumericField(col,sortable=True))
+        else:
+            indexes.append(redisearch.TextField(col,sortable=True))
+    client.create_index(indexes)
+    for i in range(0,len(datavalues)):
+        fields = {colnames[j]:datavalues[i][colnames[j]] for j in range(0,len(colnames))}
+        client.add_document("%s_%d"%(req_id,i), **fields)
+    # ---- set expiry for columns and documents ----
+    #db.expire("%s:cols"%req_id,expired_time) let's comment for now and see how it goes
+    drop_index.apply_async((req_id,), countdown=expired_time)
+
+#https://github.com/MehmetKaplan/Redis_Table
 @celery.task(bind=True)
 def do_prediction(self, intbl, selections, gene_names,
                   filteropt=1, filterval=1, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
-    #intbl: preprocessed table
-    #filteropt: 1 for highest t-val, 2 for p-val cutoff
-    #filterval: # TFs for opt 1 and p-val cutoff for opt 2
+    '''
+    intbl: preprocessed table
+    filteropt: 1 for highest t-val, 2 for p-val cutoff
+    filterval: # TFs for opt 1 and p-val cutoff for opt 2
+    '''
 
     if type(intbl) is str: # got an error in the pipeline from inittbl
         return {'current': 1, 'total': 1, 'error': intbl}
@@ -318,7 +297,7 @@ def do_prediction(self, intbl, selections, gene_names,
     # need to use manager here
     shared_ready_sum = mp.Manager().Value('i', 0)
 
-    async_pools = [pool.apply_async(predict, (intbl, preds[i], shared_ready_sum, filteropt, filterval, spec_ecutoff, nonspec_ecutoff)) for i in range(0,len(preds))]
+    async_pools = [pool.apply_async(predict, (preds[i], intbl, shared_ready_sum, filteropt, filterval, spec_ecutoff, nonspec_ecutoff)) for i in range(0,len(preds))]
 
     # run the job, update progress bar
     total = len(predfiles)
@@ -335,7 +314,7 @@ def do_prediction(self, intbl, selections, gene_names,
                      # to avoid memory leak, seriously...
     colnames,datavalues = postprocess(res,gene_names,filteropt,filterval)
 
-    # SET the values in redis
+    ''' SET the values in redis '''
     savetoredis(self.request.id,colnames,datavalues,app.config['USER_DATA_EXPIRY'])
     # significance_score can be z-score or p-value depending on the out_type
 
@@ -344,4 +323,3 @@ def do_prediction(self, intbl, selections, gene_names,
     return {'current': shared_ready_sum.value, 'total': len(predfiles), 'status': 'Task completed!',
             'result': 'done', 'taskid': self.request.id,
             'time':(time.time()-start_time)} # -- somehow cannot do jsonify(postproc)
-'''
