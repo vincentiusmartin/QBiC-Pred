@@ -151,7 +151,7 @@ def handle_upload():
             else:
                 filterval = float(request.form.get('output-selection-opt'))
 
-            if req["linecount"] > MAX_LINES or request.form.get("escore-toggle") == "off"):
+            if req["linecount"] > MAX_LINES or request.form.get("escore-toggle") == "off":
                 spec_escore_thres = -1
                 nonspec_escore_thres = -1
             else:
