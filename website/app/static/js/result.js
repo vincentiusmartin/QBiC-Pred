@@ -223,15 +223,9 @@ function displayResult(status_url){
    * parents: denotes the ids of the parent functions in the chain/pipeline
    */
 function updateProgress(status_url,parents){
-  var prevPercent = 0;
    $.getJSON(status_url,parents).done(function(data) {
        // update UI
        percent = parseInt(data['current'] * 100 / data['total']);
-       if (percent < prevPercent) {
-         percent = prevPercent;
-       }else{
-         prevPercent = percent;
-       }
 
        $(".progress-bar").attr('aria-valuenow', percent).css('width',percent+"%").html(percent+"%"); // .attr('aria-valuenow', percent)
        $('#status').html(data['status']);

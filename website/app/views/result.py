@@ -11,7 +11,6 @@ import redisearch
 import json,ast
 
 import pandas as pd
-import billiard
 
 '''
 job_id: from last task in the pipeline
@@ -20,12 +19,11 @@ job_id: from last task in the pipeline
 def process_request(job_id):
     # get the task data from redis
     taskdata = db.hgetall(job_id)
-    if "mapproc_id" not in taskdata or "preproc_id" not in taskdata:
+    if "parent_id" not in taskdata:
         abort(404)
-    preproc_id = taskdata["preproc_id"]
-    mapproc_id = taskdata["mapproc_id"]
-    task_id = taskdata["task_id"]
-    parents = json.dumps({'preproc_id':preproc_id,'mapproc_id':mapproc_id,'task_id':task_id})
+    p0 = taskdata["parent_id"]
+    p1 = taskdata["task_id"]
+    parents = json.dumps({'parent-0':p0,'parent-1':p1})
     #session.clear() # clear the session given from index
     return render_template("result.html",stats_url=url_for('task_status',task_id=job_id),parents=parents)
 
@@ -323,43 +321,22 @@ in javascript: updateProgress function calls this using status url
 '''
 @app.route('/status/<task_id>')
 def task_status(task_id):
-    preproc_id = request.args["preproc_id"] # i.e. preprocess
-    mapproc_id = request.args["mapproc_id"] # i.e. mapper
-    task_id = request.args["task_id"] # i.e. postprocess
-
-    tasktype = "async"
-    task = celery.AsyncResult(preproc_id)  # CHANGE TO: preprocess
-    if task.state == 'SUCCESS': # if preprocess is finished then check prediction
-        task = celery.GroupResult.restore(mapproc_id)  # CHANGE TO: map (prediction part)
-        if all(ar.state=="SUCCESS" for ar in task):
-            task = celery.AsyncResult(task_id) # CHANGE TO: postprocess
-        else:
-            tasktype = "group"
-    if tasktype == "group":
-        cur = 0
-        total = 0
-        status = ""
-
-        for ar in task.results:
-            # need to handle ar.state == FAILURE
-            if ar.info and not isinstance(ar.info, billiard.exceptions.WorkerLostError): # info is not directly available
-                cur += ar.info.get('current', 0)
-                total += ar.info.get('total', 1)
-
-        # handle cases when cur and total are not updated
-        if cur == 0 and total == 0:
-            total = 1
-        #for ar in task.results:
-        #    print("arrr state",ar,ar.state,type(ar),type(ar.info))
-        if not all(ar.state=="SUCCESS" for ar in task):
-            status = "Processing input data..."
+    pretask_id = request.args["parent-0"] # i.e. preprocess
+    response = {}
+    if pretask_id == "uploadpred":
         response = {
-            'state': 'PROGRESS',
-            'current': cur,
-            'total': total,
-            'status': status
+            'state': 'SUCCESS',
+            'current': 1,
+            'total': 1,
+            'status': '',
+            'result':'',
+            'taskid':task_id
         }
-    else: # async
+    else:
+        # see which task is active:
+        task = celery.AsyncResult(pretask_id) # preprocess
+        if task.state == 'SUCCESS': # if preprocess is finished then check prediction
+            task = celery.AsyncResult(task_id) # prediction
         if task.state == 'PENDING':
             response = {
                 'state': task.state,
@@ -380,6 +357,7 @@ def task_status(task_id):
             if 'result' in task.info:
                 response['result'] = task.info['result']
                 response['taskid'] = task.info['taskid']
+            # TODO: need to forget task
         #task.forget() #??? not sure if needed
     return jsonify(response)
 
