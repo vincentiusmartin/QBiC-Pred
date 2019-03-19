@@ -119,6 +119,8 @@ def prepare_request(request):
     retdict = {"status":returnstatus,"filename":filename}
     if request.form.get('input-mode') == "1":
         retdict["linecount"] = utils.line_count(filepath)
+    else: # if it is an example, just set linecount to 0 since we know it will be safe
+        retdict["linecount"] = 0
     return retdict
 
 @app.route('/upload', methods=['POST'])
@@ -149,8 +151,7 @@ def handle_upload():
             else:
                 filterval = float(request.form.get('output-selection-opt'))
 
-
-            if req["linecount"] > MAX_LINES or request.form.get("escore-toggle") == "off":
+            if req["linecount"] > MAX_LINES or request.form.get("escore-toggle") == "off"):
                 spec_escore_thres = -1
                 nonspec_escore_thres = -1
             else:
@@ -182,7 +183,6 @@ def handle_upload():
             task.forget() # not sure if needed???
 
             warning = ""
-            print(req["linecount"] , MAX_LINES)
             if req["linecount"] > MAX_LINES:
                 warning = "Notice: We turned off PBM E-score binding prediction since the number of lines is larger than %d. Please contact qbic-pred@duke.edu if you really need the E-score binding prediction." % MAX_LINES
             resp = make_response(jsonify({"warning":warning}), 202, {'Location': url_for('process_request',job_id=task.id)})
