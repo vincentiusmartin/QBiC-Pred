@@ -2,7 +2,7 @@
 
 ![alt text](http://qbic.gcb.duke.edu/static/images/headerlogo.png)
 
-QBiC-Pred (http://qbic.gcb.duke.edu/) is a web server that uses OLS 6-mer models trained on universal PBM data to predict TF binding changes due to sequence variants, as well as the significance of the changes (which implicitly depends on the quality of the data and models).
+QBiC-Pred (http://qbic.genome.duke.edu/) is a web server that uses OLS 6-mer models trained on universal PBM data to predict TF binding changes due to sequence variants, as well as the significance of the changes (which implicitly depends on the quality of the data and models).
 
 ## Directory structure
 1. **generate_prediction**
