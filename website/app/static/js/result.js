@@ -135,7 +135,7 @@ function displayResult(status_url){
             </select>
           </div>
           <div class="form-group">
-            <button id="ressearch-btn" class="btn btn-primary btn-md" type="button">Search</button>
+            <button id="ressearch-btn" class="btn btn-primary btn-md" type="button">Filter</button>
           </div>
           `);
         $('#ressearch-select').change(function(){

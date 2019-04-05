@@ -14,7 +14,7 @@ CELERY_RESULT_BACKEND = redis://localhost:6379/0
 # max upload size = 100 * 1024 * 1024
 MAX_FILE_LENGTH = 204857600
 #cpu.count
-PCOUNT = 1
+PCOUNT = 2
 
 [Directory Setting]
 PREDDIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/preddir/
@@ -22,11 +22,16 @@ UPLOAD_FOLDER = /tmp/
 CHRDIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/chromosomes/
 ESCORE_DIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/escore/escore/
 STATIC_EXAMPLE_DIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/QBiC-Pred/website/app/static/files/
-INPUT_EXAMPLE_LIST = resources/examplelist.py
+INPUT_EXAMPLE_LIST = resource/examplelist.py
 PBM_HUGO_MAPPING = resource/test/pbmtohugo.txt
+#PBM_HUGO_MAPPING = resources/mappingdata/pbmtohugo.txt
 HUGO_PBM_MAPPING = resource/test/hugotopbm.txt
+#HUGO_PBM_MAPPING = resources/mappingdata/hugotopbm.txt
 GAP_FILE = resource/test/gap-test.txt
+HUGO_NAME_ID_MAPPING = resources/hugo_name_to_hugo_id.txt
+HGNC_GENE_NAMES = resources/TF_names_v_1.01.txt
+MODELS_TBL_PATH = resources/data_upbm_selected_good_quality_final.csv
 
 [User Session]
-USER_DATA_EXPIRY = 3600
-UPLOAD_PRED_EXPIRY = 3600
+USER_DATA_EXPIRY = 600
+UPLOAD_PRED_EXPIRY = 600

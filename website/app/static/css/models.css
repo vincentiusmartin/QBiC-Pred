@@ -1,0 +1,9 @@
+
+@font-face {
+  font-family: Raleway;
+  src: url('raleway-regular.ttf');
+}
+
+#tablewrap{
+    font-family: Raleway !important;
+}

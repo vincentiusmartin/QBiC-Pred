@@ -50,6 +50,7 @@ STATIC_EXAMPLE_DIR = config["Directory Setting"]["STATIC_EXAMPLE_DIR"]
 INPUT_EXAMPLE_DICT = import_from_file(config["Directory Setting"]["INPUT_EXAMPLE_LIST"]).examples
 HUGO_NAME_ID_MAPPING = parse_hugo_name_mapping(config["Directory Setting"]["HUGO_NAME_ID_MAPPING"])
 HGNC_GENE_NAMES = parse_tfgenes(config["Directory Setting"]["HGNC_GENE_NAMES"])
+MODELS_TBL_PATH = config["Directory Setting"]["MODELS_TBL_PATH"]
 
 ''' [User Session] '''
 USER_DATA_EXPIRY = int(config["User Session"]["USER_DATA_EXPIRY"])
