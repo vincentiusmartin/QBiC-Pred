@@ -220,7 +220,7 @@ def htmlformat(invar,type,colname):
         """
         buttonhgnc = """<a href="https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/{hgnc}" target="_blank"  class="btn btn-link dropdown-item" role="button">See gene entry on HGNC website</a>"""
         buttonmodels = """<a href="/models?search={search}" target="_blank"  class="btn btn-link dropdown-item" role="button">Show OLS models for this gene</a>"""
-        buttonsearchpbm = """<a href="/models?search={search}" target="_blank"  class="btn btn-link dropdown-item" role="button">Show OLS models for this PBM name</a>"""
+        buttonsearchpbm = """<a href="/models?search={search}" target="_blank"  class="btn btn-link dropdown-item" role="button">Show model information</a>"""
         buttondownloadpbm =  """<a href="/download/pbmdata/{pbmname}"  class="btn btn-link dropdown-item" role="button">Download PBM data</a>"""
 
         if colname == "TF_gene":
