@@ -5,6 +5,7 @@ from flask import send_from_directory,jsonify,request,render_template,url_for,Re
 from app import app,db,celery
 
 import redisearch
+import billiard # just for contrive error catching
 
 # ast is used to convert string literal representation of list to a list,
 # this is needed since redis stores list as string
@@ -353,17 +354,24 @@ def task_status(task_id):
             }
             task.forget()
         else: #task.state == 'PROGRESS' or 'SUCCESS'?
-            response = {
-                'state': task.state,
-                'current': task.info.get('current', 0),
-                'total': task.info.get('total', 1),
-                'status': task.info.get('status', '')
-            }
-            if 'error' in task.info:
-                response['error'] = task.info['error']
-            if 'result' in task.info:
-                response['result'] = task.info['result']
-                response['taskid'] = task.info['taskid']
+            # to handle worker die
+            # TODO: detect when worker dies and handle
+            if task.info and isinstance(task.info, billiard.exceptions.WorkerLostError):
+                response = {'state': 'ERROR',
+                            'error': 'There was an error running the job. The webserver authors have recorded the error and will work to address it. Please re-submit your job. We apologize for the inconvenience!'
+                            }
+            else:
+                response = {
+                    'state': task.state,
+                    'current': task.info.get('current', 0),
+                    'total': task.info.get('total', 1),
+                    'status': task.info.get('status', '')
+                }
+                if 'error' in task.info:
+                    response['error'] = task.info['error']
+                if 'result' in task.info:
+                    response['result'] = task.info['result']
+                    response['taskid'] = task.info['taskid']
             # TODO: need to forget task
         #task.forget() #??? not sure if needed
     return jsonify(response)
