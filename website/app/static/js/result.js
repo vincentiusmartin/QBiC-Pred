@@ -71,7 +71,7 @@ function displayResult(status_url){
         var restbl = $('#restbl').DataTable({
             dom: 'lr<"#ressearch">tip',
             // https://stackoverflow.com/questions/17237812/datatable-jquery-table-header-width-not-aligned-with-body-width
-            //scrollX: true, -- don't use scrollX
+            //scrollX: true, -- don't use scrollX, instead use css, see: dataTables_scroll
             searching: false,
             processing: true, // Enable the display of 'processing' when the table is being processed
             serverSide: true,
@@ -287,8 +287,10 @@ function getInputParam(status_url){
         /* String for desired output */
         if (data['filteropt'] == "1"){
             filterstr = "top " + data['filterval'] + " largest absolute z-score";
-        }else{
+        }else if (data['filteropt'] == "2"){
             filterstr = "p-value < " + data['filterval'];
+        }else {
+          filterstr = "-"
         }
 
         /* parse the returned list  */

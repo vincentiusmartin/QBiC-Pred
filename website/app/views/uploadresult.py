@@ -31,7 +31,7 @@ def prepare_predfile(request):
         sep = ","
 
     try:
-        df = pd.read_csv(filepath,dtype=str,sep=sep)
+        df = pd.read_csv(filepath,dtype=str,sep=sep,keep_default_na=False)
     except:
         return 'error', 'input is not supported'
     utils.delete_file(filepath) #delete once read
@@ -40,7 +40,7 @@ def prepare_predfile(request):
     df_cols = set(df.columns)
     print(df_cols)
     if not check_cols.issubset(df_cols):
-        return 'error', 'could not find all required fields'
+        return 'error', 'Could not find all required fields! Be sure the csv/tsv file is separated by the right separator and has fields: row,wild,mutant,diff,z_score,p_value,TF_gene,binding_status,pbmname.'
     return 'success',df
 
 @app.route('/submitpredfile', methods=['POST'])
@@ -53,11 +53,9 @@ def submit_pred_upload():
     rand_id = str(uuid.uuid4())
 
     cols = list(df.columns.values)
-    if "z_score" in cols:
-        filteropt = 1
-    else:
-        filteropt = 2
+    filteropt = 0
     filterval = "-"
+    print(df.TF_gene[190:200])
     genes_str = ",".join(list(df.TF_gene))
     genes_selected = list(set(genes_str.split(",")))
     datavalues = df.to_dict('records')

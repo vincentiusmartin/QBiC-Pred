@@ -38,11 +38,6 @@
     display:none;
 }
 
-.dataTables_scroll{
-  overflow:auto;
-  position:relative;
-}
-
 .bolded-red {
   color: red;
   font-weight: bold;
@@ -61,12 +56,6 @@
 .dataTables_wrapper .dataTables_processing {
   top:40%;
   z-index: 1;
-}
-
-.scrollable-menu {
-    height: auto;
-    max-height: 200px;
-    overflow-x: hidden;
 }
 
 /* Style the close button (span) */

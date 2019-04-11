@@ -219,7 +219,9 @@ def htmlformat(invar,type,colname):
             </span>
         """
         buttonhgnc = """<a href="https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/{hgnc}" target="_blank"  class="btn btn-link dropdown-item" role="button">See gene entry on HGNC website</a>"""
-        buttonpbm =  """<a href="/download/pbmdata/{pbmname}"  class="btn btn-link dropdown-item" role="button">Download PBM data</a>"""
+        buttonmodels = """<a href="/models?search={search}" target="_blank"  class="btn btn-link dropdown-item" role="button">Show OLS models for this gene</a>"""
+        buttonsearchpbm = """<a href="/models?search={search}" target="_blank"  class="btn btn-link dropdown-item" role="button">Show OLS models for this PBM name</a>"""
+        buttondownloadpbm =  """<a href="/download/pbmdata/{pbmname}"  class="btn btn-link dropdown-item" role="button">Download PBM data</a>"""
 
         if colname == "TF_gene":
             cellvals = str_in.split(",")
@@ -229,9 +231,12 @@ def htmlformat(invar,type,colname):
                 # This is useful when we have gene that is used for testing only
                 if val in app.config['HUGO_NAME_ID_MAPPING']:
                     hgncstrbtn = buttonhgnc.format(hgnc=app.config['HUGO_NAME_ID_MAPPING'][val])
+                    modelstrbtn = buttonmodels.format(search=val)
                 else:
                     hgncstrbtn = buttonhgnc.format(hgnc="")
-                formatted.append(buttonhtml.format(content=val,colname=colname,additional=hgncstrbtn))
+                    modelstrbtn = buttonmodels.format(search="")
+                btnetc = hgncstrbtn + modelstrbtn
+                formatted.append(buttonhtml.format(content=val,colname=colname,additional=btnetc))
             content = ""
             charinrow = 0
             total = len(formatted)
@@ -244,8 +249,10 @@ def htmlformat(invar,type,colname):
                     content += "<br />"
                     charinrow = 0
         elif colname == "pbmname":
-            pbmstrbutton = buttonpbm.format(pbmname="%s.txt"%str_in)
-            content = buttonhtml.format(content=str_in,colname=colname,additional=pbmstrbutton)
+            pbmstrbutton = buttondownloadpbm.format(pbmname="%s.txt"%str_in)
+            modelstrbtn = buttonsearchpbm.format(search=str_in)
+            btnetc = pbmstrbutton + modelstrbtn
+            content = buttonhtml.format(content=str_in,colname=colname,additional=btnetc)
         else:
             content = buttonhtml.format(content=str_in,colname=colname,additional="")
 

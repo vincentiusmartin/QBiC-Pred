@@ -61,3 +61,15 @@ html,body {
   left: 0;
   width: 100%;
 }
+
+/* this is used in some pages, so it is placed in base */
+.dataTables_scroll{
+  overflow:auto;
+  position:relative;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}

@@ -11,13 +11,13 @@ examples = \
         'outputtype':2
     },
     'ICGC Breast Cancer Mutations - Small':{
-        'inputfile':'icgc-example-short.tsv',
+        'inputfile':'QBiC-icgc-example-breast-cancer-mutations-small.tsv',
         'tfs':['E2F1','FOXA1','MYC'],
         'genomever':"hg19",
         'outputtype':1
     },
     'ICGC Breast Cancer Mutations - Large':{
-        'inputfile':'QBiC-icgc-example-breast-cancer-mutations-small.tsv',
+        'inputfile':'QBiC-icgc-example-breast-cancer-mutations-large.tsv',
         'tfs':['E2F1','FOXA1','MYC'],
         'genomever':"hg19",
         'outputtype':1
