@@ -73,7 +73,7 @@ def inittbl(self,filename,cpath):
                 if row['mutated_from'] != chromosome[pos]:
                     cver = cpath.split("/")[-1]
                     print("ERROR HEREERERER")
-                    error = "Error: For the input mutation %s>%s at position %s in chromosome %s, the mutated_from nucleotide (%s) does not match the nucleotide in the %s reference genome (%s). Please check the input data and verify that the correct version of the reference human genome was selected in the Data Submission Form." % (row['mutated_from'], row['mutated_to'], row['pos'], row['chromosome'], row['mutated_from'], cver, chromosome[pos])
+                    error = "For the input mutation %s>%s at position %s in chromosome %s, the mutated_from nucleotide (%s) does not match the nucleotide in the %s reference genome (%s). Please check the input data and verify that the correct version of the reference human genome was selected in the Data Submission Form." % (row['mutated_from'], row['mutated_to'], row['pos'], row['chromosome'], row['mutated_from'], cver, chromosome[pos])
                     #error = "Found mismatch in the mutation: chromosome %s pos %s mutated_from: %s; but expected: %s. Input mutation coordinate is probably incorrect or different genome version is probably used.\n" % (row['chromosome'],row['pos'],row['mutated_from'],chromosome[pos])
                     break
                 seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to'] #-5,+6

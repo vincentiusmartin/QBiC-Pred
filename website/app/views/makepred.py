@@ -46,7 +46,7 @@ def is_valid_cols(filepath):
     elif file_extension == ".txt":
         with open(filepath) as f:
             for line in f:
-                line = f.readline().strip()
+                line = line.strip()
                 if "\t" in line:
                     line = line.split("\t")
                 else:

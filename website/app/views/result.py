@@ -357,6 +357,7 @@ def task_status(task_id):
             # to handle worker die
             # TODO: detect when worker dies and handle
             if isinstance(task.info, billiard.exceptions.WorkerLostError):
+                print("Worker is killed for %s, returning an error message to the user..." % str(task_id))
                 response = {'state': 'ERROR',
                             'error': 'There was an error running the job. The webserver authors have recorded the error and will work to address it. Please re-submit your job. We apologize for the inconvenience!'
                             }
