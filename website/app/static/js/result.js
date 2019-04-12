@@ -10,7 +10,7 @@ function displayOpt(searchOpt,searchKey){
             return ' &leq;'+searchKey;
         case 'or':
             return searchKey;
-        default:
+        default: // exact
             return ' <span style="color:#2b50f2;">has</span> '+searchKey;
     }
 }
@@ -296,7 +296,14 @@ function getInputParam(status_url){
         /* parse the returned list  */
         var $genesDropdown = $("#genes-dropdown");
         $.each(data['genes_selected'],function(idx,val){
-            $genesDropdown.append("<a class=\"dropdown-item\" href=\"#\">"+val+"</a>");
+            $genesDropdown.append("<a class=\"dropdown-item gene-name\">"+val+"</a>");
+        });
+        $(".gene-name").click(function(){
+            var searchOpt = "exact";
+            var searchKey = $(this).text();
+            searchCol = "TF_gene";
+            addFilterElm(searchOpt,searchKey,searchCol);
+            $('#restbl').DataTable().ajax.reload();
         });
         $('.selectpicker').selectpicker('refresh');
 

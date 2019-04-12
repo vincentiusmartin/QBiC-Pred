@@ -40,7 +40,7 @@ def prepare_predfile(request):
     df_cols = set(df.columns)
     print(df_cols)
     if not check_cols.issubset(df_cols):
-        return 'error', 'Could not find all required fields! Be sure the csv/tsv file is separated by the right separator and has fields: row,wild,mutant,diff,z_score,p_value,TF_gene,binding_status,pbmname.'
+        return 'error', 'Error: Could not find all the required fields. Please make sure that the csv/tsv file is separated by the correct separator (either comma or tab), and it has the fields: row,wild,mutant,diff,z_score,p_value,TF_gene,binding_status,pbmname.'
     return 'success',df
 
 @app.route('/submitpredfile', methods=['POST'])
