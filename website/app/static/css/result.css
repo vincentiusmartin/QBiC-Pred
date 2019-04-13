@@ -56,7 +56,7 @@
 .dataTables_wrapper .dataTables_processing {
   top:40%;
   z-index: 1;
-}
+} 
 
 /* Style the close button (span) */
 .close {
