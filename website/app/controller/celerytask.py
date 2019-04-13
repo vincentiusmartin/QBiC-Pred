@@ -132,6 +132,8 @@ def predict(predlist, dataset, ready_count,
             zscore = tflist[seqidx][1]
             if np.isnan(zscore):
                 zscore = 0
+            if np.isnan(diff):
+                diff = 0
             pval = scipy.stats.norm.sf(abs(zscore))*2
             add = True
             if filteropt == 1:
@@ -246,7 +248,7 @@ def postprocess(datalist,gene_names,filteropt=1,filterval=1):
 @celery.task()
 def drop_index(task_id):
     '''
-    Make this a celery task so we can schedule it
+    Make this a celery task so we can schedule it -- done?
     '''
     print("Remove key/index for %s from redis"%task_id)
     client = redisearch.Client(task_id)
@@ -317,6 +319,7 @@ def do_prediction(self, intbl, selections, gene_names,
     colnames,datavalues = postprocess(res,gene_names,filteropt,filterval)
 
     ''' SET the values in redis '''
+    #print("marktesting",colnames,datavalues)
     savetoredis(self.request.id,colnames,datavalues,app.config['USER_DATA_EXPIRY'])
     # significance_score can be z-score or p-value depending on the out_type
 
