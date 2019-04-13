@@ -14,6 +14,7 @@
     <li><a href="#section2">TF binding models</a></li>
     <li><a href="#section3">QBiC-Pred output</a></li>
     <li><a href="#section4">QBiC-Pred 12-mer encoding</a></li>
+    <li><a href="#section5">Software for model training and prediction</a></li>
   </ol>
 
   <a name="section1"><h3>1. QBiC-Pred input</h3></a>
@@ -346,6 +347,29 @@
   <p>
     After extracting the difference and z-score, we use the z-score to compute the statistical significance of the change (i.e. p-value). For convenience, the 12-mer tables containing binding differences and z-scores, as well as tables containing the corresponding p-values, are available for download from the  <a href="/downloads">Download page</a>. The pre-computed files are organized into 14 zip files, each containg predictions from 50 OLS models. A mapping between the OLS models and the zip files is available <a href="/download/mapping_aa_identity_cisbp_and_uniprobe.csv">here</a>.
   </p>
+
+  <a name="section5"><h3>5. Software for model training and prediction</h3></a>
+
+  Python code for making predictions using our OLS models is available in the QBiC-Pred GitHub repository, at:
+  <a href = "https://github.com/vincentiusmartin/QBiC-Pred/tree/master/generate_prediction"> https://github.com/vincentiusmartin/QBiC-Pred/tree/master/generate_prediction </a>
+  <br /><br />
+  Python code for training OLS models on uPBM data is available in the QBiC-Pred GitHub repository, at:
+  <a href = "https://github.com/vincentiusmartin/QBiC-Pred/blob/master/generate_prediction/olskmer.py"> https://github.com/vincentiusmartin/QBiC-Pred/blob/master/generate_prediction/olskmer.py </a>
+
+  <br /><br />
+  To run the training script please use:
+  <code>python olskmer.py &lt;filein&gt; &lt;output&gt -k &lt;kmer&gt -d &lt;chunk&gt -g &lt;gapsize&gt -p &lt;gappos&gt</code>
+  <br /><br />
+
+  where: <br />
+  <div class="graybg">
+    <b>filein</b> = the uPBM data file name <br />
+    <b>output</b> = the name of the output file <br />
+    <b>kmer</b> = the size of k-mers used in the OLS model <br />
+    <b>chunk</b> = div is the number of chunks required when the data is too large to be processed at once <br />
+    <b>gapsize</b> = the size of the gap, for OLS models using gapped k-mer (set to 0 for ungapped models, which are the type of model used by QBiC) <br />
+    <b>gappos</b> = the position of the gap within the k-mer <br />
+  </div>
 
 </div>
 {% endblock %}
