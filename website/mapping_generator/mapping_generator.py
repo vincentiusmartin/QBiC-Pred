@@ -54,6 +54,6 @@ def generate_mapping_webserv(infile,tfdb):
     pbm2hugo(gene_dict)
 
 if __name__ == "__main__":
-    gene2upbm = "../app/static/files/mapping_gene_to_upbm_final.csv"
+    gene2upbm = "../app/static/files/QBiC_mapping_577_TFgenes_to_666_uPBM_datasets_FULL_INFORMATION.csv"
     tfdb = "resources_from_humantfs/DatabaseExtract_v_1.01.csv"
     generate_mapping_webserv(gene2upbm,tfdb)
