@@ -40,7 +40,7 @@ def pbm2hugo(gene_dict):
         f.write(towrite.strip())
 
 def generate_mapping_webserv(infile,tfdb):
-    gene_df = pd.read_csv(gene2upbm)
+    gene_df = pd.read_csv(infile)
     gene_dict = dict(zip(gene_df['gene'], gene_df['upbm']))
     gene_dict = {gene:[os.path.splitext(tf)[0].strip() for tf in gene_dict[gene].split(";")] for gene in gene_dict.keys()}
     tfdb_df = pd.read_csv(tfdb)
