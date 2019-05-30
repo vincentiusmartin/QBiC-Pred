@@ -8,6 +8,7 @@ Anolis_carolinensis|M02095_1.94d|Zoo_01|6764:RFX1
 Apis_mellifera|M02105_1.94d|Zoo_01|6765:RFX4
 Aplysia_californica|M02059_1.94d|Zoo_01|2246:ESR1,ESR2
 Arabidopsis_thaliana|M00155_1.94d|Zoo_01|5818:HMGA2
+Arabidopsis_thaliana|NA|MartinZhao2019|TBP:TBP,TBPL2
 Aspergillus_nidulans|M00158_1.94d|Zoo_01|5104:HMGA1,HMGA2
 Bombyx_mori|M02022_1.94d|Zoo_01|1006:NR2F1,NR2F2
 Branchiostoma_floridae|M02224_1.94d|SebePedros2013|6866:TBX4
@@ -111,7 +112,7 @@ Homo_sapiens|M00955_1.94d|Zoo_01|6498:E2F2
 Homo_sapiens|M01018_1.94d|Barrera2016|FOXC1_S82T_R1:FOXC1,FOXC2,FOXL1,FOXS1
 Homo_sapiens|M01019_1.94d|Zoo_01|1637:FOXP1,FOXP2,FOXP3,FOXP4
 Homo_sapiens|M01020_1.94d|Zoo_01|2590:FOXK1,FOXK2
-Homo_sapiens|M01021_1.94d|Nakagawa2013|FOXN2:FOXN2,FOXN3
+Homo_sapiens|M01021_1.94d|Nakagawa2013|FOXN2:FOXN3
 Homo_sapiens|M01022_1.94d|Zoo_01|761:FOXG1
 Homo_sapiens|M01133_1.94d|Zoo_01|5014:GCM1,GCM2
 Homo_sapiens|M01214_1.94d|Barrera2016|ARX_P353L_R1:ARX
@@ -197,6 +198,13 @@ Homo_sapiens|M02087_1.94d|Zoo_01|7696:NFATC1,NFATC2,NFATC3,NFATC4
 Homo_sapiens|M02089_1.94d|Zoo_01|7328:NFATC2
 Homo_sapiens|M02097_1.94d|Zoo_01|6497:RFX2,RFX3
 Homo_sapiens|M02116_1.94d|Zoo_01|6922:GMEB1
+Homo_sapiens|NA|MartinZhao2019|EGR1:EGR1,EGR4
+Homo_sapiens|NA|MartinZhao2019|FOXO3:FOXO3
+Homo_sapiens|NA|MartinZhao2019|GATA1:GATA1,GATA2,GATA3,GATA4,GATA5,GATA6
+Homo_sapiens|NA|MartinZhao2019|MITF:MITF,TFE3,TFEB
+Homo_sapiens|NA|MartinZhao2019|RELA:NFKB1,NFKB2,REL,RELA,RELB
+Homo_sapiens|NA|MartinZhao2019|TCF3:TCF12,TCF3,TCF4
+Homo_sapiens|NA|MartinZhao2019|TFAP2A:TFAP2A,TFAP2B,TFAP2C,TFAP2D
 Homo_sapiens|NA|Shen2018|E2F1:E2F1
 Homo_sapiens|NA|Shen2018|E2F3:E2F3
 Homo_sapiens|NA|Shen2018|E2F4:E2F4,E2F5
@@ -207,13 +215,6 @@ Homo_sapiens|NA|Shen2018|MXD1-MAX:MXD1,MXD3,MXD4,MXI1
 Homo_sapiens|NA|Shen2018|MYC-MAX:MYC,MYCL,MYCN
 Homo_sapiens|NA|Shen2018|RUNX1:RUNX1,RUNX3
 Homo_sapiens|NA|Shen2018|RUNX2:RUNX2,RUNX3
-Homo_sapiens|NA|Unpublished|EGR1:EGR1,EGR4
-Homo_sapiens|NA|Unpublished|FOXO3:FOXO3
-Homo_sapiens|NA|Unpublished|GATA1:GATA1,GATA2,GATA3,GATA4,GATA5,GATA6
-Homo_sapiens|NA|Unpublished|MITF:MITF,TFE3,TFEB
-Homo_sapiens|NA|Unpublished|TBP:TBP,TBPL2
-Homo_sapiens|NA|Unpublished|TCF3:TCF12,TCF3,TCF4
-Homo_sapiens|NA|Unpublished|TFAP2A:TFAP2A,TFAP2B,TFAP2C,TFAP2D
 Meleagris_gallopavo|M01024_1.94d|Zoo_01|7676:FOXM1
 Meleagris_gallopavo|M01728_1.94d|Zoo_01|6513:IRF6
 Meleagris_gallopavo|M02074_1.94d|Zoo_01|5864:LCOR
@@ -410,7 +411,7 @@ Mus_musculus|M01333_1.94d|Berger08|Meis1_2335.1:MEIS1,MEIS2,MEIS3,PKNOX1,PKNOX2
 Mus_musculus|M01334_1.94d|Berger08|Tcf2_0913.2:HNF1A,HNF1B
 Mus_musculus|M01335_1.94d|Berger08|Dlx4_3488.2:DLX1,DLX2,DLX3,DLX4,DLX5,DLX6
 Mus_musculus|M01337_1.94d|Berger08|Gsc_2327.3:GSC,GSC2
-Mus_musculus|M01339_1.94d|Berger08|Six6_2267.4:SIX3,SIX6
+Mus_musculus|M01338_1.94d|Badis09|Six6_2267.4=v1:SIX3,SIX6
 Mus_musculus|M01340_1.94d|Berger08|Barx1_2877.1:BARX1,BARX2
 Mus_musculus|M01341_1.94d|Berger08|Msx2_3449.1:MSX2
 Mus_musculus|M01342_1.94d|Berger08|Pitx1_2312.1:PITX1,PITX2,PITX3
@@ -510,8 +511,8 @@ Mus_musculus|M01457_1.94d|Berger08|Gbx1_2883.2:GBX1,GBX2,MNX1
 Mus_musculus|M01458_1.94d|Zoo_01|2766:NOTO
 Mus_musculus|M01463_1.94d|Berger08|Hoxc4_3491.1:HOXA4,HOXB4,HOXD4
 Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2:HOXA1,HOXA2,HOXA3,HOXA9,HOXB1,HOXB2,HOXB9,HOXC9,HOXD3,HOXD9,PDX1
-Mus_musculus|M01465_1.94d|Badis09|Hoxa3_2783.2=v1:HOXA3,HOXB3,HOXD3
-Mus_musculus|M01466_1.94d|Berger08|Hoxa3_2783.2:HOXA2,HOXA3,HOXB2,HOXB3,HOXD3
+Mus_musculus|M01465_1.94d|Badis09|Hoxa3_2783.2=v1:HOXA2,HOXA3,HOXB2,HOXB3,HOXD3
+Mus_musculus|M01466_1.94d|Berger08|Hoxa3_2783.2:HOXA3,HOXB3,HOXD3
 Mus_musculus|M01468_1.94d|Berger08|Lhx8_2247.2:LHX8
 Mus_musculus|M01671_1.94d|Berger08|Pax7_3783.1:PAX3,PAX7
 Mus_musculus|M01672_1.94d|Berger08|Pax4_3989.2:PAX4
@@ -602,8 +603,8 @@ Mus_musculus|M02211_1.94d|DREAM_contest|1423:TBX1,TBX18,TBX20
 Mus_musculus|M02212_1.94d|Badis09|Eomes_0921.4=v2:EOMES,TBR1,TBX21
 Mus_musculus|M02213_1.94d|SebePedros2013|6150:EOMES,TBR1,TBX21
 Mus_musculus|M02225_1.94d|Badis09|Tbp_pr781.1=v2:TBP,TBPL2
-Mus_musculus|NA|Unpublished|Stat3:STAT3
-Mus_musculus|NA|Unpublished|Zfp24:ZNF24
+Mus_musculus|NA|MartinZhao2019|Stat3:STAT3
+Mus_musculus|NA|MartinZhao2019|Zfp24:ZNF24
 Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832:POU2F1,POU2F2,POU2F3,POU3F1,POU3F2,POU3F3,POU3F4
 Nasonia_vitripennis|M02222_1.94d|SebePedros2013|6733:TBX2,TBX3
 Nematostella_vectensis|M01545_1.94d|Zoo_01|2473:HOXD10

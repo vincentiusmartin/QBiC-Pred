@@ -8,6 +8,7 @@ Anolis_carolinensis|M02095_1.94d|Zoo_01|6764
 Apis_mellifera|M02105_1.94d|Zoo_01|6765
 Aplysia_californica|M02059_1.94d|Zoo_01|2246
 Arabidopsis_thaliana|M00155_1.94d|Zoo_01|5818
+Arabidopsis_thaliana|NA|MartinZhao2019|TBP
 Aspergillus_nidulans|M00158_1.94d|Zoo_01|5104
 Bombyx_mori|M02022_1.94d|Zoo_01|1006
 Branchiostoma_floridae|M02224_1.94d|SebePedros2013|6866
@@ -197,6 +198,13 @@ Homo_sapiens|M02087_1.94d|Zoo_01|7696
 Homo_sapiens|M02089_1.94d|Zoo_01|7328
 Homo_sapiens|M02097_1.94d|Zoo_01|6497
 Homo_sapiens|M02116_1.94d|Zoo_01|6922
+Homo_sapiens|NA|MartinZhao2019|EGR1
+Homo_sapiens|NA|MartinZhao2019|FOXO3
+Homo_sapiens|NA|MartinZhao2019|GATA1
+Homo_sapiens|NA|MartinZhao2019|MITF
+Homo_sapiens|NA|MartinZhao2019|RELA
+Homo_sapiens|NA|MartinZhao2019|TCF3
+Homo_sapiens|NA|MartinZhao2019|TFAP2A
 Homo_sapiens|NA|Shen2018|E2F1
 Homo_sapiens|NA|Shen2018|E2F3
 Homo_sapiens|NA|Shen2018|E2F4
@@ -207,13 +215,6 @@ Homo_sapiens|NA|Shen2018|MXD1-MAX
 Homo_sapiens|NA|Shen2018|MYC-MAX
 Homo_sapiens|NA|Shen2018|RUNX1
 Homo_sapiens|NA|Shen2018|RUNX2
-Homo_sapiens|NA|Unpublished|EGR1
-Homo_sapiens|NA|Unpublished|FOXO3
-Homo_sapiens|NA|Unpublished|GATA1
-Homo_sapiens|NA|Unpublished|MITF
-Homo_sapiens|NA|Unpublished|TBP
-Homo_sapiens|NA|Unpublished|TCF3
-Homo_sapiens|NA|Unpublished|TFAP2A
 Meleagris_gallopavo|M01024_1.94d|Zoo_01|7676
 Meleagris_gallopavo|M01728_1.94d|Zoo_01|6513
 Meleagris_gallopavo|M02074_1.94d|Zoo_01|5864
@@ -410,7 +411,7 @@ Mus_musculus|M01333_1.94d|Berger08|Meis1_2335.1
 Mus_musculus|M01334_1.94d|Berger08|Tcf2_0913.2
 Mus_musculus|M01335_1.94d|Berger08|Dlx4_3488.2
 Mus_musculus|M01337_1.94d|Berger08|Gsc_2327.3
-Mus_musculus|M01339_1.94d|Berger08|Six6_2267.4
+Mus_musculus|M01338_1.94d|Badis09|Six6_2267.4=v1
 Mus_musculus|M01340_1.94d|Berger08|Barx1_2877.1
 Mus_musculus|M01341_1.94d|Berger08|Msx2_3449.1
 Mus_musculus|M01342_1.94d|Berger08|Pitx1_2312.1
@@ -602,8 +603,8 @@ Mus_musculus|M02211_1.94d|DREAM_contest|1423
 Mus_musculus|M02212_1.94d|Badis09|Eomes_0921.4=v2
 Mus_musculus|M02213_1.94d|SebePedros2013|6150
 Mus_musculus|M02225_1.94d|Badis09|Tbp_pr781.1=v2
-Mus_musculus|NA|Unpublished|Stat3
-Mus_musculus|NA|Unpublished|Zfp24
+Mus_musculus|NA|MartinZhao2019|Stat3
+Mus_musculus|NA|MartinZhao2019|Zfp24
 Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832
 Nasonia_vitripennis|M02222_1.94d|SebePedros2013|6733
 Nematostella_vectensis|M01545_1.94d|Zoo_01|2473
