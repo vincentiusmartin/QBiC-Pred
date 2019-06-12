@@ -12,7 +12,9 @@ fi
 curdir=$(pwd)
 cd $dirname
 numfiles=$(ls | wc -l)
-splitidx=$(( (numfiles + 1) / splitsize ))
+splitidx=$((${numfiles}%${splitsize}?${numfiles}/${splitsize}+1:${numfiles}/${splitsize})) # ceiling
+echo "Making $splitsize zip where each zip file contains at most $splitidx files..."
+
 i=0
 partnum=1
 files=""
