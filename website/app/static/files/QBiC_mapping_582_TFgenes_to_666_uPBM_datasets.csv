@@ -1,11 +1,11 @@
 "gene","upbm","upbm_count"
-"ALX1","Mus_musculus|M01400_1.94d|Berger08|Cart1_0997.1.txt; Mus_musculus|M01401_1.94d|Berger08|Cart1_1275.1.txt; Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt",6
+"ALX1","Mus_musculus|M01401_1.94d|Berger08|Cart1_1275.1.txt; Mus_musculus|M01400_1.94d|Berger08|Cart1_0997.1.txt; Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt",6
 "ALX3","Mus_musculus|M01328_1.94d|Berger08|Alx3_3418.2.txt; Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Mus_musculus|M01400_1.94d|Berger08|Cart1_0997.1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt",6
 "ALX4","Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Mus_musculus|M01328_1.94d|Berger08|Alx3_3418.2.txt; Mus_musculus|M01400_1.94d|Berger08|Cart1_0997.1.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt",6
 "ANHX","Homo_sapiens|M01298_1.94d|Zoo_01|2337.txt",1
 "AR","Homo_sapiens|M01983_1.94d|Zoo_01|2329.txt",1
-"ARID3A","Microcebus_murinus|M00139_1.94d|Zoo_01|6517.txt; Mus_musculus|M00141_1.94d|Badis09|Arid3a_3875.1=v2.txt; Mus_musculus|M00142_1.94d|Zoo_01|536.txt; Acyrtosiphon_pisum|M00136_1.94d|Zoo_01|428.txt",4
-"ARID3B","Mus_musculus|M00142_1.94d|Zoo_01|536.txt; Mus_musculus|M00141_1.94d|Badis09|Arid3a_3875.1=v2.txt; Microcebus_murinus|M00139_1.94d|Zoo_01|6517.txt; Acyrtosiphon_pisum|M00136_1.94d|Zoo_01|428.txt",4
+"ARID3A","Mus_musculus|M00142_1.94d|Zoo_01|536.txt; Mus_musculus|M00141_1.94d|Badis09|Arid3a_3875.1=v2.txt; Microcebus_murinus|M00139_1.94d|Zoo_01|6517.txt; Acyrtosiphon_pisum|M00136_1.94d|Zoo_01|428.txt",4
+"ARID3B","Mus_musculus|M00141_1.94d|Badis09|Arid3a_3875.1=v2.txt; Microcebus_murinus|M00139_1.94d|Zoo_01|6517.txt; Mus_musculus|M00142_1.94d|Zoo_01|536.txt; Acyrtosiphon_pisum|M00136_1.94d|Zoo_01|428.txt",4
 "ARID3C","Mus_musculus|M00141_1.94d|Badis09|Arid3a_3875.1=v2.txt; Microcebus_murinus|M00139_1.94d|Zoo_01|6517.txt; Mus_musculus|M00142_1.94d|Zoo_01|536.txt; Acyrtosiphon_pisum|M00136_1.94d|Zoo_01|428.txt",4
 "ARID5A","Mus_musculus|M00144_1.94d|Badis09|Arid5a_3770.2=v1.txt; Rattus_norvegicus|M00146_1.94d|Zoo_01|531.txt; Mus_musculus|M00143_1.94d|Zoo_01|1183.txt; Danio_rerio|M00138_1.94d|Zoo_01|214.txt",4
 "ARID5B","Mus_musculus|M00143_1.94d|Zoo_01|1183.txt; Mus_musculus|M00144_1.94d|Badis09|Arid5a_3770.2=v1.txt; Rattus_norvegicus|M00146_1.94d|Zoo_01|531.txt",3
@@ -19,9 +19,9 @@
 "ASCL3","Mus_musculus|M00225_1.94d|Badis09|Ascl2_2654.2=v2.txt",1
 "ASCL4","Mus_musculus|M00225_1.94d|Badis09|Ascl2_2654.2=v2.txt",1
 "ASCL5","Mus_musculus|M00225_1.94d|Badis09|Ascl2_2654.2=v2.txt",1
-"ATF1","Mus_musculus|M00388_1.94d|Zoo_01|2502.txt; Mus_musculus|M00387_1.94d|Badis09|Atf1_3026.3=v1.txt; Mus_musculus|M00392_1.94d|Zoo_01|1581.txt; Mus_musculus|M00420_1.94d|Zoo_01|1307.txt",4
+"ATF1","Mus_musculus|M00387_1.94d|Badis09|Atf1_3026.3=v1.txt; Mus_musculus|M00388_1.94d|Zoo_01|2502.txt; Mus_musculus|M00392_1.94d|Zoo_01|1581.txt; Mus_musculus|M00420_1.94d|Zoo_01|1307.txt",4
 "ATF2","Mus_musculus|M00395_1.94d|Zoo_01|1192.txt; Mus_musculus|M00425_1.94d|Zoo_01|1187.txt",2
-"ATF3","Mus_musculus|M00394_1.94d|Zoo_01|1351.txt; Mus_musculus|M00393_1.94d|DREAM_contest|1967.txt; Mus_musculus|M00397_1.94d|Badis09|Jundm2_0911.3=v1.txt",3
+"ATF3","Mus_musculus|M00393_1.94d|DREAM_contest|1967.txt; Mus_musculus|M00394_1.94d|Zoo_01|1351.txt; Mus_musculus|M00397_1.94d|Badis09|Jundm2_0911.3=v1.txt",3
 "ATOH1","Mus_musculus|M00272_1.94d|Zoo_01|1349.txt; Mus_musculus|M00264_1.94d|Zoo_01|1372.txt; Mus_musculus|M00241_1.94d|Zoo_01|1348.txt",3
 "ATOH7","Mus_musculus|M00272_1.94d|Zoo_01|1349.txt; Mus_musculus|M00264_1.94d|Zoo_01|1372.txt; Mus_musculus|M00242_1.94d|Zoo_01|231.txt",3
 "BARHL1","Mus_musculus|M01361_1.94d|Berger08|Barhl1_2590.2.txt; Mus_musculus|M01389_1.94d|Berger08|Barhl2_3868.1.txt",2
@@ -32,23 +32,23 @@
 "BHLHE22","Mus_musculus|M00241_1.94d|Zoo_01|1348.txt; Mus_musculus|M00272_1.94d|Zoo_01|1349.txt",2
 "BHLHE23","Mus_musculus|M00241_1.94d|Zoo_01|1348.txt; Mus_musculus|M00272_1.94d|Zoo_01|1349.txt",2
 "BHLHE40","Mus_musculus|M00252_1.94d|Zoo_01|2878.txt; Mus_musculus|M00253_1.94d|Zoo_01|1308.txt; Mus_musculus|M00251_1.94d|Badis09|Bhlhb2_1274.3=v2.txt",3
-"BHLHE41","Mus_musculus|M00253_1.94d|Zoo_01|1308.txt; Mus_musculus|M00251_1.94d|Badis09|Bhlhb2_1274.3=v2.txt; Mus_musculus|M00252_1.94d|Zoo_01|2878.txt",3
+"BHLHE41","Mus_musculus|M00253_1.94d|Zoo_01|1308.txt; Mus_musculus|M00252_1.94d|Zoo_01|2878.txt; Mus_musculus|M00251_1.94d|Badis09|Bhlhb2_1274.3=v2.txt",3
 "BSX","Mus_musculus|M01447_1.94d|Berger08|Bsx_3483.2.txt; Drosophila_melanogaster|M01484_1.94d|Zoo_01|3049.txt",2
 "CCDC169-SOHLH2","Mus_musculus|M00245_1.94d|Zoo_01|163.txt",1
 "CDX1","Mus_musculus|M01355_1.94d|Berger08|Cdx1_2245.1.txt; Mus_musculus|M01376_1.94d|Berger08|Cdx2_4272.1.txt; Discocelis_tigrina|M01623_1.94d|Zoo_01|2912.txt",3
 "CDX2","Mus_musculus|M01376_1.94d|Berger08|Cdx2_4272.1.txt; Mus_musculus|M01355_1.94d|Berger08|Cdx1_2245.1.txt; Discocelis_tigrina|M01623_1.94d|Zoo_01|2912.txt",3
-"CDX4","Mus_musculus|M01355_1.94d|Berger08|Cdx1_2245.1.txt; Mus_musculus|M01376_1.94d|Berger08|Cdx2_4272.1.txt; Discocelis_tigrina|M01623_1.94d|Zoo_01|2912.txt",3
-"CEBPA","Mus_musculus|M00401_1.94d|Zoo_01|1586.txt; Mus_musculus|M00416_1.94d|Zoo_01|1598.txt; Mus_musculus|M00415_1.94d|DREAM_contest|1408.txt; Mus_musculus|M00406_1.94d|Zoo_01|2537.txt",4
+"CDX4","Mus_musculus|M01376_1.94d|Berger08|Cdx2_4272.1.txt; Mus_musculus|M01355_1.94d|Berger08|Cdx1_2245.1.txt; Discocelis_tigrina|M01623_1.94d|Zoo_01|2912.txt",3
+"CEBPA","Mus_musculus|M00401_1.94d|Zoo_01|1586.txt; Mus_musculus|M00415_1.94d|DREAM_contest|1408.txt; Mus_musculus|M00416_1.94d|Zoo_01|1598.txt; Mus_musculus|M00406_1.94d|Zoo_01|2537.txt",4
 "CEBPB","Mus_musculus|M00415_1.94d|DREAM_contest|1408.txt; Mus_musculus|M00416_1.94d|Zoo_01|1598.txt; Mus_musculus|M00401_1.94d|Zoo_01|1586.txt; Mus_musculus|M00406_1.94d|Zoo_01|2537.txt",4
 "CEBPD","Mus_musculus|M00401_1.94d|Zoo_01|1586.txt; Mus_musculus|M00415_1.94d|DREAM_contest|1408.txt; Mus_musculus|M00416_1.94d|Zoo_01|1598.txt; Mus_musculus|M00406_1.94d|Zoo_01|2537.txt",4
-"CEBPE","Mus_musculus|M00406_1.94d|Zoo_01|2537.txt; Mus_musculus|M00416_1.94d|Zoo_01|1598.txt; Mus_musculus|M00415_1.94d|DREAM_contest|1408.txt; Mus_musculus|M00401_1.94d|Zoo_01|1586.txt",4
+"CEBPE","Mus_musculus|M00406_1.94d|Zoo_01|2537.txt; Mus_musculus|M00415_1.94d|DREAM_contest|1408.txt; Mus_musculus|M00416_1.94d|Zoo_01|1598.txt; Mus_musculus|M00401_1.94d|Zoo_01|1586.txt",4
 "CEBPG","Mus_musculus|M00412_1.94d|Zoo_01|1305.txt",1
 "CLOCK","Mus_musculus|M00247_1.94d|Zoo_01|128.txt",1
 "CREB1","Mus_musculus|M00392_1.94d|Zoo_01|1581.txt; Mus_musculus|M00420_1.94d|Zoo_01|1307.txt; Mus_musculus|M00388_1.94d|Zoo_01|2502.txt",3
-"CREB5","Mus_musculus|M00425_1.94d|Zoo_01|1187.txt; Mus_musculus|M00395_1.94d|Zoo_01|1192.txt",2
+"CREB5","Mus_musculus|M00395_1.94d|Zoo_01|1192.txt; Mus_musculus|M00425_1.94d|Zoo_01|1187.txt",2
 "CREM","Mus_musculus|M00420_1.94d|Zoo_01|1307.txt; Mus_musculus|M00392_1.94d|Zoo_01|1581.txt; Mus_musculus|M00388_1.94d|Zoo_01|2502.txt",3
-"CRX","Homo_sapiens|M01228_1.94d|Barrera2016|CRX_V66I_R1.txt; Homo_sapiens|M01224_1.94d|Barrera2016|CRX_R41Q_R1.txt; Homo_sapiens|M01227_1.94d|Barrera2016|CRX_REF_R1.txt; Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Mus_musculus|M01328_1.94d|Berger08|Alx3_3418.2.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt",6
-"CXXC1","Homo_sapiens|M00872_1.94d|Zoo_01|3730.txt",1
+"CRX","Homo_sapiens|M01224_1.94d|Barrera2016|CRX_R41Q_R1.txt; Homo_sapiens|M01228_1.94d|Barrera2016|CRX_V66I_R1.txt; Homo_sapiens|M01227_1.94d|Barrera2016|CRX_REF_R1.txt; Mus_musculus|M01328_1.94d|Berger08|Alx3_3418.2.txt; Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt",6
+"CXXC1","Homo_sapiens|M00872_1.94d|Zoo_01|3730.txt; Homo_sapiens|M00872_1.94d|Zoo_01|3730.txt",2
 "DBP","Mus_musculus|M00418_1.94d|DREAM_contest|1409.txt; Mus_musculus|M00386_1.94d|Zoo_01|1189.txt",2
 "DBX1","Mus_musculus|M01428_1.94d|Berger08|Dbx2_3487.1.txt; Mus_musculus|M01414_1.94d|Berger08|Hlx1_2350.1.txt",2
 "DBX2","Mus_musculus|M01428_1.94d|Berger08|Dbx2_3487.1.txt",1
@@ -65,25 +65,25 @@
 "DMRTA2","Homo_sapiens|M00897_1.94d|Zoo_01|6843.txt; Xenopus_tropicalis|M00903_1.94d|Zoo_01|6876.txt; Drosophila_melanogaster|M00904_1.94d|Zoo_01|6704.txt; Caenorhabditis_elegans|M00912_1.94d|CEPD|10140.txt; Homo_sapiens|M00894_1.94d|Zoo_01|6491.txt; Homo_sapiens|M00898_1.94d|Zoo_01|6677.txt",6
 "DMRTC2","Cavia_porcellus|M00893_1.94d|Zoo_01|6774.txt; Tursiops_truncatus|M00902_1.94d|Zoo_01|6838.txt; Monodelphis_domestica|M00899_1.94d|Zoo_01|6762.txt",3
 "DNMT1","Homo_sapiens|M00879_1.94d|Zoo_01|3723.txt",1
-"DRGX","Homo_sapiens|M01217_1.94d|Barrera2016|ARX_REF_R1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt",6
-"E2F1","Homo_sapiens|NA|Shen2018|E2F1.txt; Ornithorhynchus_anatinus|M00958_1.94d|Zoo_01|6833.txt; Mus_musculus|M00957_1.94d|Badis09|E2F2_1022.4=v1.txt; Anolis_carolinensis|M00954_1.94d|Zoo_01|6524.txt; Mus_musculus|M00956_1.94d|Badis09|E2F3_3752.1=v2.txt",5
+"DRGX","Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Homo_sapiens|M01217_1.94d|Barrera2016|ARX_REF_R1.txt; Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt",6
+"E2F1","Homo_sapiens|NA|Shen2018|E2F1.txt; Mus_musculus|M00957_1.94d|Badis09|E2F2_1022.4=v1.txt; Ornithorhynchus_anatinus|M00958_1.94d|Zoo_01|6833.txt; Anolis_carolinensis|M00954_1.94d|Zoo_01|6524.txt; Mus_musculus|M00956_1.94d|Badis09|E2F3_3752.1=v2.txt",5
 "E2F2","Homo_sapiens|M00955_1.94d|Zoo_01|6498.txt; Mus_musculus|M00957_1.94d|Badis09|E2F2_1022.4=v1.txt; Tupaia_belangeri|M00959_1.94d|Zoo_01|6973.txt; Anolis_carolinensis|M00954_1.94d|Zoo_01|6524.txt; Physcomitrella_patens|M00965_1.94d|Zoo_01|1843.txt",5
-"E2F3","Homo_sapiens|NA|Shen2018|E2F3.txt; Mus_musculus|M00956_1.94d|Badis09|E2F3_3752.1=v2.txt; Taeniopygia_guttata|M00960_1.94d|Zoo_01|6801.txt; Physcomitrella_patens|M00965_1.94d|Zoo_01|1843.txt; Mus_musculus|M00957_1.94d|Badis09|E2F2_1022.4=v1.txt; Anolis_carolinensis|M00954_1.94d|Zoo_01|6524.txt",6
+"E2F3","Mus_musculus|M00956_1.94d|Badis09|E2F3_3752.1=v2.txt; Homo_sapiens|NA|Shen2018|E2F3.txt; Taeniopygia_guttata|M00960_1.94d|Zoo_01|6801.txt; Physcomitrella_patens|M00965_1.94d|Zoo_01|1843.txt; Mus_musculus|M00957_1.94d|Badis09|E2F2_1022.4=v1.txt; Anolis_carolinensis|M00954_1.94d|Zoo_01|6524.txt",6
 "E2F4","Homo_sapiens|NA|Shen2018|E2F4.txt",1
 "E2F5","Homo_sapiens|NA|Shen2018|E2F4.txt",1
-"EGR1","Mus_musculus|M00613_1.94d|Zoo_01|951.txt; Homo_sapiens|NA|Unpublished|EGR1.txt; Mus_musculus|M00614_1.94d|Berger06|Zif268.txt; Mus_musculus|M00611_1.94d|DREAM_contest|667.txt; Mus_musculus|M00609_1.94d|DREAM_contest|1440.txt; Caenorhabditis_elegans|M00701_1.94d|CEPD|7901.txt",6
-"EGR2","Homo_sapiens|M00559_1.94d|Barrera2016|EGR2_R359W_R1.txt; Mus_musculus|M00611_1.94d|DREAM_contest|667.txt; Homo_sapiens|M00558_1.94d|Barrera2016|EGR2_E412K_R1.txt; Mus_musculus|M00609_1.94d|DREAM_contest|1440.txt; Caenorhabditis_elegans|M00701_1.94d|CEPD|7901.txt",5
-"EGR3","Mus_musculus|M00609_1.94d|DREAM_contest|1440.txt; Mus_musculus|M00611_1.94d|DREAM_contest|667.txt; Homo_sapiens|M00561_1.94d|Barrera2016|EGR2_REF_R1.txt; Caenorhabditis_elegans|M00701_1.94d|CEPD|7901.txt",4
-"EGR4","Homo_sapiens|NA|Unpublished|EGR1.txt; Mus_musculus|M00613_1.94d|Zoo_01|951.txt; Mus_musculus|M00614_1.94d|Berger06|Zif268.txt; Mus_musculus|M00611_1.94d|DREAM_contest|667.txt; Mus_musculus|M00609_1.94d|DREAM_contest|1440.txt; Caenorhabditis_elegans|M00701_1.94d|CEPD|7901.txt",6
-"EHF","Mus_musculus|M00986_1.94d|Wei10|Ehf.txt; Mus_musculus|M00985_1.94d|Badis09|Ehf_3056.2=v1.txt; Mus_musculus|M00975_1.94d|Badis09|Elf3_3876.1=v2.txt; Mus_musculus|M00993_1.94d|Wei10|Elf5.txt",4
+"EGR1","Homo_sapiens|NA|Unpublished|EGR1.txt; Mus_musculus|M00613_1.94d|Zoo_01|951.txt; Mus_musculus|M00614_1.94d|Berger06|Zif268.txt; Mus_musculus|M00611_1.94d|DREAM_contest|667.txt; Mus_musculus|M00609_1.94d|DREAM_contest|1440.txt; Caenorhabditis_elegans|M00701_1.94d|CEPD|7901.txt",6
+"EGR2","Mus_musculus|M00611_1.94d|DREAM_contest|667.txt; Homo_sapiens|M00559_1.94d|Barrera2016|EGR2_R359W_R1.txt; Homo_sapiens|M00558_1.94d|Barrera2016|EGR2_E412K_R1.txt; Mus_musculus|M00609_1.94d|DREAM_contest|1440.txt; Caenorhabditis_elegans|M00701_1.94d|CEPD|7901.txt",5
+"EGR3","Mus_musculus|M00609_1.94d|DREAM_contest|1440.txt; Homo_sapiens|M00561_1.94d|Barrera2016|EGR2_REF_R1.txt; Mus_musculus|M00611_1.94d|DREAM_contest|667.txt; Caenorhabditis_elegans|M00701_1.94d|CEPD|7901.txt",4
+"EGR4","Mus_musculus|M00613_1.94d|Zoo_01|951.txt; Homo_sapiens|NA|Unpublished|EGR1.txt; Mus_musculus|M00614_1.94d|Berger06|Zif268.txt; Mus_musculus|M00609_1.94d|DREAM_contest|1440.txt; Mus_musculus|M00611_1.94d|DREAM_contest|667.txt; Caenorhabditis_elegans|M00701_1.94d|CEPD|7901.txt",6
+"EHF","Mus_musculus|M00985_1.94d|Badis09|Ehf_3056.2=v1.txt; Mus_musculus|M00986_1.94d|Wei10|Ehf.txt; Mus_musculus|M00975_1.94d|Badis09|Elf3_3876.1=v2.txt; Mus_musculus|M00993_1.94d|Wei10|Elf5.txt",4
 "ELF1","Mus_musculus|M00997_1.94d|Wei10|Elf2.txt; Mus_musculus|M00995_1.94d|Wei10|Elf4.txt",2
 "ELF2","Mus_musculus|M00997_1.94d|Wei10|Elf2.txt; Mus_musculus|M00995_1.94d|Wei10|Elf4.txt",2
 "ELF3","Mus_musculus|M00976_1.94d|Wei10|Elf3.txt; Mus_musculus|M00975_1.94d|Badis09|Elf3_3876.1=v2.txt; Mus_musculus|M00985_1.94d|Badis09|Ehf_3056.2=v1.txt; Mus_musculus|M00993_1.94d|Wei10|Elf5.txt",4
 "ELF4","Mus_musculus|M00995_1.94d|Wei10|Elf4.txt; Mus_musculus|M00997_1.94d|Wei10|Elf2.txt",2
-"ELF5","Mus_musculus|M00993_1.94d|Wei10|Elf5.txt; Mus_musculus|M00985_1.94d|Badis09|Ehf_3056.2=v1.txt; Mus_musculus|M00986_1.94d|Wei10|Ehf.txt; Mus_musculus|M00975_1.94d|Badis09|Elf3_3876.1=v2.txt",4
-"ELK1","Mus_musculus|M00984_1.94d|Wei10|Elk1.txt; Homo_sapiens|NA|Shen2018|ELK1.txt; Mus_musculus|M00981_1.94d|Wei10|Elk3.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt",5
+"ELF5","Mus_musculus|M00993_1.94d|Wei10|Elf5.txt; Mus_musculus|M00986_1.94d|Wei10|Ehf.txt; Mus_musculus|M00985_1.94d|Badis09|Ehf_3056.2=v1.txt; Mus_musculus|M00975_1.94d|Badis09|Elf3_3876.1=v2.txt",4
+"ELK1","Mus_musculus|M00984_1.94d|Wei10|Elk1.txt; Homo_sapiens|NA|Shen2018|ELK1.txt; Mus_musculus|M00981_1.94d|Wei10|Elk3.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt",5
 "ELK3","Mus_musculus|M00981_1.94d|Wei10|Elk3.txt; Tetraodon_nigroviridis|M00999_1.94d|Zoo_01|2773.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt",5
-"ELK4","Mus_musculus|M00992_1.94d|Wei10|Elk4.txt; Tetraodon_nigroviridis|M00999_1.94d|Zoo_01|2773.txt; Mus_musculus|M00981_1.94d|Wei10|Elk3.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt",6
+"ELK4","Mus_musculus|M00992_1.94d|Wei10|Elk4.txt; Tetraodon_nigroviridis|M00999_1.94d|Zoo_01|2773.txt; Mus_musculus|M00981_1.94d|Wei10|Elk3.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt",6
 "EMX1","Homo_sapiens|M01259_1.94d|Zoo_01|1859.txt; Mus_musculus|M01424_1.94d|Berger08|Emx2_3420.1.txt; Drosophila_melanogaster|M01485_1.94d|Zoo_01|1842.txt",3
 "EMX2","Mus_musculus|M01424_1.94d|Berger08|Emx2_3420.1.txt; Homo_sapiens|M01259_1.94d|Zoo_01|1859.txt; Drosophila_melanogaster|M01485_1.94d|Zoo_01|1842.txt",3
 "EN1","Mus_musculus|M01450_1.94d|Berger08|En1_3123.2.txt; Mus_musculus|M01413_1.94d|Berger08|En2_0952.1.txt",2
@@ -96,23 +96,23 @@
 "ESRRA","Mus_musculus|M02004_1.94d|Badis09|Esrra_2190.2=v2.txt; Mus_musculus|M02006_1.94d|DREAM_contest|1463.txt",2
 "ESRRB","Mus_musculus|M02006_1.94d|DREAM_contest|1463.txt; Mus_musculus|M02004_1.94d|Badis09|Esrra_2190.2=v2.txt",2
 "ESRRG","Mus_musculus|M02006_1.94d|DREAM_contest|1463.txt; Mus_musculus|M02004_1.94d|Badis09|Esrra_2190.2=v2.txt",2
-"ESX1","Homo_sapiens|M01249_1.94d|Barrera2016|ESX1_K193R_R1.txt; Homo_sapiens|M01250_1.94d|Barrera2016|ESX1_REF_R1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt",5
-"ETS1","Homo_sapiens|NA|Shen2018|ETS1.txt; Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Mus_musculus|M00982_1.94d|Badis09|Gabpa_2829.2=v2.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",6
+"ESX1","Homo_sapiens|M01249_1.94d|Barrera2016|ESX1_K193R_R1.txt; Homo_sapiens|M01250_1.94d|Barrera2016|ESX1_REF_R1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt",5
+"ETS1","Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Homo_sapiens|NA|Shen2018|ETS1.txt; Mus_musculus|M00982_1.94d|Badis09|Gabpa_2829.2=v2.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",6
 "ETS2","Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Homo_sapiens|NA|Shen2018|ETS1.txt; Mus_musculus|M00982_1.94d|Badis09|Gabpa_2829.2=v2.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",6
-"ETV1","Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00987_1.94d|Wei10|Etv5.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",4
-"ETV2","Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Mus_musculus|M00983_1.94d|Wei10|Gabpa.txt; Mus_musculus|M00982_1.94d|Badis09|Gabpa_2829.2=v2.txt",3
-"ETV3","Mus_musculus|M00977_1.94d|Wei10|Etv3.txt; Mus_musculus|M01002_1.94d|Wei10|Gm4881.txt; Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Mus_musculus|M00998_1.94d|Wei10|Erg.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",5
-"ETV3L","Mus_musculus|M00977_1.94d|Wei10|Etv3.txt; Mus_musculus|M01002_1.94d|Wei10|Gm4881.txt; Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Mus_musculus|M00998_1.94d|Wei10|Erg.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",5
+"ETV1","Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00987_1.94d|Wei10|Etv5.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",4
+"ETV2","Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Mus_musculus|M00982_1.94d|Badis09|Gabpa_2829.2=v2.txt; Mus_musculus|M00983_1.94d|Wei10|Gabpa.txt",3
+"ETV3","Mus_musculus|M00977_1.94d|Wei10|Etv3.txt; Mus_musculus|M01002_1.94d|Wei10|Gm4881.txt; Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt; Mus_musculus|M00998_1.94d|Wei10|Erg.txt",5
+"ETV3L","Mus_musculus|M00977_1.94d|Wei10|Etv3.txt; Mus_musculus|M01002_1.94d|Wei10|Gm4881.txt; Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt; Mus_musculus|M00998_1.94d|Wei10|Erg.txt",5
 "ETV4","Mus_musculus|M00989_1.94d|Wei10|Etv4.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",4
-"ETV5","Mus_musculus|M00987_1.94d|Wei10|Etv5.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",4
+"ETV5","Mus_musculus|M00987_1.94d|Wei10|Etv5.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",4
 "ETV6","Mus_musculus|M00994_1.94d|Wei10|Etv6.txt",1
 "ETV7","Mus_musculus|M00994_1.94d|Wei10|Etv6.txt",1
-"EVX1","Mus_musculus|M01320_1.94d|Berger08|Evx1_3952.2.txt; Mus_musculus|M01318_1.94d|Berger08|Evx2_2645.3.txt; Drosophila_melanogaster|M01487_1.94d|Zoo_01|3110.txt; Caenorhabditis_elegans|M01570_1.94d|Zoo_01|2588.txt; Sarsia_sp._Long_Island_Sound|M01621_1.94d|Zoo_01|2759.txt",5
-"EVX2","Mus_musculus|M01320_1.94d|Berger08|Evx1_3952.2.txt; Mus_musculus|M01318_1.94d|Berger08|Evx2_2645.3.txt; Drosophila_melanogaster|M01487_1.94d|Zoo_01|3110.txt; Caenorhabditis_elegans|M01570_1.94d|Zoo_01|2588.txt; Sarsia_sp._Long_Island_Sound|M01621_1.94d|Zoo_01|2759.txt",5
+"EVX1","Mus_musculus|M01318_1.94d|Berger08|Evx2_2645.3.txt; Mus_musculus|M01320_1.94d|Berger08|Evx1_3952.2.txt; Drosophila_melanogaster|M01487_1.94d|Zoo_01|3110.txt; Caenorhabditis_elegans|M01570_1.94d|Zoo_01|2588.txt; Sarsia_sp._Long_Island_Sound|M01621_1.94d|Zoo_01|2759.txt",5
+"EVX2","Mus_musculus|M01318_1.94d|Berger08|Evx2_2645.3.txt; Mus_musculus|M01320_1.94d|Berger08|Evx1_3952.2.txt; Drosophila_melanogaster|M01487_1.94d|Zoo_01|3110.txt; Caenorhabditis_elegans|M01570_1.94d|Zoo_01|2588.txt; Sarsia_sp._Long_Island_Sound|M01621_1.94d|Zoo_01|2759.txt",5
 "FERD3L","Mus_musculus|M00272_1.94d|Zoo_01|1349.txt",1
 "FEV","Mus_musculus|M00988_1.94d|Wei10|Fli1.txt; Mus_musculus|M00998_1.94d|Wei10|Erg.txt; Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",6
 "FIGLA","Mus_musculus|M00250_1.94d|Zoo_01|1363.txt",1
-"FLI1","Mus_musculus|M00988_1.94d|Wei10|Fli1.txt; Mus_musculus|M00998_1.94d|Wei10|Erg.txt; Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",6
+"FLI1","Mus_musculus|M00988_1.94d|Wei10|Fli1.txt; Mus_musculus|M00998_1.94d|Wei10|Erg.txt; Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt",6
 "FOS","Mus_musculus|M00396_1.94d|Zoo_01|1303.txt",1
 "FOSB","Mus_musculus|M00396_1.94d|Zoo_01|1303.txt",1
 "FOSL1","Mus_musculus|M00396_1.94d|Zoo_01|1303.txt",1
@@ -121,7 +121,7 @@
 "FOXA2","Mus_musculus|M01035_1.94d|Badis09|Foxa2_2830.2=v1.txt",1
 "FOXA3","Mus_musculus|M01035_1.94d|Badis09|Foxa2_2830.2=v1.txt",1
 "FOXB1","Mus_musculus|M01035_1.94d|Badis09|Foxa2_2830.2=v1.txt",1
-"FOXC1","Mus_musculus|M01041_1.94d|Zoo_01|597.txt; Homo_sapiens|M01018_1.94d|Barrera2016|FOXC1_S82T_R1.txt; Mus_musculus|M01039_1.94d|DREAM_contest|1424.txt; Mus_musculus|M01046_1.94d|Badis09|Foxl1_2809.2=v1.txt",4
+"FOXC1","Homo_sapiens|M01018_1.94d|Barrera2016|FOXC1_S82T_R1.txt; Mus_musculus|M01041_1.94d|Zoo_01|597.txt; Mus_musculus|M01039_1.94d|DREAM_contest|1424.txt; Mus_musculus|M01046_1.94d|Badis09|Foxl1_2809.2=v1.txt",4
 "FOXC2","Mus_musculus|M01039_1.94d|DREAM_contest|1424.txt; Mus_musculus|M01041_1.94d|Zoo_01|597.txt; Homo_sapiens|M01018_1.94d|Barrera2016|FOXC1_S82T_R1.txt; Mus_musculus|M01046_1.94d|Badis09|Foxl1_2809.2=v1.txt",4
 "FOXD3","Mus_musculus|M01039_1.94d|DREAM_contest|1424.txt",1
 "FOXE1","Mus_musculus|M01046_1.94d|Badis09|Foxl1_2809.2=v1.txt",1
@@ -136,10 +136,10 @@
 "FOXM1","Mus_musculus|M01025_1.94d|Nakagawa2013|Foxm1.txt; Meleagris_gallopavo|M01024_1.94d|Zoo_01|7676.txt",2
 "FOXN1","Mus_musculus|M01026_1.94d|Nakagawa2013|Foxn1.txt; Mus_musculus|M01036_1.94d|Nakagawa2013|Foxn4.txt",2
 "FOXN2","Homo_sapiens|M01021_1.94d|Nakagawa2013|FOXN2.txt; Trichoplax_adhaerens|M01058_1.94d|Nakagawa2013|FoxN2-3_Tadh.txt; Homo_sapiens|M01021_1.94d|Nakagawa2013|FOXN2.txt",3
-"FOXN3","Trichoplax_adhaerens|M01058_1.94d|Nakagawa2013|FoxN2-3_Tadh.txt; Homo_sapiens|M01021_1.94d|Nakagawa2013|FOXN2.txt",2
+"FOXN3","Homo_sapiens|M01021_1.94d|Nakagawa2013|FOXN2.txt; Homo_sapiens|M01021_1.94d|Nakagawa2013|FOXN2.txt; Trichoplax_adhaerens|M01058_1.94d|Nakagawa2013|FoxN2-3_Tadh.txt",3
 "FOXN4","Mus_musculus|M01036_1.94d|Nakagawa2013|Foxn4.txt; Mus_musculus|M01026_1.94d|Nakagawa2013|Foxn1.txt",2
 "FOXO1","Mus_musculus|M01038_1.94d|DREAM_contest|1464.txt; Mus_musculus|M01042_1.94d|DREAM_contest|1981.txt; Mus_musculus|M01040_1.94d|DREAM_contest|1986.txt; Mus_musculus|M01037_1.94d|DREAM_contest|1985.txt; Caenorhabditis_elegans|M01059_1.94d|Zoo_01|6237.txt",5
-"FOXO3","Mus_musculus|M01040_1.94d|DREAM_contest|1986.txt; Homo_sapiens|NA|Unpublished|FOXO3.txt; Mus_musculus|M01038_1.94d|DREAM_contest|1464.txt; Mus_musculus|M01037_1.94d|DREAM_contest|1985.txt; Caenorhabditis_elegans|M01059_1.94d|Zoo_01|6237.txt",5
+"FOXO3","Homo_sapiens|NA|Unpublished|FOXO3.txt; Mus_musculus|M01040_1.94d|DREAM_contest|1986.txt; Mus_musculus|M01038_1.94d|DREAM_contest|1464.txt; Mus_musculus|M01037_1.94d|DREAM_contest|1985.txt; Caenorhabditis_elegans|M01059_1.94d|Zoo_01|6237.txt",5
 "FOXO4","Mus_musculus|M01037_1.94d|DREAM_contest|1985.txt; Mus_musculus|M01038_1.94d|DREAM_contest|1464.txt; Mus_musculus|M01042_1.94d|DREAM_contest|1981.txt",3
 "FOXO6","Mus_musculus|M01042_1.94d|DREAM_contest|1981.txt; Mus_musculus|M01038_1.94d|DREAM_contest|1464.txt; Mus_musculus|M01040_1.94d|DREAM_contest|1986.txt; Mus_musculus|M01037_1.94d|DREAM_contest|1985.txt",4
 "FOXP1","Homo_sapiens|M01019_1.94d|Zoo_01|1637.txt; Mus_musculus|M01031_1.94d|DREAM_contest|1328.txt; Mus_musculus|M01030_1.94d|DREAM_contest|574.txt",3
@@ -147,7 +147,7 @@
 "FOXP3","Homo_sapiens|M01019_1.94d|Zoo_01|1637.txt; Mus_musculus|M01031_1.94d|DREAM_contest|1328.txt; Mus_musculus|M01030_1.94d|DREAM_contest|574.txt",3
 "FOXP4","Mus_musculus|M01031_1.94d|DREAM_contest|1328.txt; Homo_sapiens|M01019_1.94d|Zoo_01|1637.txt; Mus_musculus|M01030_1.94d|DREAM_contest|574.txt",3
 "FOXS1","Mus_musculus|M01041_1.94d|Zoo_01|597.txt; Mus_musculus|M01039_1.94d|DREAM_contest|1424.txt; Homo_sapiens|M01018_1.94d|Barrera2016|FOXC1_S82T_R1.txt; Mus_musculus|M01046_1.94d|Badis09|Foxl1_2809.2=v1.txt",4
-"GABPA","Mus_musculus|M00983_1.94d|Wei10|Gabpa.txt; Mus_musculus|M00982_1.94d|Badis09|Gabpa_2829.2=v2.txt; Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt",6
+"GABPA","Mus_musculus|M00983_1.94d|Wei10|Gabpa.txt; Mus_musculus|M00982_1.94d|Badis09|Gabpa_2829.2=v2.txt; Mus_musculus|M00996_1.94d|Wei10|Ets1.txt; Mus_musculus|M00984_1.94d|Wei10|Elk1.txt; Mus_musculus|M00979_1.94d|Wei10|Gm5454.txt; Mus_musculus|M00978_1.94d|Wei10|Etv1.txt",6
 "GATA1","Homo_sapiens|NA|Unpublished|GATA1.txt; Mus_musculus|M01105_1.94d|Badis09|Gata3_1024.3=v1.txt; Mus_musculus|M01107_1.94d|DREAM_contest|572.txt; Mus_musculus|M01106_1.94d|Badis09|Gata5_3768.1=v1.txt",4
 "GATA2","Mus_musculus|M01105_1.94d|Badis09|Gata3_1024.3=v1.txt; Homo_sapiens|NA|Unpublished|GATA1.txt; Mus_musculus|M01106_1.94d|Badis09|Gata5_3768.1=v1.txt; Mus_musculus|M01107_1.94d|DREAM_contest|572.txt",4
 "GATA3","Mus_musculus|M01105_1.94d|Badis09|Gata3_1024.3=v1.txt; Homo_sapiens|NA|Unpublished|GATA1.txt; Mus_musculus|M01107_1.94d|DREAM_contest|572.txt; Mus_musculus|M01106_1.94d|Badis09|Gata5_3768.1=v1.txt",4
@@ -159,17 +159,17 @@
 "GCM1","Homo_sapiens|M01133_1.94d|Zoo_01|5014.txt; Mus_musculus|M01135_1.94d|Badis09|Gcm1_3732.1=v1.txt; Rattus_norvegicus|M01136_1.94d|Zoo_01|6874.txt; Dasypus_novemcinctus|M01141_1.94d|Zoo_01|6778.txt; Taeniopygia_guttata|M01137_1.94d|Zoo_01|6736.txt",5
 "GCM2","Taeniopygia_guttata|M01137_1.94d|Zoo_01|6736.txt; Takifugu_rubripes|M01139_1.94d|Zoo_01|6742.txt; Tetraodon_nigroviridis|M01138_1.94d|Zoo_01|6837.txt; Dasypus_novemcinctus|M01141_1.94d|Zoo_01|6778.txt; Homo_sapiens|M01133_1.94d|Zoo_01|5014.txt",5
 "GFI1","Homo_sapiens|M00566_1.94d|Barrera2016|GFI1_L400F_R1.txt; Homo_sapiens|M00568_1.94d|Barrera2016|GFI1_REF_R1.txt; Homo_sapiens|M00570_1.94d|Barrera2016|GFI1B_REF_R2.txt",3
-"GFI1B","Homo_sapiens|M00569_1.94d|Barrera2016|GFI1B_A204T_R2.txt; Homo_sapiens|M00570_1.94d|Barrera2016|GFI1B_REF_R2.txt; Homo_sapiens|M00566_1.94d|Barrera2016|GFI1_L400F_R1.txt; Homo_sapiens|M00568_1.94d|Barrera2016|GFI1_REF_R1.txt",4
+"GFI1B","Homo_sapiens|M00569_1.94d|Barrera2016|GFI1B_A204T_R2.txt; Homo_sapiens|M00570_1.94d|Barrera2016|GFI1B_REF_R2.txt; Homo_sapiens|M00568_1.94d|Barrera2016|GFI1_REF_R1.txt; Homo_sapiens|M00566_1.94d|Barrera2016|GFI1_L400F_R1.txt",4
 "GLI1","Mus_musculus|M00597_1.94d|Peterson2012|Gli1_v016060.txt; Mus_musculus|M00588_1.94d|Peterson2012|Gli3_v016060.txt; Mus_musculus|M00628_1.94d|Peterson2012|Gli2_v015681.txt",3
 "GLI2","Mus_musculus|M00628_1.94d|Peterson2012|Gli2_v015681.txt; Mus_musculus|M00588_1.94d|Peterson2012|Gli3_v016060.txt; Mus_musculus|M00597_1.94d|Peterson2012|Gli1_v016060.txt",3
 "GLI3","Mus_musculus|M00588_1.94d|Peterson2012|Gli3_v016060.txt; Mus_musculus|M00628_1.94d|Peterson2012|Gli2_v015681.txt; Mus_musculus|M00597_1.94d|Peterson2012|Gli1_v016060.txt",3
 "GLIS3","Drosophila_melanogaster|M00643_1.94d|BusserPNAS2012|Lmd.txt",1
-"GMEB1","Homo_sapiens|M02116_1.94d|Zoo_01|6922.txt; Pteropus_vampyrus|M02124_1.94d|Zoo_01|6796.txt; Mus_musculus|M02121_1.94d|Badis09|Gmeb1_1745.2=v2.txt",3
+"GMEB1","Pteropus_vampyrus|M02124_1.94d|Zoo_01|6796.txt; Homo_sapiens|M02116_1.94d|Zoo_01|6922.txt; Mus_musculus|M02121_1.94d|Badis09|Gmeb1_1745.2=v2.txt",3
 "GMEB2","Mus_musculus|M02122_1.94d|DREAM_contest|1449.txt",1
 "GSC","Mus_musculus|M01337_1.94d|Berger08|Gsc_2327.3.txt; Drosophila_melanogaster|M01497_1.94d|Zoo_01|2004.txt",2
 "GSC2","Mus_musculus|M01337_1.94d|Berger08|Gsc_2327.3.txt; Drosophila_melanogaster|M01497_1.94d|Zoo_01|2004.txt",2
-"GSX1","Mus_musculus|M01398_1.94d|Berger08|Gsh2_3990.2.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt",5
-"GSX2","Mus_musculus|M01398_1.94d|Berger08|Gsh2_3990.2.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",5
+"GSX1","Mus_musculus|M01398_1.94d|Berger08|Gsh2_3990.2.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",5
+"GSX2","Mus_musculus|M01398_1.94d|Berger08|Gsh2_3990.2.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",5
 "HAND2","Mus_musculus|M00224_1.94d|Zoo_01|127.txt",1
 "HBP1","Mus_musculus|M02157_1.94d|Badis09|Hbp1_2241.3=v1.txt",1
 "HELT","Mus_musculus|M00230_1.94d|Zoo_01|1596.txt",1
@@ -190,7 +190,7 @@
 "HMBOX1","Mus_musculus|M01346_1.94d|Berger08|Hmbox1_2674.1.txt",1
 "HMG20B","Mus_musculus|M02159_1.94d|Zoo_01|5955.txt",1
 "HMGA1","Mus_musculus|M00169_1.94d|DREAM_contest|1406.txt; Pongo_pygmaeus|M00171_1.94d|Zoo_01|6712.txt; Aspergillus_nidulans|M00158_1.94d|Zoo_01|5104.txt",3
-"HMGA2","Pongo_pygmaeus|M00171_1.94d|Zoo_01|6712.txt; Mus_musculus|M00169_1.94d|DREAM_contest|1406.txt; Aspergillus_nidulans|M00158_1.94d|Zoo_01|5104.txt; Oryza_sativa|M00176_1.94d|Zoo_01|7822.txt; Arabidopsis_thaliana|M00155_1.94d|Zoo_01|5818.txt",5
+"HMGA2","Mus_musculus|M00169_1.94d|DREAM_contest|1406.txt; Pongo_pygmaeus|M00171_1.94d|Zoo_01|6712.txt; Aspergillus_nidulans|M00158_1.94d|Zoo_01|5104.txt; Oryza_sativa|M00176_1.94d|Zoo_01|7822.txt; Arabidopsis_thaliana|M00155_1.94d|Zoo_01|5818.txt",5
 "HMX1","Mus_musculus|M01456_1.94d|Berger08|Hmx1_3423.1.txt; PBM_CONSTRUCTS|M01599_1.94d|Berger08|Hmx3_3490.2.txt; Mus_musculus|M01437_1.94d|Berger08|Hmx2_3424.3.txt; Mus_musculus|M01436_1.94d|Berger08|Bapx1_2343.1.txt",4
 "HMX2","Mus_musculus|M01437_1.94d|Berger08|Hmx2_3424.3.txt; Mus_musculus|M01456_1.94d|Berger08|Hmx1_3423.1.txt; PBM_CONSTRUCTS|M01599_1.94d|Berger08|Hmx3_3490.2.txt",3
 "HMX3","PBM_CONSTRUCTS|M01599_1.94d|Berger08|Hmx3_3490.2.txt; Mus_musculus|M01456_1.94d|Berger08|Hmx1_3423.1.txt; Mus_musculus|M01437_1.94d|Berger08|Hmx2_3424.3.txt; Mus_musculus|M01436_1.94d|Berger08|Bapx1_2343.1.txt",4
@@ -202,39 +202,39 @@
 "HOXA10","Mus_musculus|M01306_1.94d|Berger08|Hoxa10_2318.1.txt; Mus_musculus|M01439_1.94d|Berger08|Hoxd10_2368.2.txt; Mus_musculus|M01349_1.94d|Berger08|Hoxc10_2779.2.txt; Mus_musculus|M01315_1.94d|Berger08|Hoxc11_3718.2.txt; Mus_musculus|M01423_1.94d|Berger08|Hoxa6_1040.1.txt; Drosophila_melanogaster|M01491_1.94d|BusserDevelopment2012|Ubx.txt",6
 "HOXA11","Mus_musculus|M01403_1.94d|Berger08|Hoxa11_2218.1.txt; Mus_musculus|M01422_1.94d|Berger08|Hoxd11_3873.1.txt; Mus_musculus|M01315_1.94d|Berger08|Hoxc11_3718.2.txt; PBM_CONSTRUCTS|M01600_1.94d|Berger08|Hoxd12_3481.1.txt; PBM_CONSTRUCTS|M01336_1.94d|Berger08|Hoxb9_3413.1.txt",5
 "HOXA13","Mus_musculus|M01402_1.94d|Berger08|Hoxa13_3126.1.txt; Mus_musculus|M01314_1.94d|Berger08|Hoxc13_3127.1.txt; Homo_sapiens|M01257_1.94d|Barrera2016|HOXD13_REF_R1.txt; Homo_sapiens|M01256_1.94d|Barrera2016|HOXD13_R306W_R2.txt; Homo_sapiens|M01252_1.94d|Barrera2016|HOXD13_I322L_R1.txt; Danio_rerio|M01211_1.94d|Zoo_01|2402.txt",6
-"HOXA2","Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Mus_musculus|M01466_1.94d|Berger08|Hoxa3_2783.2.txt; Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",5
+"HOXA2","Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt; Mus_musculus|M01465_1.94d|Badis09|Hoxa3_2783.2=v1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt",5
 "HOXA3","Mus_musculus|M01465_1.94d|Badis09|Hoxa3_2783.2=v1.txt; Mus_musculus|M01466_1.94d|Berger08|Hoxa3_2783.2.txt; Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
 "HOXA4","Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Mus_musculus|M01463_1.94d|Berger08|Hoxc4_3491.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
-"HOXA5","Mus_musculus|M01407_1.94d|Berger08|Hoxa5_3415.1.txt; Mus_musculus|M01409_1.94d|Berger08|Hoxb5_3122.2.txt; Mus_musculus|M01405_1.94d|Berger08|Hoxa7_2668.2.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
+"HOXA5","Mus_musculus|M01409_1.94d|Berger08|Hoxb5_3122.2.txt; Mus_musculus|M01407_1.94d|Berger08|Hoxa5_3415.1.txt; Mus_musculus|M01405_1.94d|Berger08|Hoxa7_2668.2.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
 "HOXA6","Mus_musculus|M01423_1.94d|Berger08|Hoxa6_1040.1.txt; Mus_musculus|M01406_1.94d|Berger08|Hoxa7_3750.1.txt; Mus_musculus|M01405_1.94d|Berger08|Hoxa7_2668.2.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",6
-"HOXA7","Mus_musculus|M01405_1.94d|Berger08|Hoxa7_2668.2.txt; Mus_musculus|M01406_1.94d|Berger08|Hoxa7_3750.1.txt; Mus_musculus|M01423_1.94d|Berger08|Hoxa6_1040.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",6
-"HOXA9","Mus_musculus|M01404_1.94d|Berger08|Hoxa9_2622.2.txt; PBM_CONSTRUCTS|M01336_1.94d|Berger08|Hoxb9_3413.1.txt; Mus_musculus|M01306_1.94d|Berger08|Hoxa10_2318.1.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt",6
+"HOXA7","Mus_musculus|M01406_1.94d|Berger08|Hoxa7_3750.1.txt; Mus_musculus|M01405_1.94d|Berger08|Hoxa7_2668.2.txt; Mus_musculus|M01423_1.94d|Berger08|Hoxa6_1040.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",6
+"HOXA9","Mus_musculus|M01404_1.94d|Berger08|Hoxa9_2622.2.txt; PBM_CONSTRUCTS|M01336_1.94d|Berger08|Hoxb9_3413.1.txt; Mus_musculus|M01306_1.94d|Berger08|Hoxa10_2318.1.txt; Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt",6
 "HOXB1","Mus_musculus|M01379_1.94d|Berger08|Hoxa1_3425.1.txt; Cupiennius_salei|M01605_1.94d|Zoo_01|2751.txt; Mus_musculus|M01421_1.94d|Berger08|Hoxd1_3448.1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt",6
-"HOXB13","Mus_musculus|M01435_1.94d|Berger08|Hoxb13_3479.1.txt; Homo_sapiens|M01268_1.94d|Zoo_01|1883.txt; Mus_musculus|M01402_1.94d|Berger08|Hoxa13_3126.1.txt; Homo_sapiens|M01256_1.94d|Barrera2016|HOXD13_R306W_R2.txt; Homo_sapiens|M01252_1.94d|Barrera2016|HOXD13_I322L_R1.txt; Danio_rerio|M01211_1.94d|Zoo_01|2402.txt",6
-"HOXB2","Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Mus_musculus|M01466_1.94d|Berger08|Hoxa3_2783.2.txt; Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt",5
+"HOXB13","Homo_sapiens|M01268_1.94d|Zoo_01|1883.txt; Mus_musculus|M01435_1.94d|Berger08|Hoxb13_3479.1.txt; Mus_musculus|M01402_1.94d|Berger08|Hoxa13_3126.1.txt; Homo_sapiens|M01252_1.94d|Barrera2016|HOXD13_I322L_R1.txt; Homo_sapiens|M01256_1.94d|Barrera2016|HOXD13_R306W_R2.txt; Danio_rerio|M01211_1.94d|Zoo_01|2402.txt",6
+"HOXB2","Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Mus_musculus|M01465_1.94d|Badis09|Hoxa3_2783.2=v1.txt; Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",5
 "HOXB3","Mus_musculus|M01434_1.94d|Berger08|Hoxb3_1720.2.txt; Mus_musculus|M01465_1.94d|Badis09|Hoxa3_2783.2=v1.txt; Mus_musculus|M01466_1.94d|Berger08|Hoxa3_2783.2.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
-"HOXB4","Mus_musculus|M01408_1.94d|Berger08|Hoxb4_2627.1.txt; Mus_musculus|M01463_1.94d|Berger08|Hoxc4_3491.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
+"HOXB4","Mus_musculus|M01408_1.94d|Berger08|Hoxb4_2627.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Mus_musculus|M01463_1.94d|Berger08|Hoxc4_3491.1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
 "HOXB5","Mus_musculus|M01407_1.94d|Berger08|Hoxa5_3415.1.txt; Mus_musculus|M01409_1.94d|Berger08|Hoxb5_3122.2.txt; Mus_musculus|M01405_1.94d|Berger08|Hoxa7_2668.2.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
 "HOXB6","Mus_musculus|M01405_1.94d|Berger08|Hoxa7_2668.2.txt; Mus_musculus|M01410_1.94d|Berger08|Hoxb7_3953.1.txt; Mus_musculus|M01423_1.94d|Berger08|Hoxa6_1040.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",6
-"HOXB7","Mus_musculus|M01410_1.94d|Berger08|Hoxb7_3953.1.txt; Mus_musculus|M01406_1.94d|Berger08|Hoxa7_3750.1.txt; Mus_musculus|M01405_1.94d|Berger08|Hoxa7_2668.2.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",6
+"HOXB7","Mus_musculus|M01410_1.94d|Berger08|Hoxb7_3953.1.txt; Mus_musculus|M01405_1.94d|Berger08|Hoxa7_2668.2.txt; Mus_musculus|M01406_1.94d|Berger08|Hoxa7_3750.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",6
 "HOXB8","Mus_musculus|M01316_1.94d|Berger08|Hoxc8_3429.2.txt; Mus_musculus|M01364_1.94d|Berger08|Hoxd8_2644.1.txt; Mus_musculus|M01448_1.94d|Berger08|Hoxb8_3780.2.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt",6
-"HOXB9","PBM_CONSTRUCTS|M01336_1.94d|Berger08|Hoxb9_3413.1.txt; Mus_musculus|M01404_1.94d|Berger08|Hoxa9_2622.2.txt; Mus_musculus|M01306_1.94d|Berger08|Hoxa10_2318.1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt",6
+"HOXB9","PBM_CONSTRUCTS|M01336_1.94d|Berger08|Hoxb9_3413.1.txt; Mus_musculus|M01404_1.94d|Berger08|Hoxa9_2622.2.txt; Mus_musculus|M01306_1.94d|Berger08|Hoxa10_2318.1.txt; Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt",6
 "HOXC10","Mus_musculus|M01349_1.94d|Berger08|Hoxc10_2779.2.txt; Mus_musculus|M01439_1.94d|Berger08|Hoxd10_2368.2.txt; Mus_musculus|M01306_1.94d|Berger08|Hoxa10_2318.1.txt; Mus_musculus|M01423_1.94d|Berger08|Hoxa6_1040.1.txt; Drosophila_melanogaster|M01491_1.94d|BusserDevelopment2012|Ubx.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt",6
 "HOXC11","Mus_musculus|M01315_1.94d|Berger08|Hoxc11_3718.2.txt; Mus_musculus|M01422_1.94d|Berger08|Hoxd11_3873.1.txt; Mus_musculus|M01403_1.94d|Berger08|Hoxa11_2218.1.txt; Drosophila_melanogaster|M01481_1.94d|BusserDevelopment2012|Abd-B.txt; PBM_CONSTRUCTS|M01600_1.94d|Berger08|Hoxd12_3481.1.txt",5
 "HOXC12","Mus_musculus|M01438_1.94d|Berger08|Hoxc12_3480.1.txt; PBM_CONSTRUCTS|M01600_1.94d|Berger08|Hoxd12_3481.1.txt; Heterodontus_francisci|M01601_1.94d|Zoo_01|2930.txt",3
 "HOXC13","Mus_musculus|M01314_1.94d|Berger08|Hoxc13_3127.1.txt; Mus_musculus|M01402_1.94d|Berger08|Hoxa13_3126.1.txt; Homo_sapiens|M01257_1.94d|Barrera2016|HOXD13_REF_R1.txt; Homo_sapiens|M01252_1.94d|Barrera2016|HOXD13_I322L_R1.txt; Homo_sapiens|M01256_1.94d|Barrera2016|HOXD13_R306W_R2.txt; Danio_rerio|M01211_1.94d|Zoo_01|2402.txt",6
-"HOXC4","Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Homo_sapiens|M01296_1.94d|Barrera2016|HOXC4_R158L_R1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",5
+"HOXC4","Homo_sapiens|M01296_1.94d|Barrera2016|HOXC4_R158L_R1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",5
 "HOXC5","Mus_musculus|M01350_1.94d|Berger08|Hoxc5_2630.2.txt; Mus_musculus|M01409_1.94d|Berger08|Hoxb5_3122.2.txt; Mus_musculus|M01407_1.94d|Berger08|Hoxa5_3415.1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
-"HOXC6","Mus_musculus|M01423_1.94d|Berger08|Hoxa6_1040.1.txt; Mus_musculus|M01405_1.94d|Berger08|Hoxa7_2668.2.txt; Mus_musculus|M01406_1.94d|Berger08|Hoxa7_3750.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",6
+"HOXC6","Mus_musculus|M01423_1.94d|Berger08|Hoxa6_1040.1.txt; Mus_musculus|M01406_1.94d|Berger08|Hoxa7_3750.1.txt; Mus_musculus|M01405_1.94d|Berger08|Hoxa7_2668.2.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",6
 "HOXC8","Mus_musculus|M01316_1.94d|Berger08|Hoxc8_3429.2.txt; Mus_musculus|M01448_1.94d|Berger08|Hoxb8_3780.2.txt; Mus_musculus|M01364_1.94d|Berger08|Hoxd8_2644.1.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt",6
 "HOXC9","Mus_musculus|M01404_1.94d|Berger08|Hoxa9_2622.2.txt; PBM_CONSTRUCTS|M01336_1.94d|Berger08|Hoxb9_3413.1.txt; Mus_musculus|M01306_1.94d|Berger08|Hoxa10_2318.1.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt",6
 "HOXD1","Mus_musculus|M01421_1.94d|Berger08|Hoxd1_3448.1.txt; Cupiennius_salei|M01605_1.94d|Zoo_01|2751.txt; Mus_musculus|M01379_1.94d|Berger08|Hoxa1_3425.1.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",5
-"HOXD10","Mus_musculus|M01439_1.94d|Berger08|Hoxd10_2368.2.txt; Mus_musculus|M01306_1.94d|Berger08|Hoxa10_2318.1.txt; Mus_musculus|M01349_1.94d|Berger08|Hoxc10_2779.2.txt; Mus_musculus|M01423_1.94d|Berger08|Hoxa6_1040.1.txt; Drosophila_melanogaster|M01491_1.94d|BusserDevelopment2012|Ubx.txt; Nematostella_vectensis|M01545_1.94d|Zoo_01|2473.txt",6
+"HOXD10","Mus_musculus|M01439_1.94d|Berger08|Hoxd10_2368.2.txt; Mus_musculus|M01349_1.94d|Berger08|Hoxc10_2779.2.txt; Mus_musculus|M01306_1.94d|Berger08|Hoxa10_2318.1.txt; Mus_musculus|M01423_1.94d|Berger08|Hoxa6_1040.1.txt; Drosophila_melanogaster|M01491_1.94d|BusserDevelopment2012|Ubx.txt; Nematostella_vectensis|M01545_1.94d|Zoo_01|2473.txt",6
 "HOXD11","Mus_musculus|M01422_1.94d|Berger08|Hoxd11_3873.1.txt; Mus_musculus|M01403_1.94d|Berger08|Hoxa11_2218.1.txt; Mus_musculus|M01315_1.94d|Berger08|Hoxc11_3718.2.txt; PBM_CONSTRUCTS|M01600_1.94d|Berger08|Hoxd12_3481.1.txt; Heterodontus_francisci|M01601_1.94d|Zoo_01|2930.txt",5
 "HOXD12","PBM_CONSTRUCTS|M01600_1.94d|Berger08|Hoxd12_3481.1.txt; Heterodontus_francisci|M01601_1.94d|Zoo_01|2930.txt; Mus_musculus|M01438_1.94d|Berger08|Hoxc12_3480.1.txt; Mus_musculus|M01315_1.94d|Berger08|Hoxc11_3718.2.txt",4
-"HOXD13","Homo_sapiens|M01256_1.94d|Barrera2016|HOXD13_R306W_R2.txt; Homo_sapiens|M01252_1.94d|Barrera2016|HOXD13_I322L_R1.txt; Homo_sapiens|M01258_1.94d|Barrera2016|HOXD13_S316C_R1.txt; Danio_rerio|M01211_1.94d|Zoo_01|2402.txt",4
+"HOXD13","Homo_sapiens|M01256_1.94d|Barrera2016|HOXD13_R306W_R2.txt; Homo_sapiens|M01258_1.94d|Barrera2016|HOXD13_S316C_R1.txt; Homo_sapiens|M01252_1.94d|Barrera2016|HOXD13_I322L_R1.txt; Danio_rerio|M01211_1.94d|Zoo_01|2402.txt",4
 "HOXD3","Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt; Mus_musculus|M01465_1.94d|Badis09|Hoxa3_2783.2=v1.txt; Mus_musculus|M01466_1.94d|Berger08|Hoxa3_2783.2.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
-"HOXD4","Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Mus_musculus|M01463_1.94d|Berger08|Hoxc4_3491.1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
+"HOXD4","Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Mus_musculus|M01463_1.94d|Berger08|Hoxc4_3491.1.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
 "HOXD8","Mus_musculus|M01364_1.94d|Berger08|Hoxd8_2644.1.txt; Mus_musculus|M01448_1.94d|Berger08|Hoxb8_3780.2.txt; Mus_musculus|M01316_1.94d|Berger08|Hoxc8_3429.2.txt; Homo_sapiens|M01297_1.94d|Barrera2016|HOXC4_REF_R1.txt; Homo_sapiens|M01295_1.94d|Barrera2016|HOXC4_N178S_R1.txt; Drosophila_melanogaster|M01492_1.94d|Zoo_01|760.txt",6
 "HOXD9","Mus_musculus|M01404_1.94d|Berger08|Hoxa9_2622.2.txt; PBM_CONSTRUCTS|M01336_1.94d|Berger08|Hoxb9_3413.1.txt; Mus_musculus|M01306_1.94d|Berger08|Hoxa10_2318.1.txt; Mus_musculus|M01307_1.94d|Berger08|Hoxa4_3426.1.txt; Mus_musculus|M01464_1.94d|Berger08|Hoxd3_1742.2.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",6
 "HSF2","Danio_rerio|M01715_1.94d|Zoo_01|6339.txt",1
@@ -249,13 +249,13 @@
 "IRX1","Mus_musculus|M01382_1.94d|Berger08|Irx3_0920.1.txt; Mus_musculus|M01383_1.94d|Berger08|Irx3_2226.1.txt; Mus_musculus|M01384_1.94d|Berger08|Irx5_2385.1.txt; Oikopleura_dioica|M01642_1.94d|Zoo_01|2344.txt; Caenorhabditis_briggsae|M01191_1.94d|Zoo_01|2800.txt",5
 "IRX2","Mus_musculus|M01311_1.94d|Berger08|Irx2_0900.3.txt; Mus_musculus|M01384_1.94d|Berger08|Irx5_2385.1.txt; Mus_musculus|M01383_1.94d|Berger08|Irx3_2226.1.txt; Oikopleura_dioica|M01642_1.94d|Zoo_01|2344.txt; Caenorhabditis_briggsae|M01191_1.94d|Zoo_01|2800.txt",5
 "IRX3","Mus_musculus|M01382_1.94d|Berger08|Irx3_0920.1.txt; Mus_musculus|M01383_1.94d|Berger08|Irx3_2226.1.txt; Mus_musculus|M01384_1.94d|Berger08|Irx5_2385.1.txt; Oikopleura_dioica|M01642_1.94d|Zoo_01|2344.txt; Caenorhabditis_briggsae|M01191_1.94d|Zoo_01|2800.txt",5
-"IRX4","Mus_musculus|M01383_1.94d|Berger08|Irx3_2226.1.txt; Mus_musculus|M01382_1.94d|Berger08|Irx3_0920.1.txt; Mus_musculus|M01384_1.94d|Berger08|Irx5_2385.1.txt; Oikopleura_dioica|M01642_1.94d|Zoo_01|2344.txt; Caenorhabditis_briggsae|M01191_1.94d|Zoo_01|2800.txt",5
+"IRX4","Mus_musculus|M01382_1.94d|Berger08|Irx3_0920.1.txt; Mus_musculus|M01383_1.94d|Berger08|Irx3_2226.1.txt; Mus_musculus|M01384_1.94d|Berger08|Irx5_2385.1.txt; Oikopleura_dioica|M01642_1.94d|Zoo_01|2344.txt; Caenorhabditis_briggsae|M01191_1.94d|Zoo_01|2800.txt",5
 "IRX5","Mus_musculus|M01311_1.94d|Berger08|Irx2_0900.3.txt; Mus_musculus|M01384_1.94d|Berger08|Irx5_2385.1.txt; Mus_musculus|M01383_1.94d|Berger08|Irx3_2226.1.txt; Oikopleura_dioica|M01642_1.94d|Zoo_01|2344.txt; Caenorhabditis_briggsae|M01191_1.94d|Zoo_01|2800.txt",5
-"IRX6","Mus_musculus|M01383_1.94d|Berger08|Irx3_2226.1.txt; Mus_musculus|M01382_1.94d|Berger08|Irx3_0920.1.txt; Mus_musculus|M01384_1.94d|Berger08|Irx5_2385.1.txt; Oikopleura_dioica|M01642_1.94d|Zoo_01|2344.txt; Caenorhabditis_briggsae|M01191_1.94d|Zoo_01|2800.txt",5
-"ISX","Homo_sapiens|M01284_1.94d|Barrera2016|ISX_REF_R1.txt; Homo_sapiens|M01283_1.94d|Barrera2016|ISX_R83Q_R1.txt; Mus_musculus|M01381_1.94d|Berger08|Isx_3445.1.txt; Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt",5
-"JDP2","Mus_musculus|M00397_1.94d|Badis09|Jundm2_0911.3=v1.txt; Mus_musculus|M00393_1.94d|DREAM_contest|1967.txt; Mus_musculus|M00394_1.94d|Zoo_01|1351.txt",3
+"IRX6","Mus_musculus|M01382_1.94d|Berger08|Irx3_0920.1.txt; Mus_musculus|M01383_1.94d|Berger08|Irx3_2226.1.txt; Mus_musculus|M01384_1.94d|Berger08|Irx5_2385.1.txt; Oikopleura_dioica|M01642_1.94d|Zoo_01|2344.txt; Caenorhabditis_briggsae|M01191_1.94d|Zoo_01|2800.txt",5
+"ISX","Homo_sapiens|M01283_1.94d|Barrera2016|ISX_R83Q_R1.txt; Homo_sapiens|M01284_1.94d|Barrera2016|ISX_REF_R1.txt; Mus_musculus|M01381_1.94d|Berger08|Isx_3445.1.txt; Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt",5
+"JDP2","Mus_musculus|M00397_1.94d|Badis09|Jundm2_0911.3=v1.txt; Mus_musculus|M00394_1.94d|Zoo_01|1351.txt; Mus_musculus|M00393_1.94d|DREAM_contest|1967.txt",3
 "KDM2B","Homo_sapiens|M00877_1.94d|Zoo_01|6494.txt",1
-"KLF1","Homo_sapiens|M00554_1.94d|Barrera2016|KLF1_REF_R1.txt; Homo_sapiens|M00551_1.94d|Barrera2016|KLF1_E325K_R1.txt; Mus_musculus|M00600_1.94d|Badis09|Klf7_0974.2=v1.txt; Mus_musculus|M00616_1.94d|DREAM_contest|665.txt",4
+"KLF1","Homo_sapiens|M00551_1.94d|Barrera2016|KLF1_E325K_R1.txt; Homo_sapiens|M00554_1.94d|Barrera2016|KLF1_REF_R1.txt; Mus_musculus|M00600_1.94d|Badis09|Klf7_0974.2=v1.txt; Mus_musculus|M00616_1.94d|DREAM_contest|665.txt",4
 "KLF12","Mus_musculus|M00639_1.94d|DREAM_contest|586.txt; Mus_musculus|M00616_1.94d|DREAM_contest|665.txt; Mus_musculus|M00600_1.94d|Badis09|Klf7_0974.2=v1.txt; Homo_sapiens|M00551_1.94d|Barrera2016|KLF1_E325K_R1.txt",4
 "KLF13","Mus_musculus|M00610_1.94d|DREAM_contest|595.txt",1
 "KLF14","Mus_musculus|M00610_1.94d|DREAM_contest|595.txt",1
@@ -273,10 +273,10 @@
 "LCOR","Meleagris_gallopavo|M02074_1.94d|Zoo_01|5864.txt; Xenopus_tropicalis|M02080_1.94d|Zoo_01|5534.txt; Anolis_carolinensis|M02070_1.94d|Zoo_01|6523.txt; Oryzias_latipes|M02075_1.94d|Zoo_01|6790.txt",4
 "LEF1","Mus_musculus|M02164_1.94d|Badis09|Lef1_3504.1=v1.txt; Mus_musculus|M02162_1.94d|Badis09|Tcf7l2_3461.1=v1.txt; Mus_musculus|M02156_1.94d|Badis09|Tcf7_0950.2=v2.txt",3
 "LHX1","Mus_musculus|M01331_1.94d|Berger08|Lhx1_2240.2.txt; Mus_musculus|M01374_1.94d|Berger08|Lhx5_2279.1.txt; Mus_musculus|M01363_1.94d|Berger08|Lhx3_3431.1.txt",3
-"LHX2","Mus_musculus|M01304_1.94d|Berger08|Lhx2_0953.2.txt; Homo_sapiens|M01233_1.94d|Zoo_01|1899.txt; Mus_musculus|M01332_1.94d|Berger08|Lhx9_3492.1.txt",3
+"LHX2","Homo_sapiens|M01233_1.94d|Zoo_01|1899.txt; Mus_musculus|M01332_1.94d|Berger08|Lhx9_3492.1.txt; Mus_musculus|M01304_1.94d|Berger08|Lhx2_0953.2.txt",3
 "LHX3","Mus_musculus|M01363_1.94d|Berger08|Lhx3_3431.1.txt; Mus_musculus|M01358_1.94d|Berger08|Lhx4_1719.2.txt; Drosophila_melanogaster|M01488_1.94d|Zoo_01|2902.txt; Mus_musculus|M01374_1.94d|Berger08|Lhx5_2279.1.txt; Mus_musculus|M01331_1.94d|Berger08|Lhx1_2240.2.txt",5
-"LHX4","Mus_musculus|M01358_1.94d|Berger08|Lhx4_1719.2.txt; Mus_musculus|M01363_1.94d|Berger08|Lhx3_3431.1.txt; Drosophila_melanogaster|M01488_1.94d|Zoo_01|2902.txt; Mus_musculus|M01374_1.94d|Berger08|Lhx5_2279.1.txt; Mus_musculus|M01331_1.94d|Berger08|Lhx1_2240.2.txt",5
-"LHX5","Mus_musculus|M01331_1.94d|Berger08|Lhx1_2240.2.txt; Mus_musculus|M01374_1.94d|Berger08|Lhx5_2279.1.txt; Mus_musculus|M01363_1.94d|Berger08|Lhx3_3431.1.txt",3
+"LHX4","Mus_musculus|M01358_1.94d|Berger08|Lhx4_1719.2.txt; Mus_musculus|M01363_1.94d|Berger08|Lhx3_3431.1.txt; Drosophila_melanogaster|M01488_1.94d|Zoo_01|2902.txt; Mus_musculus|M01331_1.94d|Berger08|Lhx1_2240.2.txt; Mus_musculus|M01374_1.94d|Berger08|Lhx5_2279.1.txt",5
+"LHX5","Mus_musculus|M01374_1.94d|Berger08|Lhx5_2279.1.txt; Mus_musculus|M01331_1.94d|Berger08|Lhx1_2240.2.txt; Mus_musculus|M01363_1.94d|Berger08|Lhx3_3431.1.txt",3
 "LHX6","Homo_sapiens|M01234_1.94d|Zoo_01|2969.txt; Mus_musculus|M01362_1.94d|Berger08|Lhx6_2272.1.txt; PBM_CONSTRUCTS|M01602_1.94d|Berger08|Lhx6_3432.1.txt; Drosophila_melanogaster|M01498_1.94d|Zoo_01|1865.txt",4
 "LHX8","Mus_musculus|M01468_1.94d|Berger08|Lhx8_2247.2.txt; PBM_CONSTRUCTS|M01602_1.94d|Berger08|Lhx6_3432.1.txt; Mus_musculus|M01362_1.94d|Berger08|Lhx6_2272.1.txt",3
 "LHX9","Homo_sapiens|M01233_1.94d|Zoo_01|1899.txt; Mus_musculus|M01332_1.94d|Berger08|Lhx9_3492.1.txt; Mus_musculus|M01304_1.94d|Berger08|Lhx2_0953.2.txt",3
@@ -294,14 +294,14 @@
 "MEIS3","Mus_musculus|M01417_1.94d|Berger08|Mrg2_2302.1.txt; Mus_musculus|M01333_1.94d|Berger08|Meis1_2335.1.txt; Mus_musculus|M01365_1.94d|Berger08|Mrg1_2246.2.txt",3
 "MEOX1","Mus_musculus|M01309_1.94d|Berger08|Meox1_2310.2.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",2
 "MEOX2","Mus_musculus|M01309_1.94d|Berger08|Meox1_2310.2.txt; Mus_musculus|M01329_1.94d|Berger08|Hoxa2_3079.1.txt",2
-"MITF","Homo_sapiens|NA|Unpublished|MITF.txt; Mus_musculus|M00255_1.94d|Zoo_01|1347.txt; Mus_musculus|M00221_1.94d|Zoo_01|1600.txt; Mus_musculus|M00240_1.94d|Zoo_01|1369.txt; Mus_musculus|M00248_1.94d|DREAM_contest|1399.txt; Mus_musculus|M00249_1.94d|Zoo_01|1356.txt",6
+"MITF","Mus_musculus|M00255_1.94d|Zoo_01|1347.txt; Homo_sapiens|NA|Unpublished|MITF.txt; Mus_musculus|M00221_1.94d|Zoo_01|1600.txt; Mus_musculus|M00240_1.94d|Zoo_01|1369.txt; Mus_musculus|M00249_1.94d|Zoo_01|1356.txt; Mus_musculus|M00248_1.94d|DREAM_contest|1399.txt",6
 "MLX","Mus_musculus|M00228_1.94d|DREAM_contest|1971.txt; Mus_musculus|M00229_1.94d|Zoo_01|1361.txt",2
 "MLXIP","Mus_musculus|M00258_1.94d|Zoo_01|1283.txt",1
 "MLXIPL","Mus_musculus|M00258_1.94d|Zoo_01|1283.txt",1
-"MNX1","Mus_musculus|M01313_1.94d|Berger08|Hlxb9_3422.1.txt; Mus_musculus|M01457_1.94d|Berger08|Gbx1_2883.2.txt; Mus_musculus|M01391_1.94d|Berger08|Gbx2_3110.1.txt",3
+"MNX1","Mus_musculus|M01313_1.94d|Berger08|Hlxb9_3422.1.txt; Mus_musculus|M01391_1.94d|Berger08|Gbx2_3110.1.txt; Mus_musculus|M01457_1.94d|Berger08|Gbx1_2883.2.txt",3
 "MSC","Mus_musculus|M00242_1.94d|Zoo_01|231.txt",1
 "MSX1","Mus_musculus|M01430_1.94d|Berger08|Msx1_3031.2.txt; Mus_musculus|M01357_1.94d|Berger08|Msx3_3206.1.txt; Homo_sapiens|M01248_1.94d|Barrera2016|MSX2_REF_R2.txt; Drosophila_melanogaster|M01483_1.94d|BusserDevelopment2012|Msh.txt",4
-"MSX2","Homo_sapiens|M01248_1.94d|Barrera2016|MSX2_REF_R2.txt; Homo_sapiens|M01247_1.94d|Barrera2016|MSX2_R172H_R1.txt; Mus_musculus|M01341_1.94d|Berger08|Msx2_3449.1.txt; Drosophila_melanogaster|M01483_1.94d|BusserDevelopment2012|Msh.txt",4
+"MSX2","Homo_sapiens|M01247_1.94d|Barrera2016|MSX2_R172H_R1.txt; Homo_sapiens|M01248_1.94d|Barrera2016|MSX2_REF_R2.txt; Mus_musculus|M01341_1.94d|Berger08|Msx2_3449.1.txt; Drosophila_melanogaster|M01483_1.94d|BusserDevelopment2012|Msh.txt",4
 "MXD1","Homo_sapiens|NA|Shen2018|MXD1-MAX.txt",1
 "MXD3","Homo_sapiens|NA|Shen2018|MXD1-MAX.txt",1
 "MXD4","Homo_sapiens|NA|Shen2018|MXD1-MAX.txt",1
@@ -312,10 +312,10 @@
 "MYC","Homo_sapiens|NA|Shen2018|MYC-MAX.txt",1
 "MYCL","Homo_sapiens|NA|Shen2018|MYC-MAX.txt",1
 "MYCN","Homo_sapiens|NA|Shen2018|MYC-MAX.txt",1
-"MYF5","Mus_musculus|M00256_1.94d|Badis09|Myf6_3824.2=v2.txt; Caenorhabditis_elegans|M00278_1.94d|DeMasi2011|HLH-1_rep2.txt; Caenorhabditis_elegans|M00277_1.94d|DeMasi2011|HLH-1_L13V_rep1.txt; Caenorhabditis_elegans|M00276_1.94d|DeMasi2011|HLH-1_L13T_rep2.txt; Caenorhabditis_elegans|M00275_1.94d|DeMasi2011|HLH-1_L13R_rep2.txt",5
-"MYF6","Mus_musculus|M00256_1.94d|Badis09|Myf6_3824.2=v2.txt; Caenorhabditis_elegans|M00278_1.94d|DeMasi2011|HLH-1_rep2.txt; Caenorhabditis_elegans|M00277_1.94d|DeMasi2011|HLH-1_L13V_rep1.txt; Caenorhabditis_elegans|M00276_1.94d|DeMasi2011|HLH-1_L13T_rep2.txt; Caenorhabditis_elegans|M00275_1.94d|DeMasi2011|HLH-1_L13R_rep2.txt",5
+"MYF5","Mus_musculus|M00256_1.94d|Badis09|Myf6_3824.2=v2.txt; Caenorhabditis_elegans|M00278_1.94d|DeMasi2011|HLH-1_rep2.txt; Caenorhabditis_elegans|M00276_1.94d|DeMasi2011|HLH-1_L13T_rep2.txt; Caenorhabditis_elegans|M00275_1.94d|DeMasi2011|HLH-1_L13R_rep2.txt; Caenorhabditis_elegans|M00277_1.94d|DeMasi2011|HLH-1_L13V_rep1.txt",5
+"MYF6","Mus_musculus|M00256_1.94d|Badis09|Myf6_3824.2=v2.txt; Caenorhabditis_elegans|M00278_1.94d|DeMasi2011|HLH-1_rep2.txt; Caenorhabditis_elegans|M00276_1.94d|DeMasi2011|HLH-1_L13T_rep2.txt; Caenorhabditis_elegans|M00275_1.94d|DeMasi2011|HLH-1_L13R_rep2.txt; Caenorhabditis_elegans|M00277_1.94d|DeMasi2011|HLH-1_L13V_rep1.txt",5
 "MYOD1","Mus_musculus|M00256_1.94d|Badis09|Myf6_3824.2=v2.txt; Caenorhabditis_elegans|M00278_1.94d|DeMasi2011|HLH-1_rep2.txt; Caenorhabditis_elegans|M00277_1.94d|DeMasi2011|HLH-1_L13V_rep1.txt; Caenorhabditis_elegans|M00276_1.94d|DeMasi2011|HLH-1_L13T_rep2.txt; Caenorhabditis_elegans|M00275_1.94d|DeMasi2011|HLH-1_L13R_rep2.txt",5
-"MYOG","Mus_musculus|M00256_1.94d|Badis09|Myf6_3824.2=v2.txt; Caenorhabditis_elegans|M00278_1.94d|DeMasi2011|HLH-1_rep2.txt; Caenorhabditis_elegans|M00277_1.94d|DeMasi2011|HLH-1_L13V_rep1.txt; Caenorhabditis_elegans|M00275_1.94d|DeMasi2011|HLH-1_L13R_rep2.txt; Caenorhabditis_elegans|M00276_1.94d|DeMasi2011|HLH-1_L13T_rep2.txt",5
+"MYOG","Mus_musculus|M00256_1.94d|Badis09|Myf6_3824.2=v2.txt; Caenorhabditis_elegans|M00278_1.94d|DeMasi2011|HLH-1_rep2.txt; Caenorhabditis_elegans|M00276_1.94d|DeMasi2011|HLH-1_L13T_rep2.txt; Caenorhabditis_elegans|M00275_1.94d|DeMasi2011|HLH-1_L13R_rep2.txt; Caenorhabditis_elegans|M00277_1.94d|DeMasi2011|HLH-1_L13V_rep1.txt",5
 "MYPOP","Mus_musculus|M01858_1.94d|DREAM_contest|1978.txt",1
 "MYRF","Homo_sapiens|M01967_1.94d|Zoo_01|6974.txt; Mus_musculus|M01968_1.94d|Zoo_01|5531.txt; Danio_rerio|M01966_1.94d|Zoo_01|5956.txt",3
 "MYT1L","Caenorhabditis_elegans|M00842_1.94d|CEPD|8672.txt",1
@@ -332,21 +332,23 @@
 "NEUROG3","Mus_musculus|M00264_1.94d|Zoo_01|1372.txt; Mus_musculus|M00272_1.94d|Zoo_01|1349.txt",2
 "NFAT5","Gallus_gallus|M02090_1.94d|Zoo_01|6782.txt",1
 "NFATC1","Monodelphis_domestica|M02092_1.94d|Zoo_01|5474.txt; Meleagris_gallopavo|M02091_1.94d|Zoo_01|5293.txt; Xenopus_tropicalis|M02094_1.94d|Zoo_01|5846.txt; Homo_sapiens|M02087_1.94d|Zoo_01|7696.txt",4
-"NFATC2","Homo_sapiens|M02089_1.94d|Zoo_01|7328.txt; Meleagris_gallopavo|M02091_1.94d|Zoo_01|5293.txt; Monodelphis_domestica|M02092_1.94d|Zoo_01|5474.txt; Xenopus_tropicalis|M02094_1.94d|Zoo_01|5846.txt; Homo_sapiens|M02087_1.94d|Zoo_01|7696.txt",5
-"NFATC3","Homo_sapiens|M02087_1.94d|Zoo_01|7696.txt; Xenopus_tropicalis|M02094_1.94d|Zoo_01|5846.txt; Monodelphis_domestica|M02092_1.94d|Zoo_01|5474.txt",3
+"NFATC2","Homo_sapiens|M02089_1.94d|Zoo_01|7328.txt; Meleagris_gallopavo|M02091_1.94d|Zoo_01|5293.txt; Xenopus_tropicalis|M02094_1.94d|Zoo_01|5846.txt; Monodelphis_domestica|M02092_1.94d|Zoo_01|5474.txt; Homo_sapiens|M02087_1.94d|Zoo_01|7696.txt",5
+"NFATC3","Homo_sapiens|M02087_1.94d|Zoo_01|7696.txt; Monodelphis_domestica|M02092_1.94d|Zoo_01|5474.txt; Xenopus_tropicalis|M02094_1.94d|Zoo_01|5846.txt",3
 "NFATC4","Homo_sapiens|M02087_1.94d|Zoo_01|7696.txt; Monodelphis_domestica|M02092_1.94d|Zoo_01|5474.txt; Meleagris_gallopavo|M02091_1.94d|Zoo_01|5293.txt; Xenopus_tropicalis|M02094_1.94d|Zoo_01|5846.txt",4
 "NFIL3","Mus_musculus|M00417_1.94d|Zoo_01|1293.txt; Mus_musculus|M00452_1.94d|DREAM_contest|1445.txt",2
+"NFKB1","Homo_sapiens|NA|Unpublished|RELA.txt",1
+"NFKB2","Homo_sapiens|NA|Unpublished|RELA.txt",1
 "NKX1-1","Mus_musculus|M01370_1.94d|Berger08|Nkx1-1_3856.3.txt; Mus_musculus|M01433_1.94d|Berger08|Nkx1-2_3214.1.txt; Drosophila_melanogaster|M01489_1.94d|BusserDevelopment2012|Slou.txt",3
 "NKX1-2","Mus_musculus|M01433_1.94d|Berger08|Nkx1-2_3214.1.txt; Mus_musculus|M01370_1.94d|Berger08|Nkx1-1_3856.3.txt; Drosophila_melanogaster|M01489_1.94d|BusserDevelopment2012|Slou.txt",3
-"NKX2-1","Mus_musculus|M01445_1.94d|Berger08|Nkx2-4_3074.1.txt; Mus_musculus|M01310_1.94d|Berger08|Titf1_1722.2.txt; Mus_musculus|M01366_1.94d|Berger08|Nkx2-2_2823.1.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Mus_musculus|M01452_1.94d|DREAM_contest|1441.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt",6
-"NKX2-2","Mus_musculus|M01366_1.94d|Berger08|Nkx2-2_2823.1.txt; Homo_sapiens|M01261_1.94d|Barrera2016|NKX2-8_REF_R1.txt; Mus_musculus|M01452_1.94d|DREAM_contest|1441.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt",6
-"NKX2-3","Mus_musculus|M01426_1.94d|Berger08|Nkx2-3_3435.1.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Mus_musculus|M01330_1.94d|Berger08|Nkx2-5_3436.1.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt",5
+"NKX2-1","Mus_musculus|M01310_1.94d|Berger08|Titf1_1722.2.txt; Mus_musculus|M01445_1.94d|Berger08|Nkx2-4_3074.1.txt; Mus_musculus|M01366_1.94d|Berger08|Nkx2-2_2823.1.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Mus_musculus|M01452_1.94d|DREAM_contest|1441.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt",6
+"NKX2-2","Mus_musculus|M01366_1.94d|Berger08|Nkx2-2_2823.1.txt; Mus_musculus|M01452_1.94d|DREAM_contest|1441.txt; Homo_sapiens|M01261_1.94d|Barrera2016|NKX2-8_REF_R1.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt",6
+"NKX2-3","Mus_musculus|M01426_1.94d|Berger08|Nkx2-3_3435.1.txt; Mus_musculus|M01330_1.94d|Berger08|Nkx2-5_3436.1.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt",5
 "NKX2-4","Mus_musculus|M01310_1.94d|Berger08|Titf1_1722.2.txt; Mus_musculus|M01445_1.94d|Berger08|Nkx2-4_3074.1.txt; Mus_musculus|M01366_1.94d|Berger08|Nkx2-2_2823.1.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Mus_musculus|M01452_1.94d|DREAM_contest|1441.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt",6
-"NKX2-5","Homo_sapiens|M01286_1.94d|Barrera2016|NKX2-5_R161P_R1.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Homo_sapiens|M01287_1.94d|Barrera2016|NKX2-5_R190C_R1.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt",5
+"NKX2-5","Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Homo_sapiens|M01287_1.94d|Barrera2016|NKX2-5_R190C_R1.txt; Homo_sapiens|M01286_1.94d|Barrera2016|NKX2-5_R161P_R1.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt",5
 "NKX2-6","Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt; Mus_musculus|M01426_1.94d|Berger08|Nkx2-3_3435.1.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt",4
-"NKX2-8","Homo_sapiens|M01261_1.94d|Barrera2016|NKX2-8_REF_R1.txt; Homo_sapiens|M01260_1.94d|Barrera2016|NKX2-8_A94T_R1.txt; Mus_musculus|M01452_1.94d|DREAM_contest|1441.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt",6
-"NKX3-1","Mus_musculus|M01348_1.94d|Berger08|Nkx3-1_2923.2.txt; Mus_musculus|M01347_1.94d|Badis09|Nkx3-1_2923.2=v2.txt; Mus_musculus|M01436_1.94d|Berger08|Bapx1_2343.1.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt",5
-"NKX3-2","Mus_musculus|M01436_1.94d|Berger08|Bapx1_2343.1.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt; Drosophila_melanogaster|M01495_1.94d|Zoo_01|2333.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt",5
+"NKX2-8","Homo_sapiens|M01260_1.94d|Barrera2016|NKX2-8_A94T_R1.txt; Homo_sapiens|M01261_1.94d|Barrera2016|NKX2-8_REF_R1.txt; Mus_musculus|M01452_1.94d|DREAM_contest|1441.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt",6
+"NKX3-1","Mus_musculus|M01347_1.94d|Badis09|Nkx3-1_2923.2=v2.txt; Mus_musculus|M01348_1.94d|Berger08|Nkx3-1_2923.2.txt; Mus_musculus|M01436_1.94d|Berger08|Bapx1_2343.1.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt",5
+"NKX3-2","Mus_musculus|M01436_1.94d|Berger08|Bapx1_2343.1.txt; Drosophila_melanogaster|M01495_1.94d|Zoo_01|2333.txt; Drosophila_melanogaster|M01494_1.94d|BusserDevelopment2012|Bap.txt; Homo_sapiens|M01288_1.94d|Barrera2016|NKX2-5_REF_R1.txt; Mus_musculus|M01425_1.94d|Berger08|Nkx2-6_3437.1.txt",5
 "NKX6-1","Mus_musculus|M01395_1.94d|Berger08|Nkx6-1_2825.1.txt; PBM_CONSTRUCTS|M01454_1.94d|Berger08|Nkx6-3_3446.1.txt",2
 "NKX6-2","Mus_musculus|M01395_1.94d|Berger08|Nkx6-1_2825.1.txt; PBM_CONSTRUCTS|M01454_1.94d|Berger08|Nkx6-3_3446.1.txt",2
 "NKX6-3","PBM_CONSTRUCTS|M01454_1.94d|Berger08|Nkx6-3_3446.1.txt; Mus_musculus|M01395_1.94d|Berger08|Nkx6-1_2825.1.txt",2
@@ -355,8 +357,8 @@
 "NPAS2","Mus_musculus|M00247_1.94d|Zoo_01|128.txt",1
 "NR1H4","Homo_sapiens|M01981_1.94d|Barrera2016|NR1H4_REF_R1.txt",1
 "NR2C1","Mus_musculus|M01995_1.94d|Zoo_01|1413.txt; Mus_musculus|M01994_1.94d|DREAM_contest|573.txt; Brugia_pahangi|M02058_1.94d|Zoo_01|2348.txt",3
-"NR2C2","Mus_musculus|M01994_1.94d|DREAM_contest|573.txt; Mus_musculus|M01995_1.94d|Zoo_01|1413.txt; Brugia_pahangi|M02058_1.94d|Zoo_01|2348.txt; Schistosoma_mansoni|M02024_1.94d|Zoo_01|2432.txt",4
-"NR2E1","Homo_sapiens|M01982_1.94d|Zoo_01|2757.txt; Mus_musculus|M02001_1.94d|DREAM_contest|661.txt; Pan_paniscus|M02055_1.94d|Zoo_01|1007.txt",3
+"NR2C2","Mus_musculus|M01995_1.94d|Zoo_01|1413.txt; Mus_musculus|M01994_1.94d|DREAM_contest|573.txt; Brugia_pahangi|M02058_1.94d|Zoo_01|2348.txt; Schistosoma_mansoni|M02024_1.94d|Zoo_01|2432.txt",4
+"NR2E1","Mus_musculus|M02001_1.94d|DREAM_contest|661.txt; Pan_paniscus|M02055_1.94d|Zoo_01|1007.txt; Homo_sapiens|M01982_1.94d|Zoo_01|2757.txt",3
 "NR2E3","Homo_sapiens|M01986_1.94d|Barrera2016|NR2E3_G56R_R1.txt; Homo_sapiens|M01988_1.94d|Barrera2016|NR2E3_R76W_R1.txt",2
 "NR2F1","Mus_musculus|M02014_1.94d|DREAM_contest|1461.txt; Mus_musculus|M02008_1.94d|Badis09|Nr2f2_2192.2=v2.txt; Bombyx_mori|M02022_1.94d|Zoo_01|1006.txt; Mus_musculus|M01993_1.94d|DREAM_contest|578.txt",4
 "NR2F2","Mus_musculus|M02008_1.94d|Badis09|Nr2f2_2192.2=v2.txt; Mus_musculus|M02014_1.94d|DREAM_contest|1461.txt; Bombyx_mori|M02022_1.94d|Zoo_01|1006.txt; Mus_musculus|M01993_1.94d|DREAM_contest|578.txt",4
@@ -376,16 +378,16 @@
 "ONECUT3","Caenorhabditis_elegans|M00870_1.94d|Zoo_01|6208.txt",1
 "OSR1","Mus_musculus|M00626_1.94d|Badis09|Osr1_3033.2=v1.txt; Mus_musculus|M00590_1.94d|Badis09|Osr2_1727.2=v1.txt; Caenorhabditis_elegans|M00697_1.94d|CEPD|8648.txt",3
 "OSR2","Mus_musculus|M00590_1.94d|Badis09|Osr2_1727.2=v1.txt; Mus_musculus|M00626_1.94d|Badis09|Osr1_3033.2=v1.txt; Caenorhabditis_elegans|M00697_1.94d|CEPD|8648.txt",3
-"OTP","Mus_musculus|M01344_1.94d|Berger08|Otp_3496.1.txt; Mus_musculus|M01327_1.94d|Berger08|Phox2b_3948.1.txt; Mus_musculus|M01325_1.94d|Berger08|Phox2a_3947.1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Homo_sapiens|M01294_1.94d|Zoo_01|2013.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt",6
+"OTP","Mus_musculus|M01344_1.94d|Berger08|Otp_3496.1.txt; Mus_musculus|M01325_1.94d|Berger08|Phox2a_3947.1.txt; Mus_musculus|M01327_1.94d|Berger08|Phox2b_3948.1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Homo_sapiens|M01294_1.94d|Zoo_01|2013.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt",6
 "OTX1","Mus_musculus|M01321_1.94d|Berger08|Otx1_2325.1.txt; Mus_musculus|M01345_1.94d|Berger08|Otx2_3441.1.txt; Homo_sapiens|M01228_1.94d|Barrera2016|CRX_V66I_R1.txt; Homo_sapiens|M01227_1.94d|Barrera2016|CRX_REF_R1.txt; Mus_musculus|M01344_1.94d|Berger08|Otp_3496.1.txt",5
 "OTX2","Mus_musculus|M01345_1.94d|Berger08|Otx2_3441.1.txt; Mus_musculus|M01321_1.94d|Berger08|Otx1_2325.1.txt; Homo_sapiens|M01228_1.94d|Barrera2016|CRX_V66I_R1.txt; Homo_sapiens|M01227_1.94d|Barrera2016|CRX_REF_R1.txt; Mus_musculus|M01344_1.94d|Berger08|Otp_3496.1.txt",5
 "OVOL1","Caenorhabditis_elegans|M00693_1.94d|CEPD|7898.txt",1
-"OVOL2","Homo_sapiens|M00563_1.94d|Barrera2016|OVOL2_REF_R1.txt; Homo_sapiens|M00562_1.94d|Barrera2016|OVOL2_D228E_R1.txt",2
+"OVOL2","Homo_sapiens|M00562_1.94d|Barrera2016|OVOL2_D228E_R1.txt; Homo_sapiens|M00563_1.94d|Barrera2016|OVOL2_REF_R1.txt",2
 "PAX2","Xenopus_tropicalis|M02063_1.94d|Zoo_01|5729.txt; Danio_rerio|M02061_1.94d|Zoo_01|5899.txt; Caenorhabditis_elegans|M02066_1.94d|CEPD|10189.txt",3
-"PAX3","Homo_sapiens|M01662_1.94d|Barrera2016|PAX3_G48R_R1.txt; Homo_sapiens|M01665_1.94d|Barrera2016|PAX3_P50L_R1.txt; Homo_sapiens|M01663_1.94d|Barrera2016|PAX3_N47H_R1.txt; Mus_musculus|M01671_1.94d|Berger08|Pax7_3783.1.txt",4
-"PAX4","Homo_sapiens|M01661_1.94d|Barrera2016|PAX4_REF_R3.txt; Homo_sapiens|M01659_1.94d|Barrera2016|PAX4_R192S_R1.txt; Homo_sapiens|M01658_1.94d|Barrera2016|PAX4_R192H_R1.txt; Mus_musculus|M01672_1.94d|Berger08|Pax4_3989.2.txt",4
+"PAX3","Homo_sapiens|M01665_1.94d|Barrera2016|PAX3_P50L_R1.txt; Homo_sapiens|M01663_1.94d|Barrera2016|PAX3_N47H_R1.txt; Homo_sapiens|M01662_1.94d|Barrera2016|PAX3_G48R_R1.txt; Mus_musculus|M01671_1.94d|Berger08|Pax7_3783.1.txt",4
+"PAX4","Homo_sapiens|M01659_1.94d|Barrera2016|PAX4_R192S_R1.txt; Homo_sapiens|M01658_1.94d|Barrera2016|PAX4_R192H_R1.txt; Homo_sapiens|M01661_1.94d|Barrera2016|PAX4_REF_R3.txt; Mus_musculus|M01672_1.94d|Berger08|Pax4_3989.2.txt",4
 "PAX5","Xenopus_tropicalis|M02063_1.94d|Zoo_01|5729.txt; Danio_rerio|M02061_1.94d|Zoo_01|5899.txt; Caenorhabditis_elegans|M02066_1.94d|CEPD|10189.txt",3
-"PAX6","Homo_sapiens|M01647_1.94d|Barrera2016|PAX6_P118R_R1.txt; Homo_sapiens|M01652_1.94d|Barrera2016|PAX6_REF_R1.txt; Homo_sapiens|M01650_1.94d|Barrera2016|PAX6_R242T_R1.txt",3
+"PAX6","Homo_sapiens|M01650_1.94d|Barrera2016|PAX6_R242T_R1.txt; Homo_sapiens|M01647_1.94d|Barrera2016|PAX6_P118R_R1.txt; Homo_sapiens|M01652_1.94d|Barrera2016|PAX6_REF_R1.txt",3
 "PAX7","Homo_sapiens|M01656_1.94d|Barrera2016|PAX7_REF_R1.txt; Mus_musculus|M01671_1.94d|Berger08|Pax7_3783.1.txt; Homo_sapiens|M01665_1.94d|Barrera2016|PAX3_P50L_R1.txt; Homo_sapiens|M01662_1.94d|Barrera2016|PAX3_G48R_R1.txt",4
 "PAX8","Danio_rerio|M02061_1.94d|Zoo_01|5899.txt; Xenopus_tropicalis|M02063_1.94d|Zoo_01|5729.txt",2
 "PBX1","Homo_sapiens|M01230_1.94d|Barrera2016|PBX4_REF_R2.txt",1
@@ -397,44 +399,47 @@
 "PHOX2A","Mus_musculus|M01325_1.94d|Berger08|Phox2a_3947.1.txt; Mus_musculus|M01327_1.94d|Berger08|Phox2b_3948.1.txt; Homo_sapiens|M01235_1.94d|Barrera2016|PHOX2B_Q143R_R1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt",6
 "PHOX2B","Homo_sapiens|M01235_1.94d|Barrera2016|PHOX2B_Q143R_R1.txt; Mus_musculus|M01325_1.94d|Berger08|Phox2a_3947.1.txt; Mus_musculus|M01327_1.94d|Berger08|Phox2b_3948.1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt",6
 "PITX1","Mus_musculus|M01342_1.94d|Berger08|Pitx1_2312.1.txt; Mus_musculus|M01368_1.94d|Berger08|Pitx2_2274.3.txt; Mus_musculus|M01356_1.94d|Berger08|Pitx3_3497.2.txt; Drosophila_melanogaster|M01501_1.94d|BusserDevelopment2012|Ptx1.txt",4
-"PITX2","Mus_musculus|M01368_1.94d|Berger08|Pitx2_2274.3.txt; Homo_sapiens|M01277_1.94d|Barrera2016|PITX2_T114P_R1.txt; Mus_musculus|M01356_1.94d|Berger08|Pitx3_3497.2.txt; Mus_musculus|M01342_1.94d|Berger08|Pitx1_2312.1.txt; Drosophila_melanogaster|M01501_1.94d|BusserDevelopment2012|Ptx1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt",6
+"PITX2","Mus_musculus|M01356_1.94d|Berger08|Pitx3_3497.2.txt; Mus_musculus|M01368_1.94d|Berger08|Pitx2_2274.3.txt; Homo_sapiens|M01277_1.94d|Barrera2016|PITX2_T114P_R1.txt; Mus_musculus|M01342_1.94d|Berger08|Pitx1_2312.1.txt; Drosophila_melanogaster|M01501_1.94d|BusserDevelopment2012|Ptx1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt",6
 "PITX3","Homo_sapiens|M01277_1.94d|Barrera2016|PITX2_T114P_R1.txt; Mus_musculus|M01356_1.94d|Berger08|Pitx3_3497.2.txt; Mus_musculus|M01368_1.94d|Berger08|Pitx2_2274.3.txt; Mus_musculus|M01342_1.94d|Berger08|Pitx1_2312.1.txt; Drosophila_melanogaster|M01501_1.94d|BusserDevelopment2012|Ptx1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt",6
-"PKNOX1","Mus_musculus|M01324_1.94d|Berger08|Pknox1_2364.2.txt; Mus_musculus|M01397_1.94d|Berger08|Pknox2_3077.2.txt; Mus_musculus|M01417_1.94d|Berger08|Mrg2_2302.1.txt; Mus_musculus|M01333_1.94d|Berger08|Meis1_2335.1.txt; Mus_musculus|M01365_1.94d|Berger08|Mrg1_2246.2.txt",5
-"PKNOX2","Mus_musculus|M01397_1.94d|Berger08|Pknox2_3077.2.txt; Mus_musculus|M01324_1.94d|Berger08|Pknox1_2364.2.txt; Mus_musculus|M01333_1.94d|Berger08|Meis1_2335.1.txt; Mus_musculus|M01365_1.94d|Berger08|Mrg1_2246.2.txt; Mus_musculus|M01417_1.94d|Berger08|Mrg2_2302.1.txt",5
+"PKNOX1","Mus_musculus|M01324_1.94d|Berger08|Pknox1_2364.2.txt; Mus_musculus|M01397_1.94d|Berger08|Pknox2_3077.2.txt; Mus_musculus|M01365_1.94d|Berger08|Mrg1_2246.2.txt; Mus_musculus|M01333_1.94d|Berger08|Meis1_2335.1.txt; Mus_musculus|M01417_1.94d|Berger08|Mrg2_2302.1.txt",5
+"PKNOX2","Mus_musculus|M01397_1.94d|Berger08|Pknox2_3077.2.txt; Mus_musculus|M01324_1.94d|Berger08|Pknox1_2364.2.txt; Mus_musculus|M01365_1.94d|Berger08|Mrg1_2246.2.txt; Mus_musculus|M01333_1.94d|Berger08|Meis1_2335.1.txt; Mus_musculus|M01417_1.94d|Berger08|Mrg2_2302.1.txt",5
 "PLAGL1","Mus_musculus|M00587_1.94d|Badis09|Plagl1_0972.2=v1.txt",1
-"POU1F1","Mus_musculus|M01686_1.94d|DREAM_contest|1451.txt; Mus_musculus|M01685_1.94d|Berger08|Pou1f1_3818.1.txt; Mus_musculus|M01687_1.94d|DREAM_contest|1431.txt",3
+"POU1F1","Mus_musculus|M01685_1.94d|Berger08|Pou1f1_3818.1.txt; Mus_musculus|M01686_1.94d|DREAM_contest|1451.txt; Mus_musculus|M01687_1.94d|DREAM_contest|1431.txt",3
 "POU2F1","Homo_sapiens|M01681_1.94d|Berger06|Oct-1.txt; Mus_musculus|M01693_1.94d|Berger08|Pou2f1_3081.2.txt; Mus_musculus|M01689_1.94d|Berger08|Pou2f2_3748.1.txt; Takifugu_rubripes|M01700_1.94d|Zoo_01|6957.txt; Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt",6
 "POU2F2","Mus_musculus|M01689_1.94d|Berger08|Pou2f2_3748.1.txt; Mus_musculus|M01694_1.94d|DREAM_contest|1085.txt; Mus_musculus|M01693_1.94d|Berger08|Pou2f1_3081.2.txt; Takifugu_rubripes|M01700_1.94d|Zoo_01|6957.txt; Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt",6
 "POU2F3","Mus_musculus|M01695_1.94d|Berger08|Pou2f3_3986.2.txt; Takifugu_rubripes|M01700_1.94d|Zoo_01|6957.txt; Homo_sapiens|M01681_1.94d|Berger06|Oct-1.txt; Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt",5
-"POU3F1","Mus_musculus|M01698_1.94d|DREAM_contest|1452.txt; Mus_musculus|M01697_1.94d|Berger08|Pou3f1_3819.1.txt; Mus_musculus|M01699_1.94d|Berger08|Pou3f2_2824.1.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt; Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832.txt; Takifugu_rubripes|M01700_1.94d|Zoo_01|6957.txt",6
-"POU3F2","Mus_musculus|M01699_1.94d|Berger08|Pou3f2_2824.1.txt; Xenopus_laevis|M01710_1.94d|Zoo_01|6722.txt; Ailuropoda_melanoleuca|M01675_1.94d|Zoo_01|6519.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt; Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832.txt; Takifugu_rubripes|M01700_1.94d|Zoo_01|6957.txt",6
-"POU3F3","Ailuropoda_melanoleuca|M01675_1.94d|Zoo_01|6519.txt; Mus_musculus|M01699_1.94d|Berger08|Pou3f2_2824.1.txt; Mus_musculus|M02082_1.94d|Berger08|Pou3f3_3235.2.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt; Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832.txt; Takifugu_rubripes|M01700_1.94d|Zoo_01|6957.txt",6
-"POU3F4","Mus_musculus|M01696_1.94d|Berger08|Pou3f4_3773.1.txt; Homo_sapiens|M01682_1.94d|Barrera2016|POU3F4_A312V_R1.txt; Homo_sapiens|M01684_1.94d|Barrera2016|POU3F4_REF_R1.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt; Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832.txt; Takifugu_rubripes|M01700_1.94d|Zoo_01|6957.txt",6
-"POU4F1","Homo_sapiens|M01678_1.94d|Barrera2016|POU4F3_REF_R1.txt; Homo_sapiens|M01677_1.94d|Barrera2016|POU4F3_L289F_R1.txt; Mus_musculus|M01692_1.94d|Berger08|Pou4f3_2791.1.txt",3
-"POU4F2","Homo_sapiens|M01678_1.94d|Barrera2016|POU4F3_REF_R1.txt; Mus_musculus|M01692_1.94d|Berger08|Pou4f3_2791.1.txt; Homo_sapiens|M01677_1.94d|Barrera2016|POU4F3_L289F_R1.txt",3
-"POU4F3","Mus_musculus|M01692_1.94d|Berger08|Pou4f3_2791.1.txt; Homo_sapiens|M01677_1.94d|Barrera2016|POU4F3_L289F_R1.txt; Homo_sapiens|M01678_1.94d|Barrera2016|POU4F3_REF_R1.txt",3
-"POU5F1","Mus_musculus|M01696_1.94d|Berger08|Pou3f4_3773.1.txt; Homo_sapiens|M01682_1.94d|Barrera2016|POU3F4_A312V_R1.txt; Homo_sapiens|M01684_1.94d|Barrera2016|POU3F4_REF_R1.txt; Takifugu_rubripes|M01701_1.94d|Zoo_01|6827.txt; Xenopus_laevis|M01710_1.94d|Zoo_01|6722.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt",6
+"POU3F1","Mus_musculus|M01697_1.94d|Berger08|Pou3f1_3819.1.txt; Mus_musculus|M01698_1.94d|DREAM_contest|1452.txt; Mus_musculus|M01699_1.94d|Berger08|Pou3f2_2824.1.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt; Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832.txt; Takifugu_rubripes|M01700_1.94d|Zoo_01|6957.txt",6
+"POU3F2","Mus_musculus|M01699_1.94d|Berger08|Pou3f2_2824.1.txt; Ailuropoda_melanoleuca|M01675_1.94d|Zoo_01|6519.txt; Xenopus_laevis|M01710_1.94d|Zoo_01|6722.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt; Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832.txt; Takifugu_rubripes|M01700_1.94d|Zoo_01|6957.txt",6
+"POU3F3","Ailuropoda_melanoleuca|M01675_1.94d|Zoo_01|6519.txt; Mus_musculus|M02082_1.94d|Berger08|Pou3f3_3235.2.txt; Mus_musculus|M01699_1.94d|Berger08|Pou3f2_2824.1.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt; Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832.txt; Takifugu_rubripes|M01700_1.94d|Zoo_01|6957.txt",6
+"POU3F4","Homo_sapiens|M01682_1.94d|Barrera2016|POU3F4_A312V_R1.txt; Homo_sapiens|M01684_1.94d|Barrera2016|POU3F4_REF_R1.txt; Mus_musculus|M01696_1.94d|Berger08|Pou3f4_3773.1.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt; Nasonia_vitripennis|M01706_1.94d|Zoo_01|6832.txt; Takifugu_rubripes|M01700_1.94d|Zoo_01|6957.txt",6
+"POU4F1","Mus_musculus|M01692_1.94d|Berger08|Pou4f3_2791.1.txt; Homo_sapiens|M01677_1.94d|Barrera2016|POU4F3_L289F_R1.txt; Homo_sapiens|M01678_1.94d|Barrera2016|POU4F3_REF_R1.txt",3
+"POU4F2","Homo_sapiens|M01677_1.94d|Barrera2016|POU4F3_L289F_R1.txt; Mus_musculus|M01692_1.94d|Berger08|Pou4f3_2791.1.txt; Homo_sapiens|M01678_1.94d|Barrera2016|POU4F3_REF_R1.txt",3
+"POU4F3","Homo_sapiens|M01677_1.94d|Barrera2016|POU4F3_L289F_R1.txt; Mus_musculus|M01692_1.94d|Berger08|Pou4f3_2791.1.txt; Homo_sapiens|M01678_1.94d|Barrera2016|POU4F3_REF_R1.txt",3
+"POU5F1","Homo_sapiens|M01684_1.94d|Barrera2016|POU3F4_REF_R1.txt; Mus_musculus|M01696_1.94d|Berger08|Pou3f4_3773.1.txt; Homo_sapiens|M01682_1.94d|Barrera2016|POU3F4_A312V_R1.txt; Xenopus_laevis|M01710_1.94d|Zoo_01|6722.txt; Takifugu_rubripes|M01701_1.94d|Zoo_01|6827.txt; Danio_rerio|M01676_1.94d|Zoo_01|6777.txt",6
 "POU5F1B","Homo_sapiens|M01684_1.94d|Barrera2016|POU3F4_REF_R1.txt; Mus_musculus|M01696_1.94d|Berger08|Pou3f4_3773.1.txt; Takifugu_rubripes|M01701_1.94d|Zoo_01|6827.txt",3
-"POU6F1","Mus_musculus|M01691_1.94d|Berger08|Pou6f1_3733.1.txt; Mus_musculus|M01690_1.94d|Berger08|Pou6f1_1731.2.txt",2
+"POU6F1","Mus_musculus|M01690_1.94d|Berger08|Pou6f1_1731.2.txt; Mus_musculus|M01691_1.94d|Berger08|Pou6f1_3733.1.txt",2
 "POU6F2","Homo_sapiens|M01679_1.94d|Barrera2016|POU6F2_E639K_R1.txt; Homo_sapiens|M01680_1.94d|Barrera2016|POU6F2_REF_R1.txt; Mus_musculus|M01690_1.94d|Berger08|Pou6f1_1731.2.txt; Mus_musculus|M01691_1.94d|Berger08|Pou6f1_3733.1.txt",4
-"PROP1","Homo_sapiens|M01282_1.94d|Barrera2016|PROP1_REF_R1.txt; Homo_sapiens|M01281_1.94d|Barrera2016|PROP1_R99Q_R1.txt; Homo_sapiens|M01280_1.94d|Barrera2016|PROP1_R112Q_R1.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Mus_musculus|M01328_1.94d|Berger08|Alx3_3418.2.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt",6
-"PRRX1","Mus_musculus|M01359_1.94d|Berger08|Prrx1_3442.1.txt; Mus_musculus|M01415_1.94d|Berger08|Prrx2_3072.1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Homo_sapiens|M01294_1.94d|Zoo_01|2013.txt",5
+"PROP1","Homo_sapiens|M01282_1.94d|Barrera2016|PROP1_REF_R1.txt; Homo_sapiens|M01280_1.94d|Barrera2016|PROP1_R112Q_R1.txt; Homo_sapiens|M01281_1.94d|Barrera2016|PROP1_R99Q_R1.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Mus_musculus|M01328_1.94d|Berger08|Alx3_3418.2.txt",6
+"PRRX1","Mus_musculus|M01359_1.94d|Berger08|Prrx1_3442.1.txt; Mus_musculus|M01415_1.94d|Berger08|Prrx2_3072.1.txt; Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Homo_sapiens|M01294_1.94d|Zoo_01|2013.txt",5
 "PRRX2","Mus_musculus|M01415_1.94d|Berger08|Prrx2_3072.1.txt; Mus_musculus|M01359_1.94d|Berger08|Prrx1_3442.1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Mus_musculus|M01416_1.94d|Berger08|Alx4_1744.1.txt; Homo_sapiens|M01294_1.94d|Zoo_01|2013.txt",5
 "PTF1A","Mus_musculus|M00272_1.94d|Zoo_01|1349.txt",1
-"RARA","Mus_musculus|M02011_1.94d|Badis09|Rara_1051.3=v2.txt; Mus_musculus|M01998_1.94d|Zoo_01|599.txt; Mus_musculus|M01992_1.94d|DREAM_contest|1427.txt",3
+"RARA","Mus_musculus|M02011_1.94d|Badis09|Rara_1051.3=v2.txt; Mus_musculus|M01992_1.94d|DREAM_contest|1427.txt; Mus_musculus|M01998_1.94d|Zoo_01|599.txt",3
 "RARB","Mus_musculus|M01998_1.94d|Zoo_01|599.txt; Mus_musculus|M02011_1.94d|Badis09|Rara_1051.3=v2.txt; Mus_musculus|M01992_1.94d|DREAM_contest|1427.txt",3
-"RARG","Homo_sapiens|M01985_1.94d|Zoo_01|482.txt; Mus_musculus|M01992_1.94d|DREAM_contest|1427.txt; Mus_musculus|M02011_1.94d|Badis09|Rara_1051.3=v2.txt; Mus_musculus|M01998_1.94d|Zoo_01|599.txt",4
+"RARG","Mus_musculus|M01992_1.94d|DREAM_contest|1427.txt; Homo_sapiens|M01985_1.94d|Zoo_01|482.txt; Mus_musculus|M02011_1.94d|Badis09|Rara_1051.3=v2.txt; Mus_musculus|M01998_1.94d|Zoo_01|599.txt",4
 "RAX","Mus_musculus|M01354_1.94d|Berger08|Rax_3443.1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Homo_sapiens|M01217_1.94d|Barrera2016|ARX_REF_R1.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt",6
-"RAX2","Mus_musculus|M01354_1.94d|Berger08|Rax_3443.1.txt; Homo_sapiens|M01217_1.94d|Barrera2016|ARX_REF_R1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt",6
+"RAX2","Mus_musculus|M01354_1.94d|Berger08|Rax_3443.1.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Homo_sapiens|M01217_1.94d|Barrera2016|ARX_REF_R1.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt",6
 "RBPJ","Homo_sapiens|M00861_1.94d|DelBianco2010|GST-CSL_Fig4.txt; Homo_sapiens|M00862_1.94d|DelBianco2010|GST-CSL-NOTCH1.txt; Homo_sapiens|M00866_1.94d|DelBianco2010|MAML1-CSL-GST-NOTCH1_Fig2.txt",3
+"REL","Homo_sapiens|NA|Unpublished|RELA.txt",1
+"RELA","Homo_sapiens|NA|Unpublished|RELA.txt",1
+"RELB","Homo_sapiens|NA|Unpublished|RELA.txt",1
 "RFX1","Tetraodon_nigroviridis|M02103_1.94d|Zoo_01|6836.txt; Anolis_carolinensis|M02095_1.94d|Zoo_01|6764.txt; Ornithorhynchus_anatinus|M02102_1.94d|Zoo_01|6785.txt; Schistosoma_japonicum|M02109_1.94d|Zoo_01|6798.txt; Caenorhabditis_elegans|M02107_1.94d|CEPD|8874.txt",5
 "RFX2","Homo_sapiens|M02097_1.94d|Zoo_01|6497.txt; Ornithorhynchus_anatinus|M02102_1.94d|Zoo_01|6785.txt; Mus_musculus|M02101_1.94d|Badis09|Rfx3_3961.1=v2.txt; Schistosoma_japonicum|M02109_1.94d|Zoo_01|6798.txt; Caenorhabditis_elegans|M02107_1.94d|CEPD|8874.txt",5
-"RFX3","Mus_musculus|M02101_1.94d|Badis09|Rfx3_3961.1=v2.txt; Homo_sapiens|M02097_1.94d|Zoo_01|6497.txt; Ornithorhynchus_anatinus|M02102_1.94d|Zoo_01|6785.txt; Schistosoma_japonicum|M02109_1.94d|Zoo_01|6798.txt; Caenorhabditis_elegans|M02107_1.94d|CEPD|8874.txt",5
+"RFX3","Mus_musculus|M02101_1.94d|Badis09|Rfx3_3961.1=v2.txt; Ornithorhynchus_anatinus|M02102_1.94d|Zoo_01|6785.txt; Homo_sapiens|M02097_1.94d|Zoo_01|6497.txt; Schistosoma_japonicum|M02109_1.94d|Zoo_01|6798.txt; Caenorhabditis_elegans|M02107_1.94d|CEPD|8874.txt",5
 "RFX4","Mus_musculus|M02098_1.94d|Badis09|Rfx4_3761.1=v2.txt; Cavia_porcellus|M02096_1.94d|Zoo_01|6868.txt; Apis_mellifera|M02105_1.94d|Zoo_01|6765.txt; Caenorhabditis_elegans|M02107_1.94d|CEPD|8874.txt; Ornithorhynchus_anatinus|M02102_1.94d|Zoo_01|6785.txt; Schistosoma_japonicum|M02109_1.94d|Zoo_01|6798.txt",6
 "RFX5","Mus_musculus|M02100_1.94d|Badis09|Rfxdc2_3516.1=v1.txt; Mus_musculus|M02099_1.94d|DREAM_contest|1416.txt",2
 "RFX6","Cavia_porcellus|M02096_1.94d|Zoo_01|6868.txt; Mus_musculus|M02098_1.94d|Badis09|Rfx4_3761.1=v2.txt; Pediculus_humanus|M02106_1.94d|Zoo_01|6792.txt; Schistosoma_japonicum|M02109_1.94d|Zoo_01|6798.txt; Ornithorhynchus_anatinus|M02102_1.94d|Zoo_01|6785.txt; Caenorhabditis_elegans|M02107_1.94d|CEPD|8874.txt",6
-"RFX7","Mus_musculus|M02099_1.94d|DREAM_contest|1416.txt; Mus_musculus|M02100_1.94d|Badis09|Rfxdc2_3516.1=v1.txt",2
-"RORA","Mus_musculus|M02009_1.94d|DREAM_contest|1412.txt; Mus_musculus|M02010_1.94d|DREAM_contest|1456.txt; Aedes_aegypti|M01972_1.94d|Zoo_01|872.txt; Drosophila_melanogaster|M02018_1.94d|Zoo_01|2401.txt",4
+"RFX7","Mus_musculus|M02100_1.94d|Badis09|Rfxdc2_3516.1=v1.txt; Mus_musculus|M02099_1.94d|DREAM_contest|1416.txt",2
+"RORA","Mus_musculus|M02009_1.94d|DREAM_contest|1412.txt; Mus_musculus|M02010_1.94d|DREAM_contest|1456.txt; Drosophila_melanogaster|M02018_1.94d|Zoo_01|2401.txt; Aedes_aegypti|M01972_1.94d|Zoo_01|872.txt",4
 "RORB","Mus_musculus|M02010_1.94d|DREAM_contest|1456.txt; Mus_musculus|M02009_1.94d|DREAM_contest|1412.txt; Aedes_aegypti|M01972_1.94d|Zoo_01|872.txt; Drosophila_melanogaster|M02018_1.94d|Zoo_01|2401.txt",4
 "RORC","Mus_musculus|M02009_1.94d|DREAM_contest|1412.txt; Mus_musculus|M02010_1.94d|DREAM_contest|1456.txt; Aedes_aegypti|M01972_1.94d|Zoo_01|872.txt; Drosophila_melanogaster|M02018_1.94d|Zoo_01|2401.txt",4
 "RUNX1","Homo_sapiens|NA|Shen2018|RUNX1.txt",1
@@ -445,19 +450,19 @@
 "RXRG","Mus_musculus|M01996_1.94d|Zoo_01|1396.txt; Mus_musculus|M01997_1.94d|Badis09|Rxra_1035.2=v1.txt; Mus_musculus|M02012_1.94d|Zoo_01|1395.txt",3
 "SCX","Mus_musculus|M00242_1.94d|Zoo_01|231.txt; Mus_musculus|M00224_1.94d|Zoo_01|127.txt",2
 "SHOX","Mus_musculus|M01367_1.94d|Berger08|Shox2_2641.2.txt; Homo_sapiens|M01294_1.94d|Zoo_01|2013.txt; Oikopleura_dioica|M01644_1.94d|Zoo_01|2032.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt",5
-"SHOX2","Homo_sapiens|M01294_1.94d|Zoo_01|2013.txt; Mus_musculus|M01367_1.94d|Berger08|Shox2_2641.2.txt; Oikopleura_dioica|M01644_1.94d|Zoo_01|2032.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt",5
+"SHOX2","Mus_musculus|M01367_1.94d|Berger08|Shox2_2641.2.txt; Homo_sapiens|M01294_1.94d|Zoo_01|2013.txt; Oikopleura_dioica|M01644_1.94d|Zoo_01|2032.txt; Mus_musculus|M01396_1.94d|Berger08|Arx_1738.2.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt",5
 "SIX1","Mus_musculus|M01443_1.94d|Berger08|Six1_0935.2.txt; Mus_musculus|M01353_1.94d|Berger08|Six2_2307.2.txt; Drosophila_melanogaster|M01490_1.94d|Zoo_01|2010.txt; Homo_sapiens|M01293_1.94d|Barrera2016|SIX6_T165A_R1.txt",4
 "SIX2","Mus_musculus|M01353_1.94d|Berger08|Six2_2307.2.txt; Mus_musculus|M01443_1.94d|Berger08|Six1_0935.2.txt; Drosophila_melanogaster|M01490_1.94d|Zoo_01|2010.txt; Homo_sapiens|M01293_1.94d|Barrera2016|SIX6_T165A_R1.txt",4
-"SIX3","Mus_musculus|M01412_1.94d|Berger08|Six3_1732.2.txt; Mus_musculus|M01339_1.94d|Berger08|Six6_2267.4.txt; Homo_sapiens|M01291_1.94d|Barrera2016|SIX6_H141N_R1.txt; Homo_sapiens|M01293_1.94d|Barrera2016|SIX6_T165A_R1.txt; Mus_musculus|M01353_1.94d|Berger08|Six2_2307.2.txt; Mus_musculus|M01443_1.94d|Berger08|Six1_0935.2.txt",6
+"SIX3","Mus_musculus|M01412_1.94d|Berger08|Six3_1732.2.txt; Mus_musculus|M01338_1.94d|Badis09|Six6_2267.4=v1.txt; Homo_sapiens|M01291_1.94d|Barrera2016|SIX6_H141N_R1.txt; Homo_sapiens|M01293_1.94d|Barrera2016|SIX6_T165A_R1.txt; Mus_musculus|M01353_1.94d|Berger08|Six2_2307.2.txt; Mus_musculus|M01443_1.94d|Berger08|Six1_0935.2.txt",6
 "SIX4","Mus_musculus|M01443_1.94d|Berger08|Six1_0935.2.txt; Mus_musculus|M01353_1.94d|Berger08|Six2_2307.2.txt; Drosophila_melanogaster|M01490_1.94d|Zoo_01|2010.txt",3
-"SIX5","Drosophila_melanogaster|M01490_1.94d|Zoo_01|2010.txt; Mus_musculus|M01443_1.94d|Berger08|Six1_0935.2.txt; Mus_musculus|M01353_1.94d|Berger08|Six2_2307.2.txt",3
-"SIX6","Mus_musculus|M01339_1.94d|Berger08|Six6_2267.4.txt; Homo_sapiens|M01291_1.94d|Barrera2016|SIX6_H141N_R1.txt; Homo_sapiens|M01293_1.94d|Barrera2016|SIX6_T165A_R1.txt; Mus_musculus|M01353_1.94d|Berger08|Six2_2307.2.txt; Mus_musculus|M01443_1.94d|Berger08|Six1_0935.2.txt",5
+"SIX5","Drosophila_melanogaster|M01490_1.94d|Zoo_01|2010.txt; Mus_musculus|M01353_1.94d|Berger08|Six2_2307.2.txt; Mus_musculus|M01443_1.94d|Berger08|Six1_0935.2.txt",3
+"SIX6","Mus_musculus|M01338_1.94d|Badis09|Six6_2267.4=v1.txt; Homo_sapiens|M01293_1.94d|Barrera2016|SIX6_T165A_R1.txt; Homo_sapiens|M01291_1.94d|Barrera2016|SIX6_H141N_R1.txt; Mus_musculus|M01443_1.94d|Berger08|Six1_0935.2.txt; Mus_musculus|M01353_1.94d|Berger08|Six2_2307.2.txt",5
 "SMAD3","Mus_musculus|M02149_1.94d|Badis09|Smad3_3805.1=v1.txt",1
 "SNAI1","Mus_musculus|M00619_1.94d|DREAM_contest|1942.txt",1
-"SNAI2","Homo_sapiens|M00550_1.94d|Barrera2016|SNAI2_T234I_R1.txt; Homo_sapiens|M00548_1.94d|Barrera2016|SNAI2_D119E_R1.txt; Homo_sapiens|M00549_1.94d|Barrera2016|SNAI2_REF_R1.txt",3
+"SNAI2","Homo_sapiens|M00548_1.94d|Barrera2016|SNAI2_D119E_R1.txt; Homo_sapiens|M00550_1.94d|Barrera2016|SNAI2_T234I_R1.txt; Homo_sapiens|M00549_1.94d|Barrera2016|SNAI2_REF_R1.txt",3
 "SNAI3","Homo_sapiens|M00550_1.94d|Barrera2016|SNAI2_T234I_R1.txt; Homo_sapiens|M00549_1.94d|Barrera2016|SNAI2_REF_R1.txt; Homo_sapiens|M00548_1.94d|Barrera2016|SNAI2_D119E_R1.txt",3
 "SOHLH2","Mus_musculus|M00245_1.94d|Zoo_01|163.txt",1
-"SOX1","Mus_musculus|M02182_1.94d|Badis09|Sox1_2631.2=v2.txt; Mus_musculus|M02176_1.94d|Badis09|Sox21_3417.1=v2.txt; Mus_musculus|M02173_1.94d|DREAM_contest|1390.txt; Mus_musculus|M02174_1.94d|Badis09|Sox14_2677.2=v1.txt",4
+"SOX1","Mus_musculus|M02182_1.94d|Badis09|Sox1_2631.2=v2.txt; Mus_musculus|M02176_1.94d|Badis09|Sox21_3417.1=v2.txt; Mus_musculus|M02174_1.94d|Badis09|Sox14_2677.2=v1.txt; Mus_musculus|M02173_1.94d|DREAM_contest|1390.txt",4
 "SOX10","Mus_musculus|M02165_1.94d|DREAM_contest|463.txt; Mus_musculus|M02161_1.94d|Badis09|Sox8_1733.2=v1.txt",2
 "SOX11","Mus_musculus|M02178_1.94d|Badis09|Sox11_2266.2=v2.txt; Mus_musculus|M02181_1.94d|Badis09|Sox4_2941.2=v1.txt",2
 "SOX12","Mus_musculus|M02171_1.94d|Badis09|Sox12_3957.1=v1.txt",1
@@ -466,7 +471,7 @@
 "SOX15","Mus_musculus|M02167_1.94d|Badis09|Sox15_3457.1=v2.txt",1
 "SOX17","Mus_musculus|M02163_1.94d|Badis09|Sox17_2837.2=v1.txt",1
 "SOX18","Mus_musculus|M02170_1.94d|Badis09|Sox18_3506.1=v2.txt",1
-"SOX2","Mus_musculus|M02182_1.94d|Badis09|Sox1_2631.2=v2.txt; Mus_musculus|M02176_1.94d|Badis09|Sox21_3417.1=v2.txt; Mus_musculus|M02174_1.94d|Badis09|Sox14_2677.2=v1.txt; Mus_musculus|M02173_1.94d|DREAM_contest|1390.txt",4
+"SOX2","Mus_musculus|M02176_1.94d|Badis09|Sox21_3417.1=v2.txt; Mus_musculus|M02182_1.94d|Badis09|Sox1_2631.2=v2.txt; Mus_musculus|M02173_1.94d|DREAM_contest|1390.txt; Mus_musculus|M02174_1.94d|Badis09|Sox14_2677.2=v1.txt",4
 "SOX21","Mus_musculus|M02176_1.94d|Badis09|Sox21_3417.1=v2.txt",1
 "SOX3","Mus_musculus|M02169_1.94d|DREAM_contest|1404.txt",1
 "SOX30","Mus_musculus|M02166_1.94d|Badis09|Sox30_2781.2=v2.txt",1
@@ -478,28 +483,28 @@
 "SOX9","Mus_musculus|M02161_1.94d|Badis09|Sox8_1733.2=v1.txt; Mus_musculus|M02165_1.94d|DREAM_contest|463.txt",2
 "SP1","Mus_musculus|M00596_1.94d|Badis09|Sp4_1011.2=v1.txt; Mus_musculus|M00595_1.94d|Zoo_01|12.txt; PBM_CONSTRUCTS|M00804_1.94d|Lam11|953.txt",3
 "SP100","Mus_musculus|M02120_1.94d|Badis09|Sp100_2947.2=v2.txt",1
-"SP2","Mus_musculus|M00595_1.94d|Zoo_01|12.txt; Mus_musculus|M00596_1.94d|Badis09|Sp4_1011.2=v1.txt",2
+"SP2","Mus_musculus|M00596_1.94d|Badis09|Sp4_1011.2=v1.txt; Mus_musculus|M00595_1.94d|Zoo_01|12.txt",2
 "SP3","Mus_musculus|M00595_1.94d|Zoo_01|12.txt; Mus_musculus|M00596_1.94d|Badis09|Sp4_1011.2=v1.txt; PBM_CONSTRUCTS|M00804_1.94d|Lam11|953.txt",3
 "SP4","Mus_musculus|M00595_1.94d|Zoo_01|12.txt; Mus_musculus|M00596_1.94d|Badis09|Sp4_1011.2=v1.txt; PBM_CONSTRUCTS|M00804_1.94d|Lam11|953.txt",3
-"SP5","Mus_musculus|M00596_1.94d|Badis09|Sp4_1011.2=v1.txt; Mus_musculus|M00595_1.94d|Zoo_01|12.txt; PBM_CONSTRUCTS|M00804_1.94d|Lam11|953.txt",3
+"SP5","Mus_musculus|M00595_1.94d|Zoo_01|12.txt; Mus_musculus|M00596_1.94d|Badis09|Sp4_1011.2=v1.txt; PBM_CONSTRUCTS|M00804_1.94d|Lam11|953.txt",3
 "SP6","Mus_musculus|M00596_1.94d|Badis09|Sp4_1011.2=v1.txt; Mus_musculus|M00595_1.94d|Zoo_01|12.txt",2
 "SP7","Mus_musculus|M00595_1.94d|Zoo_01|12.txt; Mus_musculus|M00596_1.94d|Badis09|Sp4_1011.2=v1.txt",2
 "SP8","Mus_musculus|M00595_1.94d|Zoo_01|12.txt; Mus_musculus|M00596_1.94d|Badis09|Sp4_1011.2=v1.txt; PBM_CONSTRUCTS|M00804_1.94d|Lam11|953.txt",3
-"SP9","Mus_musculus|M00595_1.94d|Zoo_01|12.txt; Mus_musculus|M00596_1.94d|Badis09|Sp4_1011.2=v1.txt; PBM_CONSTRUCTS|M00804_1.94d|Lam11|953.txt",3
-"SPDEF","Mus_musculus|M00991_1.94d|Wei10|Spdef.txt; Mus_musculus|M00990_1.94d|Badis09|Spdef_0905.2=v1.txt",2
+"SP9","Mus_musculus|M00596_1.94d|Badis09|Sp4_1011.2=v1.txt; Mus_musculus|M00595_1.94d|Zoo_01|12.txt; PBM_CONSTRUCTS|M00804_1.94d|Lam11|953.txt",3
+"SPDEF","Mus_musculus|M00990_1.94d|Badis09|Spdef_0905.2=v1.txt; Mus_musculus|M00991_1.94d|Wei10|Spdef.txt",2
 "SPI1","Mus_musculus|M00974_1.94d|Wei10|Sfpi1.txt; Mus_musculus|M00973_1.94d|Badis09|Sfpi1_1034.2=v1.txt",2
 "SPIB","Mus_musculus|M00974_1.94d|Wei10|Sfpi1.txt; Mus_musculus|M00973_1.94d|Badis09|Sfpi1_1034.2=v1.txt",2
 "SPIC","Mus_musculus|M00973_1.94d|Badis09|Sfpi1_1034.2=v1.txt; Mus_musculus|M00974_1.94d|Wei10|Sfpi1.txt",2
 "SREBF1","Mus_musculus|M00235_1.94d|Zoo_01|1588.txt; Mus_musculus|M00234_1.94d|DREAM_contest|570.txt",2
-"SREBF2","Mus_musculus|M00235_1.94d|Zoo_01|1588.txt; Mus_musculus|M00234_1.94d|DREAM_contest|570.txt",2
-"SRF","Dictyostelium_discoideum|M01770_1.94d|Zoo_01|981.txt; Caenorhabditis_elegans|M01772_1.94d|CEPD|10570.txt",2
+"SREBF2","Mus_musculus|M00234_1.94d|DREAM_contest|570.txt; Mus_musculus|M00235_1.94d|Zoo_01|1588.txt",2
+"SRF","Caenorhabditis_elegans|M01772_1.94d|CEPD|10570.txt; Dictyostelium_discoideum|M01770_1.94d|Zoo_01|981.txt",2
 "SRY","Mus_musculus|M02179_1.94d|Badis09|Sry_2833.2=v1.txt",1
 "ST18","Caenorhabditis_elegans|M00842_1.94d|CEPD|8672.txt",1
 "STAT3","Mus_musculus|NA|Unpublished|Stat3.txt",1
-"TAL1","Mus_musculus|M00224_1.94d|Zoo_01|127.txt; Mus_musculus|M00272_1.94d|Zoo_01|1349.txt",2
+"TAL1","Mus_musculus|M00272_1.94d|Zoo_01|1349.txt; Mus_musculus|M00224_1.94d|Zoo_01|127.txt",2
 "TAL2","Mus_musculus|M00224_1.94d|Zoo_01|127.txt; Mus_musculus|M00272_1.94d|Zoo_01|1349.txt",2
-"TBP","Homo_sapiens|NA|Unpublished|TBP.txt; Mus_musculus|M02225_1.94d|Badis09|Tbp_pr781.1=v2.txt",2
-"TBPL2","Homo_sapiens|NA|Unpublished|TBP.txt; Mus_musculus|M02225_1.94d|Badis09|Tbp_pr781.1=v2.txt",2
+"TBP","Mus_musculus|M02225_1.94d|Badis09|Tbp_pr781.1=v2.txt; Arabidopsis_thaliana|NA|Unpublished|TBP.txt",2
+"TBPL2","Mus_musculus|M02225_1.94d|Badis09|Tbp_pr781.1=v2.txt; Arabidopsis_thaliana|NA|Unpublished|TBP.txt",2
 "TBR1","Mus_musculus|M02213_1.94d|SebePedros2013|6150.txt; Mus_musculus|M02212_1.94d|Badis09|Eomes_0921.4=v2.txt",2
 "TBX1","Mus_musculus|M02211_1.94d|DREAM_contest|1423.txt",1
 "TBX18","Mus_musculus|M02211_1.94d|DREAM_contest|1423.txt",1
@@ -509,12 +514,12 @@
 "TBX3","Mus_musculus|M02210_1.94d|DREAM_contest|2000.txt; Mus_musculus|M02206_1.94d|DREAM_contest|1421.txt; Gasterosteus_aculeatus|M02205_1.94d|Zoo_01|6485.txt; Takifugu_rubripes|M02214_1.94d|Zoo_01|6802.txt; Nasonia_vitripennis|M02222_1.94d|SebePedros2013|6733.txt",5
 "TBX4","Mus_musculus|M02207_1.94d|DREAM_contest|1426.txt; Mus_musculus|M02209_1.94d|DREAM_contest|1422.txt; Branchiostoma_floridae|M02224_1.94d|SebePedros2013|6866.txt; Strongylocentrotus_purpuratus|M02221_1.94d|Zoo_01|6735.txt",4
 "TBX5","Mus_musculus|M02209_1.94d|DREAM_contest|1422.txt; Mus_musculus|M02207_1.94d|DREAM_contest|1426.txt; Strongylocentrotus_purpuratus|M02221_1.94d|Zoo_01|6735.txt",3
-"TCF12","Mus_musculus|M00254_1.94d|Zoo_01|1362.txt; Mus_musculus|M00266_1.94d|Zoo_01|207.txt; Homo_sapiens|NA|Unpublished|TCF3.txt; Mus_musculus|M00231_1.94d|DREAM_contest|1466.txt; Mus_musculus|M00233_1.94d|Badis09|Tcfe2a_3865.1=v2.txt",5
+"TCF12","Mus_musculus|M00254_1.94d|Zoo_01|1362.txt; Mus_musculus|M00266_1.94d|Zoo_01|207.txt; Homo_sapiens|NA|Unpublished|TCF3.txt; Mus_musculus|M00233_1.94d|Badis09|Tcfe2a_3865.1=v2.txt; Mus_musculus|M00231_1.94d|DREAM_contest|1466.txt",5
 "TCF15","Mus_musculus|M00242_1.94d|Zoo_01|231.txt; Mus_musculus|M00224_1.94d|Zoo_01|127.txt",2
 "TCF21","Mus_musculus|M00242_1.94d|Zoo_01|231.txt",1
 "TCF23","Mus_musculus|M00242_1.94d|Zoo_01|231.txt",1
-"TCF3","Homo_sapiens|NA|Unpublished|TCF3.txt; Mus_musculus|M00266_1.94d|Zoo_01|207.txt; Mus_musculus|M00254_1.94d|Zoo_01|1362.txt; Mus_musculus|M00231_1.94d|DREAM_contest|1466.txt; Mus_musculus|M00233_1.94d|Badis09|Tcfe2a_3865.1=v2.txt",5
-"TCF4","Mus_musculus|M00266_1.94d|Zoo_01|207.txt; Mus_musculus|M00254_1.94d|Zoo_01|1362.txt; Homo_sapiens|NA|Unpublished|TCF3.txt; Mus_musculus|M00231_1.94d|DREAM_contest|1466.txt; Mus_musculus|M00233_1.94d|Badis09|Tcfe2a_3865.1=v2.txt",5
+"TCF3","Homo_sapiens|NA|Unpublished|TCF3.txt; Mus_musculus|M00266_1.94d|Zoo_01|207.txt; Mus_musculus|M00254_1.94d|Zoo_01|1362.txt; Mus_musculus|M00233_1.94d|Badis09|Tcfe2a_3865.1=v2.txt; Mus_musculus|M00231_1.94d|DREAM_contest|1466.txt",5
+"TCF4","Mus_musculus|M00266_1.94d|Zoo_01|207.txt; Mus_musculus|M00254_1.94d|Zoo_01|1362.txt; Homo_sapiens|NA|Unpublished|TCF3.txt; Mus_musculus|M00233_1.94d|Badis09|Tcfe2a_3865.1=v2.txt; Mus_musculus|M00231_1.94d|DREAM_contest|1466.txt",5
 "TCF7","Mus_musculus|M02156_1.94d|Badis09|Tcf7_0950.2=v2.txt; Mus_musculus|M02162_1.94d|Badis09|Tcf7l2_3461.1=v1.txt; Mus_musculus|M02164_1.94d|Badis09|Lef1_3504.1=v1.txt",3
 "TCF7L1","Mus_musculus|M02162_1.94d|Badis09|Tcf7l2_3461.1=v1.txt",1
 "TCF7L2","Mus_musculus|M02162_1.94d|Badis09|Tcf7l2_3461.1=v1.txt; Mus_musculus|M02156_1.94d|Badis09|Tcf7_0950.2=v2.txt; Mus_musculus|M02164_1.94d|Badis09|Lef1_3504.1=v1.txt",3
@@ -523,14 +528,14 @@
 "TERF2","Mus_musculus|M01857_1.94d|Zoo_01|5770.txt",1
 "TET1","Homo_sapiens|M00880_1.94d|Zoo_01|7371.txt",1
 "TFAP2A","Homo_sapiens|NA|Unpublished|TFAP2A.txt; Mus_musculus|M00117_1.94d|Badis09|Tcfap2a_2337.3=v2.txt; Mus_musculus|M00118_1.94d|Badis09|Tcfap2b_3988.1=v2.txt; Mus_musculus|M00119_1.94d|Badis09|Tcfap2c_2912.2=v2.txt",4
-"TFAP2B","Mus_musculus|M00118_1.94d|Badis09|Tcfap2b_3988.1=v2.txt; Homo_sapiens|NA|Unpublished|TFAP2A.txt; Mus_musculus|M00117_1.94d|Badis09|Tcfap2a_2337.3=v2.txt; Mus_musculus|M00119_1.94d|Badis09|Tcfap2c_2912.2=v2.txt",4
+"TFAP2B","Mus_musculus|M00118_1.94d|Badis09|Tcfap2b_3988.1=v2.txt; Mus_musculus|M00117_1.94d|Badis09|Tcfap2a_2337.3=v2.txt; Homo_sapiens|NA|Unpublished|TFAP2A.txt; Mus_musculus|M00119_1.94d|Badis09|Tcfap2c_2912.2=v2.txt",4
 "TFAP2C","Mus_musculus|M00119_1.94d|Badis09|Tcfap2c_2912.2=v2.txt; Homo_sapiens|NA|Unpublished|TFAP2A.txt; Mus_musculus|M00117_1.94d|Badis09|Tcfap2a_2337.3=v2.txt; Mus_musculus|M00118_1.94d|Badis09|Tcfap2b_3988.1=v2.txt",4
-"TFAP2D","Mus_musculus|M00117_1.94d|Badis09|Tcfap2a_2337.3=v2.txt; Mus_musculus|M00120_1.94d|Badis09|Tcfap2e_3713.1=v1.txt; Homo_sapiens|NA|Unpublished|TFAP2A.txt; Mus_musculus|M00118_1.94d|Badis09|Tcfap2b_3988.1=v2.txt",4
+"TFAP2D","Mus_musculus|M00117_1.94d|Badis09|Tcfap2a_2337.3=v2.txt; Homo_sapiens|NA|Unpublished|TFAP2A.txt; Mus_musculus|M00120_1.94d|Badis09|Tcfap2e_3713.1=v1.txt; Mus_musculus|M00118_1.94d|Badis09|Tcfap2b_3988.1=v2.txt",4
 "TFAP2E","Mus_musculus|M00120_1.94d|Badis09|Tcfap2e_3713.1=v1.txt; Mus_musculus|M00118_1.94d|Badis09|Tcfap2b_3988.1=v2.txt; Mus_musculus|M00117_1.94d|Badis09|Tcfap2a_2337.3=v2.txt; Mus_musculus|M00119_1.94d|Badis09|Tcfap2c_2912.2=v2.txt",4
 "TFAP4","Mus_musculus|M00223_1.94d|Zoo_01|1300.txt",1
-"TFE3","Mus_musculus|M00221_1.94d|Zoo_01|1600.txt; Mus_musculus|M00255_1.94d|Zoo_01|1347.txt; Homo_sapiens|NA|Unpublished|MITF.txt; Mus_musculus|M00240_1.94d|Zoo_01|1369.txt; Mus_musculus|M00249_1.94d|Zoo_01|1356.txt; Mus_musculus|M00248_1.94d|DREAM_contest|1399.txt",6
-"TFEB","Mus_musculus|M00240_1.94d|Zoo_01|1369.txt; Homo_sapiens|NA|Unpublished|MITF.txt; Mus_musculus|M00221_1.94d|Zoo_01|1600.txt; Mus_musculus|M00249_1.94d|Zoo_01|1356.txt; Mus_musculus|M00248_1.94d|DREAM_contest|1399.txt",5
-"TFEC","Mus_musculus|M00248_1.94d|DREAM_contest|1399.txt; Mus_musculus|M00249_1.94d|Zoo_01|1356.txt; Mus_musculus|M00255_1.94d|Zoo_01|1347.txt; Mus_musculus|M00240_1.94d|Zoo_01|1369.txt",4
+"TFE3","Mus_musculus|M00221_1.94d|Zoo_01|1600.txt; Homo_sapiens|NA|Unpublished|MITF.txt; Mus_musculus|M00255_1.94d|Zoo_01|1347.txt; Mus_musculus|M00240_1.94d|Zoo_01|1369.txt; Mus_musculus|M00248_1.94d|DREAM_contest|1399.txt; Mus_musculus|M00249_1.94d|Zoo_01|1356.txt",6
+"TFEB","Mus_musculus|M00240_1.94d|Zoo_01|1369.txt; Homo_sapiens|NA|Unpublished|MITF.txt; Mus_musculus|M00221_1.94d|Zoo_01|1600.txt; Mus_musculus|M00248_1.94d|DREAM_contest|1399.txt; Mus_musculus|M00249_1.94d|Zoo_01|1356.txt",5
+"TFEC","Mus_musculus|M00249_1.94d|Zoo_01|1356.txt; Mus_musculus|M00248_1.94d|DREAM_contest|1399.txt; Mus_musculus|M00255_1.94d|Zoo_01|1347.txt; Mus_musculus|M00240_1.94d|Zoo_01|1369.txt",4
 "TGIF1","Mus_musculus|M01429_1.94d|Berger08|Tgif1_2342.2.txt; Mus_musculus|M01453_1.94d|Berger08|Tgif2_3451.1.txt",2
 "TGIF2","Mus_musculus|M01453_1.94d|Berger08|Tgif2_3451.1.txt; Mus_musculus|M01429_1.94d|Berger08|Tgif1_2342.2.txt",2
 "TGIF2LX","Mus_musculus|M01453_1.94d|Berger08|Tgif2_3451.1.txt; Mus_musculus|M01429_1.94d|Berger08|Tgif1_2342.2.txt",2
@@ -541,12 +546,12 @@
 "USF1","Mus_musculus|M00268_1.94d|Zoo_01|2533.txt",1
 "USF2","Mus_musculus|M00268_1.94d|Zoo_01|2533.txt",1
 "VAX1","Mus_musculus|M01323_1.94d|Berger08|Vax1_3499.1.txt; Homo_sapiens|M01242_1.94d|Barrera2016|VAX2_REF_R2.txt; Mus_musculus|M01393_1.94d|Berger08|Vax2_3500.1.txt; Homo_sapiens|M01241_1.94d|Barrera2016|VAX2_L139M_R2.txt",4
-"VAX2","Homo_sapiens|M01241_1.94d|Barrera2016|VAX2_L139M_R2.txt; Mus_musculus|M01393_1.94d|Berger08|Vax2_3500.1.txt; Mus_musculus|M01323_1.94d|Berger08|Vax1_3499.1.txt",3
-"VENTX","Homo_sapiens|M01267_1.94d|Barrera2016|VENTX_REF_R1.txt; Homo_sapiens|M01264_1.94d|Zoo_01|1593.txt; Homo_sapiens|M01265_1.94d|Barrera2016|VENTX_E101K_R1.txt",3
-"VSX1","Homo_sapiens|M01222_1.94d|Barrera2016|VSX1_REF_R1.txt; Homo_sapiens|M01221_1.94d|Barrera2016|VSX1_R166Q_R1.txt; Homo_sapiens|M01220_1.94d|Barrera2016|VSX1_Q175H_R1.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt",6
-"VSX2","Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Homo_sapiens|M01244_1.94d|Barrera2016|VSX2_R200Q_R1.txt; Danio_rerio|M01209_1.94d|Zoo_01|2479.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt",5
-"WT1","Homo_sapiens|M00575_1.94d|Barrera2016|WT1_R366C_R1.txt; Homo_sapiens|M00576_1.94d|Barrera2016|WT1_R366L_R1.txt; Homo_sapiens|M00574_1.94d|Barrera2016|WT1_H373Y_R1.txt",3
-"XBP1","Mus_musculus|M00385_1.94d|Zoo_01|1190.txt; Mus_musculus|M00384_1.94d|DREAM_contest|1394.txt",2
+"VAX2","Homo_sapiens|M01241_1.94d|Barrera2016|VAX2_L139M_R2.txt; Mus_musculus|M01323_1.94d|Berger08|Vax1_3499.1.txt; Mus_musculus|M01393_1.94d|Berger08|Vax2_3500.1.txt",3
+"VENTX","Homo_sapiens|M01264_1.94d|Zoo_01|1593.txt; Homo_sapiens|M01267_1.94d|Barrera2016|VENTX_REF_R1.txt; Homo_sapiens|M01265_1.94d|Barrera2016|VENTX_E101K_R1.txt",3
+"VSX1","Homo_sapiens|M01220_1.94d|Barrera2016|VSX1_Q175H_R1.txt; Homo_sapiens|M01221_1.94d|Barrera2016|VSX1_R166Q_R1.txt; Homo_sapiens|M01222_1.94d|Barrera2016|VSX1_REF_R1.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt",6
+"VSX2","Homo_sapiens|M01244_1.94d|Barrera2016|VSX2_R200Q_R1.txt; Homo_sapiens|M01245_1.94d|Barrera2016|VSX2_REF_R1.txt; Danio_rerio|M01209_1.94d|Zoo_01|2479.txt; Mus_musculus|M01388_1.94d|Berger08|Vsx1_1728.1.txt; Tetraodon_nigroviridis|M01478_1.94d|Zoo_01|2002.txt",5
+"WT1","Homo_sapiens|M00575_1.94d|Barrera2016|WT1_R366C_R1.txt; Homo_sapiens|M00574_1.94d|Barrera2016|WT1_H373Y_R1.txt; Homo_sapiens|M00576_1.94d|Barrera2016|WT1_R366L_R1.txt",3
+"XBP1","Mus_musculus|M00384_1.94d|DREAM_contest|1394.txt; Mus_musculus|M00385_1.94d|Zoo_01|1190.txt",2
 "YBX1","Caenorhabditis_elegans|M00858_1.94d|Zoo_01|6233.txt",1
 "YBX2","Caenorhabditis_elegans|M00858_1.94d|Zoo_01|6233.txt",1
 "YBX3","Caenorhabditis_elegans|M00858_1.94d|Zoo_01|6233.txt",1
@@ -572,7 +577,7 @@
 "ZNF263","Mus_musculus|M00591_1.94d|DREAM_contest|598.txt",1
 "ZNF281","Mus_musculus|M00615_1.94d|Badis09|Zfp281_0973.2=v1.txt",1
 "ZNF35","Mus_musculus|M00633_1.94d|Badis09|Zfp105_2634.2=v2.txt",1
-"ZNF655","Homo_sapiens|M00583_1.94d|Barrera2016|ZNF655_S393L_R2.txt; Homo_sapiens|M00581_1.94d|Barrera2016|ZNF655_E327G_R2.txt; Homo_sapiens|M00582_1.94d|Barrera2016|ZNF655_REF_R2.txt",3
+"ZNF655","Homo_sapiens|M00581_1.94d|Barrera2016|ZNF655_E327G_R2.txt; Homo_sapiens|M00583_1.94d|Barrera2016|ZNF655_S393L_R2.txt; Homo_sapiens|M00582_1.94d|Barrera2016|ZNF655_REF_R2.txt",3
 "ZNF691","Mus_musculus|M00623_1.94d|Badis09|Zfp691_0895.2=v1.txt",1
-"ZNF740","Mus_musculus|M00625_1.94d|Badis09|Zfp740_0925.2=v2.txt; Mus_musculus|M00624_1.94d|DREAM_contest|1226.txt",2
+"ZNF740","Mus_musculus|M00624_1.94d|DREAM_contest|1226.txt; Mus_musculus|M00625_1.94d|Badis09|Zfp740_0925.2=v2.txt",2
 "ZNF8","Mus_musculus|M00635_1.94d|Badis09|Zfp128_2806.2=v2.txt",1
