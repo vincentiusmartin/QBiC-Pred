@@ -10,7 +10,6 @@ def get_chrom(cfile):
 
 def itoseq(seqint,kmer):
     nucleotides = {0:'A',1:'C',2:'G',3:'T'}
-    binrep = 0
     seq = ""
     while(seqint > 0):
         seq = nucleotides[seqint & 3] + seq

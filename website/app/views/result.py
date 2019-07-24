@@ -185,7 +185,8 @@ def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_as
         result['recordsFiltered'] = len(filtered_docs)
         result['data'] = filtered_docs[start:start+length]
     else:
-        query = redisearch.Query("*").sort_by(order_col,order_asc).paging(start,length)
+        # query = redisearch.Query("*").paging(start,length)
+        query = redisearch.Query("*").paging(start,length)
         res = client.search(query)
         result['recordsFiltered'] = res.total
         result['data'] = res.docs
