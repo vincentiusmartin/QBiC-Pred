@@ -291,7 +291,6 @@ def main():
     args = parser.parse_args()
 
     #python3 main.py -i inputs/test.vcf -g inputs/gene_input.txt -c hg38
-    print(args)
 
     tbl = inittbl(args.inputfile, args.chrver)
 
