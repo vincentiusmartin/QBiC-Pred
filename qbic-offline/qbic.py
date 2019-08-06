@@ -155,7 +155,6 @@ def predict(predlist, dataset, ready_count,
     newcontainer = {}
     for row_key in container:
         newcontainer[row_key[:-2]] = container[row_key]
-    print(newcontainer)
     return newcontainer
 
 def format2tbl(tbl,gene_names,filteropt=1):
@@ -297,6 +296,7 @@ def main():
     args = parser.parse_args()
 
     #python3 qbic.py -i testing_resources/test.vcf -g testing_resources/gene_input.txt -c hg19
+    #TfX E2F
 
     tbl = inittbl(args.inputfile, args.chrver)
 

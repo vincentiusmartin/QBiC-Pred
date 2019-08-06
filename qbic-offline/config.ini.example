@@ -1,14 +1,11 @@
 
 [General Conf]
 # cpu.count
-PCOUNT = 2
+PCOUNT = cpu.count
 
 [Directory Setting]
-PREDDIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/preddir
-CHRDIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/chromosomes
-ESCORE_DIR = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/escore/escore
-PBM_HUGO_MAPPING = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/QBiC-Pred/website/resource/test/pbmtohugo.txt
-HUGO_PBM_MAPPING = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/QBiC-Pred/website/resource/test/hugotopbm.txt
-HUGO_NAME_ID_MAPPING = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/QBiC-Pred/website/resources/hugo_name_to_hugo_id.txt
-HGNC_GENE_NAMES = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/QBiC-Pred/website/resources/TF_names_v_1.01.txt
-MODELS_TBL_PATH = /Users/vincentiusmartin/Research/MutationPredictor/QBiC-Pred/QBiC-Pred/website/resources/QBiC_mapping_582_TFgenes_to_667_uPBM_datasets_FULL_INFORMATION.csv
+PREDDIR = /your/path/here/preddir
+CHRDIR = /your/path/here/chromosomes
+ESCORE_DIR = /your/path/here/escore
+PBM_HUGO_MAPPING = /your/path/here/pbmtohugo.txt
+HUGO_PBM_MAPPING = /your/path/here/hugotopbm.txt
