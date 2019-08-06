@@ -35,5 +35,6 @@ with the paths to the following files: [PBM_HUGO_MAPPING](https://github.com/vin
 Below is an example of a command to run QBiC offline:
 > `python3 qbic.py -i testing_resources/input_mutation_test.vcf -g testing_resources/tflist_test.txt -c hg19 -o predictons.tsv`.
 
-The first parameteer `-i` is the input mutation file and `-g` is a file with all
-TF genes of interest. Please see the full list of the supported TF genes [here](https://github.com/vincentiusmartin/QBiC-Pred/blob/master/website/resources/TF_names_v_1.01.txt). Then `-c` as the chromosome version and `-o` for the output directory.
+The first parameter `-i` is the input mutation file and `-g` is a file with all
+TF genes of interest--please see the full list of the supported TF genes [here](https://github.com/vincentiusmartin/QBiC-Pred/blob/master/website/resources/TF_names_v_1.01.txt). Then `-c` as the chromosome version and `-o` for the output directory.
+For the full list of available arguments, do `python3 qbic.py --help`.
