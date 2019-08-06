@@ -40,5 +40,3 @@ ESCORE_DIR = config["Directory Setting"]["ESCORE_DIR"]
 PBM_HUGO_MAPPING = config["Directory Setting"]["PBM_HUGO_MAPPING"]
 DBD_PBM_MAPPING = get_family_map(config["Directory Setting"]["HUGO_PBM_MAPPING"])
 HUGO_PBM_MAPPING = dictfamily2genedict([DBD_PBM_MAPPING[key] for key in DBD_PBM_MAPPING])
-HUGO_NAME_ID_MAPPING = parse_hugo_name_mapping(config["Directory Setting"]["HUGO_NAME_ID_MAPPING"])
-MODELS_TBL_PATH = config["Directory Setting"]["MODELS_TBL_PATH"]

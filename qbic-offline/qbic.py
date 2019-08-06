@@ -79,7 +79,6 @@ def inittbl(filename, chromosome_version, kmer = 6):
     result = sorted(result,key=lambda result:result[0])
     # example row in result: [73, 'CCAACCAACCCA', 'ATTCCAACCAACCCCCTA', 5263444, 0, 0, 'None']
     print("Time to preprocess: {:.2f}secs".format(time.time()-start))
-    print(result)
     return result
 
 def predict(predlist, dataset, ready_count,
