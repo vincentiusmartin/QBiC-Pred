@@ -281,6 +281,7 @@ def get_res_tbl(task_id):
     cols = ast.literal_eval(db.hgetall("%s:cols"%task_id)['cols'])
 
     filtered_db = filter_fromdb(task_id,searchFilter,start,length,cols[order_col],order_asc)
+    # filtered = filter_fromdb(task_id,search_filter,start=0,length=-1) -- in download
 
     retlist = []
 

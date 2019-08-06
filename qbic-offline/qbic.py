@@ -16,8 +16,13 @@ def inittbl(filename, chromosome_version, kmer = 6):
     start = time.time()
     file_extension = os.path.splitext(filename)[1]
 
+    # validate inputs
     if file_extension != ".txt" and file_extension != ".vcf" and file_extension != ".tsv" and file_extension != ".csv":
         raise Exception('File extension should be either txt, vcf, tsv, or csv')
+
+    chrs = [name for name in os.listdir(config.CHRDIR) if os.path.isdir(config.CHRDIR + "/" + name)]
+    if chromosome_version not in chrs:
+        raise Exception('Chromosome version is not available, please use one of the following: %s' % ", ".join(chrs))
 
     result = []
     error = ""
@@ -74,6 +79,7 @@ def inittbl(filename, chromosome_version, kmer = 6):
     result = sorted(result,key=lambda result:result[0])
     # example row in result: [73, 'CCAACCAACCCA', 'ATTCCAACCAACCCCCTA', 5263444, 0, 0, 'None']
     print("Time to preprocess: {:.2f}secs".format(time.time()-start))
+    print(result)
     return result
 
 def predict(predlist, dataset, ready_count,
@@ -150,6 +156,7 @@ def predict(predlist, dataset, ready_count,
     newcontainer = {}
     for row_key in container:
         newcontainer[row_key[:-2]] = container[row_key]
+    print(newcontainer)
     return newcontainer
 
 def format2tbl(tbl,gene_names,filteropt=1):
@@ -290,7 +297,7 @@ def main():
                         default=0.35, help='PBM E-score non-specific cutoff.')
     args = parser.parse_args()
 
-    #python3 main.py -i inputs/test.vcf -g inputs/gene_input.txt -c hg38
+    #python3 qbic.py -i testing_resources/test.vcf -g testing_resources/gene_input.txt -c hg19
 
     tbl = inittbl(args.inputfile, args.chrver)
 
