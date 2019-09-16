@@ -278,7 +278,7 @@ def main():
 
     parser = argparse.ArgumentParser(description = 'TF Mutation Predictions')
     parser.add_argument('-i', '--inputfile', action="store", dest="inputfile", type=str,
-                        help='Input mutation file in .vcf, .tsv, .csv, or .txt firmat.')
+                        help='Input mutation file in .vcf, .tsv, .csv, or .txt format.')
     parser.add_argument('-g', '--genesfile', action="store", dest="genesfile", type=str,
                         help='A file that contains all TF genes that are desired.')
     parser.add_argument('-o', '--outpath', action="store", dest="outpath", type=str,
@@ -295,7 +295,7 @@ def main():
                         default=0.35, help='PBM E-score non-specific cutoff.')
     args = parser.parse_args()
 
-    #python3 qbic.py -i testing_resources/test.vcf -g testing_resources/gene_input.txt -c hg19
+    #python3 qbic.py -i testing_resources/QBiC-sequence-format-example-ELK1_17mers.txt -g testing_resources/gene_input.txt -c hg19
     #TfX E2F
 
     tbl = inittbl(args.inputfile, args.chrver)
