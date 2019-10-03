@@ -100,11 +100,10 @@ def predict(predlist, dataset, ready_count,
     else:
         container = {tuple(row[:4]):[[0,0,1,"None","None"]] for row in dataset} # rowidx,12mer,18mer,seqidx : [diff,z,p,bind,pbmname]
 
-    # convert container into a DataFrame for efficient mapping
-    container = pd.DataFrame.from_dict(container,orient='index').transpose()
-
     escore_total_time = 0
     if optim == True:
+        # convert container into a DataFrame for efficient mapping
+        container = pd.DataFrame.from_dict(container,orient='index').transpose()
         # iterate for each transcription factor
         for i in range(0,len(predlist)):
             start = time.time()
