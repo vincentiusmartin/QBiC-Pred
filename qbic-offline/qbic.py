@@ -64,7 +64,7 @@ def inittbl(filename, chromosome_version, kmer = 6):
             if cidx not in dataset:
                 continue
             print("Iterating dataset for chromosome {}...".format(cidx))
-            chromosome = utils.get_chrom(config.CHRDIR + "/" + chromosome_version + "/chr." + str(cidx) + '.fa.gz')
+            chromosome = utils.get_chrom(config.CHRDIR + "/" + chromosome_version + "/chr" + str(cidx) + '.fa.gz')
             for idx,row in dataset[cidx].iterrows():
                 pos = row['pos'] - 1
                 if row['mutated_from'] != chromosome[pos]:
