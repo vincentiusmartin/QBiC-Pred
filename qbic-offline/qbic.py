@@ -111,7 +111,7 @@ def predict(predlist, dataset, ready_count,
             print("Processing " + pbmname)
             with open(predlist[i], 'r') as f:
                 tf_df = pd.read_csv(f, delimiter=' ').round(5).fillna(0)
-            if len(tflist) < 4**12:
+            if tflist.shape[0] < 4**12:
                 print("Skip %s since it has less rows than 4**12" % pbmname)
                 buggedtf += 1
                 continue
@@ -164,7 +164,7 @@ def predict(predlist, dataset, ready_count,
             print("Processing " + pbmname)
             with open(predlist[i], 'r') as f:
                 tflist = pd.read_csv(f, delimiter=' ').round(5).values.tolist()
-            if tflist.shape[0] < 4**12:
+            if len(tflist) < 4**12:
                 print("Skip %s since it has less rows than 4**12" % pbmname)
                 buggedtf += 1
                 continue
