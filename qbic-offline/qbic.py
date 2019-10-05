@@ -7,6 +7,7 @@ import numpy as np
 import scipy.stats
 import argparse
 import collections
+import sys
 
 from timeit import default_timer as timer
 
@@ -312,6 +313,15 @@ def main():
     fileinput = "inputs/test.vcf"
     genelist = "inputs/gene_input.txt"
     outpath = "result.csv"""
+
+    # cProfile capitulation
+    # https://stackoverflow.com/questions/53890693/cprofile-causes-pickling-error-when-running-multiprocessing-python-code
+    import cProfile
+    if sys.modules['__main__'].__file__ == cProfile.__file__:
+        import qbic # re-import main (does *not* use cache or execute as __main__)
+        globals().update(vars(qbic))  # Replaces current contents with newly imported stuff
+        sys.modules['__main__'] = qbic  # Ensures pickle lookups on __main__ find matching version
+
 
     parser = argparse.ArgumentParser(description = 'TF Mutation Predictions')
     parser.add_argument('-i', '--inputfile', action="store", dest="inputfile", type=str,
