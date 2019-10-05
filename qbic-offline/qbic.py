@@ -167,7 +167,9 @@ def predict(predlist, dataset, ready_count,
                     # For 10k rows, total: 141.34secs, from e-score 128.56331secs
                     # For 50k rows, total: 771.42 secs, from e-score: 752.123secs
                     # another example: 2547.41secs, from e-score: 2523.96897secs
-                    isbound = utils.isbound_escore_18mer(row_key[2], pbmname, config.ESCORE_DIR, spec_ecutoff, nonspec_ecutoff)
+                    eshort_path = "%s/%s_escore.txt" % (escore_dir,pbm_name)
+                    short2long_map = "%s/index_short_to_long.csv" % (escore_dir)
+                    isbound = utils.isbound_escore_18mer(row_key[2], eshort_path, short2long_map, spec_ecutoff, nonspec_ecutoff)
                     container[row_key].append([diff,zscore,pval,isbound,pbmname])
                     test_end = timer()
                     escore_total_time += (test_end-test_start)
