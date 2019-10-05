@@ -105,7 +105,7 @@ def inittbl(filename, chromosome_version, kmer = 6, filetype=""):
 
 def predict(predlist, dataset, ready_count,
             filteropt="p-value", filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35,
-            optim=True, n_jobs=None, tf_bundle_size=4):
+            q=None, num_threads=None):
     """
     for the container list, key is a tuple of: (rowidx,sequence,seqidx)
     and each element in value is a list of: [diff,z-score,pbmname]
@@ -125,75 +125,78 @@ def predict(predlist, dataset, ready_count,
     '''
 
     escore_total_time = 0.
-    if optim == True:
-        # store the results here
-        res = []
+    # store the results here
+    res = []
 
-        # iterate for each transcription factor
-        for i in range(0,len(predlist)):
-            start = time.time()
-            pbmname = '.'.join(map(str,predlist[i].split(".")[1:-1]))
-            print("Processing " + pbmname)
-            with open(predlist[i], 'r') as f:
-                tf_df = pd.read_csv(f, delimiter=' ').round(5).fillna(0)
+    #iterate for each transcription factor
+    for i in range(0,len(predlist)):
+        start = time.time()
+        pbmname = '.'.join(map(str,predlist[i].split(".")[1:-1]))
+        print("Processing " + pbmname)
+        with open(predlist[i], 'r') as f:
+            tf_df = pd.read_csv(f, delimiter=' ').round(5).fillna(0)
             if tf_df.shape[0] < 4**12:
                 print("Skip %s since it has less rows than 4**12" % pbmname)
                 buggedtf += 1
                 continue
+  
+        # create a new local dataframe for computation + filtration
+        container = pd.DataFrame(dataset, columns = ['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'pbmname'])
 
-            # create a new local dataframe for computation + filtration
-            container = pd.DataFrame(dataset, columns = ['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'pbmname'])
+        # extract the z-scores and pvalues
+        container['z-score'] = tf_df.iloc[container['seqidx'], 1].values # copy values otherwise pd.Series index issue
+        container['p_val'] = scipy.stats.norm.sf(np.abs(container['z-score']))*2 
 
-            # extract the z-scores and pvalues
-            container['z-score'] = tf_df.iloc[container['seqidx'], 1].values # copy values otherwise pd.Series index issue
-            container['p_val'] = scipy.stats.norm.sf(np.abs(container['z-score']))*2 
+        # drop the p values above threshold (insignificant)
+        container = container[container['p_val'] <= filterval]
 
-            # drop the p values above threshold (insignificant)
-            container = container[container['p_val'] <= filterval]
+        # collect diff (done after thresholding)
+        container['diff'] = tf_df.iloc[container['seqidx'], 0].values # copy values otherwise pd.Series index issue
 
-            # collect diff (done after thresholding)
-            container['diff'] = tf_df.iloc[container['seqidx'], 0].values # copy values otherwise pd.Series index issue
+        # create a bound column and set the pbmname
+        container['isbound'] = "N/A"
+        container['pbmname'] = pbmname
 
-            # create a bound column and set the pbmname
-            container['isbound'] = "N/A"
-            container['pbmname'] = pbmname
-
-            # resort columns
-            container = container[['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'p_val', 'isbound', 'pbmname']]  
+        # resort columns
+        container = container[['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'p_val', 'isbound', 'pbmname']]  
 
 
-            if spec_ecutoff != -1 and nonspec_ecutoff != -1:
-                test_start = timer()
-                eshort_path = "%s/%s_escore.txt" % (config.ESCORE_DIR,pbmname)
-                short2long_map = "%s/index_short_to_long.csv" % (config.ESCORE_DIR)
-                container['isbound'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, eshort_path, short2long_map, spec_ecutoff, nonspec_ecutoff))
-                test_end = timer()
-                escore_total_time += (test_end-test_start)
+        if spec_ecutoff != -1 and nonspec_ecutoff != -1:
+            test_start = timer()
+            eshort_path = "%s/%s_escore.txt" % (config.ESCORE_DIR,pbmname)
+            short2long_map = "%s/index_short_to_long.csv" % (config.ESCORE_DIR)
+            container['isbound'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, eshort_path, short2long_map, spec_ecutoff, nonspec_ecutoff))
+            test_end = timer()
+            escore_total_time += (test_end-test_start)
 
-            print("Total e-score time %.5f" % escore_total_time)
-            ready_count.value += 1
-            print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
+        print("Total e-score time %.5f" % escore_total_time)
+        ready_count.value += 1
+        print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
 
-            # drop columns no longer needed
-            container.drop(columns=['seqidx', '18mer'], inplace=True)
+    # drop columns no longer needed
+    container.drop(columns=['seqidx', '18mer'], inplace=True)
 
-            # append to list
-            res += [container]
+    # append to list
+    res += [container]
 
-        # concatenate the individual tf containers
-        res = pd.concat(res, axis=0, ignore_index=True)
+    # concatenate the individual tf containers
+    res = pd.concat(res, axis=0, ignore_index=True)
 
-        # may modify downstream tasks to accept dataframe
-        # return res
-        
-        # for now, convert into the same format
-        tuple_keys = zip(res['row_key'], res['12mer'])
-        tuple_values = map(list, zip(res['diff'],  res['z-score'], res['p_val'], res['isbound'], res['pbmname']))
+    # may modify downstream tasks to accept dataframe
+    # return res
 
-        res = collections.defaultdict(list)
-        [res[k].extend([v]) for k,v in zip(tuple_keys, tuple_values)]
+    # for now, convert into the same format
+    tuple_keys = zip(res['row_key'], res['12mer'])
+    tuple_values = map(list, zip(res['diff'],  res['z-score'], res['p_val'], res['isbound'], res['pbmname']))
 
+    res = collections.defaultdict(list)
+    [res[k].extend([v]) for k,v in zip(tuple_keys, tuple_values)]
+
+    if q is None:
         return res
+    else:
+        q.put(res)
+        return None
 
 def format2tbl(tbl,gene_names,filteropt=1):
     '''
@@ -269,7 +272,7 @@ def parse_tfgenes(filepath, prefix = "prediction6mer.", sufix = ".txt"):
     return {"genes":genes,"pbms":unique_pbms}
 
 def do_prediction(intbl, pbms, gene_names,
-                  filteropt="p-value", filterval=0.0001, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
+                  filteropt="p-value", filterval=0.0001, spec_ecutoff=0.4, nonspec_ecutoff=0.35, num_threads=None):
     """
     intbl: preprocessed table
     filteropt: p-value or z-score
@@ -282,23 +285,33 @@ def do_prediction(intbl, pbms, gene_names,
     # move the comment here for testing
     predfiles = [config.PREDDIR + "/" + pbm for pbm in pbms] # os.listdir(preddir)
     preds = utils.chunkify(predfiles,config.PCOUNT) # chunks the predfiles for each process
-
+    
     # need to use manager here
     shared_ready_sum = mp.Manager().Value('i', 0)
 
-    pool = mp.Pool(processes=config.PCOUNT)
+    q = mp.JoinableQueue(config.PCOUNT) # maxsize of queue is num processes
     if filteropt == "p-value":
         filterval = float(filterval)
     else: #z-score
         filterval = int(filterval)
-    async_pools = [pool.apply_async(predict, (preds[i], intbl, shared_ready_sum, filteropt, filterval, spec_ecutoff, nonspec_ecutoff)) for i in range(0,len(preds))]
+    procs = [] # hold the processes
 
-    total = len(predfiles)
-    while not all([p.ready() for p in async_pools]):
-        time.sleep(2)
+    for pred in preds:
+        p = mp.Process(target = predict, args = (pred, intbl, shared_ready_sum, filteropt, filterval, spec_ecutoff, nonspec_ecutoff, q, num_threads))
+        p.start()
+        procs += [p]
 
-    res = [p.get() for p in async_pools]
-    pool.terminate()
+    # store queue results
+    res = []
+
+    for p in procs:
+        res += [q.get()]
+        q.task_done()
+        p.join()
+        p.terminate()
+
+    q.join()
+    q.close()
 
     colnames,datavalues = postprocess(res,gene_names,filteropt,filterval)
 
