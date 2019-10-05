@@ -6,6 +6,7 @@ import multiprocessing as mp
 import numpy as np
 import scipy.stats
 import argparse
+import collections
 
 from timeit import default_timer as timer
 
@@ -83,27 +84,27 @@ def inittbl(filename, chromosome_version, kmer = 6):
 
 def predict(predlist, dataset, ready_count,
             filteropt="p-value", filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35,
-            optim=False, n_jobs=None, tf_bundle_size=4):
+            optim=True, n_jobs=None, tf_bundle_size=4):
     """
     for the container list, key is a tuple of: (rowidx,sequence,seqidx)
     and each element in value is a list of: [diff,z-score,pbmname]
 
     return:
      filteropt=1: diff,z_score,tfname
-     filteropt=2: diff,p_val,escore,tfname
+     filteropt=2: diff,z_score,p_val,escore,tfname
     """
     buggedtf = 0
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
-    if filteropt == "p-value": #t-value
-        # leave this empty as for p-value, we don't have to compare and the size is dynamic
-        container = {tuple(row[:4]):[] for row in dataset}
-    else:
-        container = {tuple(row[:4]):[[0,0,1,"None","None"]] for row in dataset} # rowidx,12mer,18mer,seqidx : [diff,z,p,bind,pbmname]
+    
+    '''
+    EDIT -- this only works for p-values, z-scores need a different memory access pattern
+    '''
 
-    escore_total_time = 0
+    escore_total_time = 0.
     if optim == True:
-        # convert container into a DataFrame for efficient mapping
-        container = pd.DataFrame.from_dict(container,orient='index').transpose()
+        # store the results here
+        res = []
+
         # iterate for each transcription factor
         for i in range(0,len(predlist)):
             start = time.time()
@@ -111,109 +112,62 @@ def predict(predlist, dataset, ready_count,
             print("Processing " + pbmname)
             with open(predlist[i], 'r') as f:
                 tf_df = pd.read_csv(f, delimiter=' ').round(5).fillna(0)
-            if tflist.shape[0] < 4**12:
+            if tf_df.shape[0] < 4**12:
                 print("Skip %s since it has less rows than 4**12" % pbmname)
                 buggedtf += 1
                 continue
 
-            seq_idxs = container.iloc[:, 3]
-            diffs = tf_df.iloc[seq_idxs, 0]
-            zscores = tf_df.iloc[seq_idxs, 1]
+            # create a new local dataframe for computation + filtration
+            container = pd.DataFrame(dataset, columns = ['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'pbmname'])
 
-            pvals = scipy.stats.norm.sf(abs(zscores))*2
+            # extract the z-scores and pvalues
+            container['z-score'] = tf_df.iloc[container['seqidx'], 1].values # copy values otherwise pd.Series index issue
+            container['p_val'] = scipy.stats.norm.sf(np.abs(container['z-score']))*2 
 
-            display(container)
-            display(container.shape)
-            return None
+            # drop the p values above threshold (insignificant)
+            container = container[container['p_val'] <= filterval]
 
-            add = True
-            if filteropt == 1:
-                # if z-score is chosen then filterval is the maximum of item shown
-                if len(container[row_key]) >= filterval:
-                    least_idx = min(enumerate(container[row_key]),key=lambda x:abs(x[1][1]))[0]
-                    if abs(tflist[seqidx][1]) > abs(container[row_key][least_idx][1]):
-                        del container[row_key][least_idx]
-                    else:
-                        add = False
-                # filteropt = 2, if z-score is chosen then filterval is the p-val threshold
-                elif pval > filterval:
-                        add = False
-                # E-score calculation is here
-                if add:
-                    if spec_ecutoff == -1 or nonspec_ecutoff == -1:
-                        container[row_key].append([diff,zscore,pval,"N/A",pbmname])
-                    else:
-                        test_start = timer()
-                        # E-score calculation: 0.05 seconds each
-                        # For 10k rows, total: 141.34secs, from e-score 128.56331secs
-                        # For 50k rows, total: 771.42 secs, from e-score: 752.123secs
-                        # another example: 2547.41secs, from e-score: 2523.96897secs
-                        isbound = utils.isbound_escore_18mer(row_key[2], pbmname, config.ESCORE_DIR, spec_ecutoff, nonspec_ecutoff)
-                        container[row_key].append([diff,zscore,pval,isbound,pbmname])
-                        test_end = timer()
-                        escore_total_time += (test_end-test_start)
+            # collect diff (done after thresholding)
+            container['diff'] = tf_df.iloc[container['seqidx'], 0].values # copy values otherwise pd.Series index issue
+
+            # create a bound column and set the pbmname
+            container['isbound'] = "N/A"
+            container['pbmname'] = pbmname
+
+            # resort columns
+            container = container[['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'p_val', 'isbound', 'pbmname']]  
+
+
+            if spec_ecutoff != -1 and nonspec_ecutoff != -1:
+                test_start = timer()
+                container['isbound'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, pbmname, config.ESCORE_DIR, spec_ecutoff, nonspec_ecutoff))
+                test_end = timer()
+                escore_total_time += (test_end-test_start)
 
             print("Total e-score time %.5f" % escore_total_time)
             ready_count.value += 1
             print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
 
-    else:
-        for i in range(0,len(predlist)):
-            start = time.time()
-            pbmname = '.'.join(map(str,predlist[i].split(".")[1:-1]))
-            print("Processing " + pbmname)
-            with open(predlist[i], 'r') as f:
-                tflist = pd.read_csv(f, delimiter=' ').round(5).values.tolist()
-            if len(tflist) < 4**12:
-                print("Skip %s since it has less rows than 4**12" % pbmname)
-                buggedtf += 1
-                continue
-            for row_key in container:
-                seqidx = row_key[3]
-                diff = tflist[seqidx][0]
-                zscore = tflist[seqidx][1]
-                if np.isnan(zscore):
-                    zscore = 0
-                if np.isnan(diff):
-                    diff = 0
-                pval = scipy.stats.norm.sf(abs(zscore))*2
-                add = True
-                if filteropt == 1:
-                    # if z-score is chosen then filterval is the maximum of item shown
-                    if len(container[row_key]) >= filterval:
-                        least_idx = min(enumerate(container[row_key]),key=lambda x:abs(x[1][1]))[0]
-                        if abs(tflist[seqidx][1]) > abs(container[row_key][least_idx][1]):
-                            del container[row_key][least_idx]
-                        else:
-                            add = False
-                # filteropt = 2, if z-score is chosen then filterval is the p-val threshold
-                elif pval > filterval:
-                        add = False
-                # E-score calculation is here
-                if add:
-                    if spec_ecutoff == -1 or nonspec_ecutoff == -1:
-                        container[row_key].append([diff,zscore,pval,"N/A",pbmname])
-                    else:
-                        test_start = timer()
-                        # E-score calculation: 0.05 seconds each
-                        # For 10k rows, total: 141.34secs, from e-score 128.56331secs
-                        # For 50k rows, total: 771.42 secs, from e-score: 752.123secs
-                        # another example: 2547.41secs, from e-score: 2523.96897secs
-                        isbound = utils.isbound_escore_18mer(row_key[2], pbmname, config.ESCORE_DIR, spec_ecutoff, nonspec_ecutoff)
-                        container[row_key].append([diff,zscore,pval,isbound,pbmname])
-                        test_end = timer()
-                        escore_total_time += (test_end-test_start)
+            # drop columns no longer needed
+            container.drop(columns=['seqidx', '18mer'], inplace=True)
 
-            print("Total e-score time %.5f" % escore_total_time)
-            ready_count.value += 1
-            print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
+            # append to list
+            res += [container]
 
+        # concatenate the individual tf containers
+        res = pd.concat(res, axis=0, ignore_index=True)
 
-    # remove seqidx and 18mer as it is not needed anymore
-    newcontainer = {}
-    for row_key in container:
-        newcontainer[row_key[:-2]] = container[row_key]
-    return newcontainer
+        # may modify downstream tasks to accept dataframe
+        # return res
+        
+        # for now, convert into the same format
+        tuple_keys = zip(res['row_key'], res['12mer'])
+        tuple_values = map(list, zip(res['diff'],  res['z-score'], res['p_val'], res['isbound'], res['pbmname']))
+
+        res = collections.defaultdict(list)
+        [res[k].extend([v]) for k,v in zip(tuple_keys, tuple_values)]
+
+        return res
 
 def format2tbl(tbl,gene_names,filteropt=1):
     '''
@@ -285,7 +239,7 @@ def postprocess(datalist,gene_names,filteropt=1,filterval=1):
 
 def parse_tfgenes(filepath, prefix = "prediction6mer.", sufix = ".txt"):
     genes = open(filepath).read().splitlines()
-    unique_pbms = list({prefix + tf + sufix for gene in genes for tf in config.HUGO_PBM_MAPPING[gene]})
+    unique_pbms = [prefix + tf + sufix for gene in genes for tf in config.HUGO_PBM_MAPPING[gene]]
     return {"genes":genes,"pbms":unique_pbms}
 
 def do_prediction(intbl, pbms, gene_names,
@@ -357,11 +311,9 @@ def main():
     #TfX E2F
 
     tbl = inittbl(args.inputfile, args.chrver)
-
     input_genes = parse_tfgenes(args.genesfile)
     colnames, datavalues = do_prediction(tbl, input_genes["pbms"], input_genes["genes"], args.filteropt, args.filterval,
                                          args.escorespec, args.escorenonspec)
-
     print("Writing output to %s" % args.outpath)
     pd.DataFrame(datavalues).to_csv(args.outpath, index = False, columns = colnames, sep="\t")
 
