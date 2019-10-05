@@ -13,7 +13,7 @@ from timeit import default_timer as timer
 import utils
 import config
 
-def inittbl(filename, chromosome_version, kmer = 6):
+def inittbl(filename, chromosome_version, kmer = 6, filetype=""):
     start = time.time()
     file_extension = os.path.splitext(filename)[1]
 
@@ -28,8 +28,19 @@ def inittbl(filename, chromosome_version, kmer = 6):
     result = []
     error = ""
 
+    type = ""
+    if not filetype:
+        if file_extension == ".txt":
+            type = "customseq"
+        elif file_extension == ".vcf":
+            type = "vcf"
+        else:
+            type = "icgc"
+    else:
+        type = str(filetype)
+
     # TODO: if fast enough, we can also put error checking in here
-    if file_extension == ".txt":
+    if type == "customseq":
         with open(filename) as f:
             idx = 0
             for line in f:
@@ -43,20 +54,29 @@ def inittbl(filename, chromosome_version, kmer = 6):
                 mid_seq = escore_seq[len(escore_seq)//2-6:len(escore_seq)//2+5] + line[1] # the 12mer seq
                 result.append([idx,mid_seq,escore_seq,utils.seqtoi(mid_seq),0,0,"None"])
     else:
-        if file_extension == ".vcf":
+        if type == "vcf":
             df = pd.read_csv(filename,sep="\t",header=None).drop(2,1)
             df = df.rename(columns={0:"chromosome",1:"pos",3:"mutated_from",4:"mutated_to"})
-            df['chromosome'] = df['chromosome'].map(lambda x:x.replace("chr",""))
-        else:
+        elif type == "icgc" or type == "mut":
             if file_extension == ".tsv":
                 separator = "\t"
             else: # must be csv since we checked it, TODO: can also return error here
                 separator = ","
-            df = pd.read_csv(filename,
-                        sep=separator,
-                        usecols=['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele'])
-            df = df[df['mutation_type'].apply(lambda x: "single base substitution" == x)].drop('mutation_type',1).drop_duplicates() # only take single base mutation
-            df = df.rename(columns={"chromosome_start":"pos","mutated_from_allele":"mutated_from","mutated_to_allele":"mutated_to"})
+            if type == "icgc":
+                df = pd.read_csv(filename,
+                            sep=separator,
+                            usecols=['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele'])
+                df = df[df['mutation_type'].apply(lambda x: "single base substitution" == x)].drop('mutation_type',1).drop_duplicates() # only take single base mutation
+                df = df.rename(columns={"chromosome_start":"pos","mutated_from_allele":"mutated_from","mutated_to_allele":"mutated_to"})
+            else: # type == "mut", usually have chr, start, end, ref, alt
+                df = pd.read_csv(filename, sep=separator)
+                df.columns = ["chromosome",'pos','chromosome_end',"mutated_from","mutated_to"]
+                df = df.drop('chromosome_end',1)
+        else:
+            raise Exception("File type is not recognized")
+
+        # remove "chr" from all chromosomes
+        df['chromosome'] = df['chromosome'].map(lambda x:x.replace("chr",""))
 
         grouped = df.groupby('chromosome',sort=True)
         dataset = {key:item for key,item in grouped}
@@ -88,6 +108,10 @@ def predict(predlist, dataset, ready_count,
     """
     for the container list, key is a tuple of: (rowidx,sequence,seqidx)
     and each element in value is a list of: [diff,z-score,pbmname]
+    If spec_ecutoff and nonspec_ecutoff == -1 then no escore calculation is done
+
+    filteropt = p-value, t-value, none
+                if none then just calculate escore
 
     return:
      filteropt=1: diff,z_score,tfname
@@ -95,7 +119,6 @@ def predict(predlist, dataset, ready_count,
     """
     buggedtf = 0
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
-    
     '''
     EDIT -- this only works for p-values, z-scores need a different memory access pattern
     '''
@@ -140,7 +163,9 @@ def predict(predlist, dataset, ready_count,
 
             if spec_ecutoff != -1 and nonspec_ecutoff != -1:
                 test_start = timer()
-                container['isbound'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, pbmname, config.ESCORE_DIR, spec_ecutoff, nonspec_ecutoff))
+                eshort_path = "%s/%s_escore.txt" % (config.ESCORE_DIR,pbmname)
+                short2long_map = "%s/index_short_to_long.csv" % (config.ESCORE_DIR)
+                container['isbound'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, eshort_path, short2long_map, spec_ecutoff, nonspec_ecutoff))
                 test_end = timer()
                 escore_total_time += (test_end-test_start)
 
@@ -293,6 +318,8 @@ def main():
                         help='Input mutation file in .vcf, .tsv, .csv, or .txt format.')
     parser.add_argument('-g', '--genesfile', action="store", dest="genesfile", type=str,
                         help='A file that contains all TF genes that are desired.')
+    parser.add_argument('-t', '--filetype', action="store", dest="filetype", type=str,
+                        default="", help='File type can specify: vcf, icgc, customseq, or mut')
     parser.add_argument('-o', '--outpath', action="store", dest="outpath", type=str,
                         default="out.tsv", help='name of the .tsv file that is made')
     parser.add_argument('-f', '--filteropt', action="store", dest="filteropt", type=str,
@@ -307,16 +334,17 @@ def main():
                         default=0.35, help='PBM E-score non-specific cutoff.')
     args = parser.parse_args()
 
-    #python3 qbic.py -i testing_resources/QBiC-sequence-format-example-ELK1_17mers.txt -g testing_resources/gene_input.txt -c hg19
+    #python3 qbic.py -i testing_resources/single_mutations_sample.tsv -g testing_resources/gene_input.txt -c hg19
+    # input_mutation_test.vcf
+    # -t mut
     #TfX E2F
 
-    tbl = inittbl(args.inputfile, args.chrver)
+    tbl = inittbl(args.inputfile, args.chrver, filetype = args.filetype)
     input_genes = parse_tfgenes(args.genesfile)
     colnames, datavalues = do_prediction(tbl, input_genes["pbms"], input_genes["genes"], args.filteropt, args.filterval,
                                          args.escorespec, args.escorenonspec)
     print("Writing output to %s" % args.outpath)
     pd.DataFrame(datavalues).to_csv(args.outpath, index = False, columns = colnames, sep="\t")
-
 
 if __name__=="__main__":
     main()

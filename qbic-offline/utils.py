@@ -36,12 +36,33 @@ def is_dna(sequence,length=0):
         check = (len(sequence) == length)
     return check
 
-def isbound_escore(seq,etable,kmer=8,bsite_cutoff=0.4,nbsite_cutoff=0.35):
+def isbound_escore_8merdict(seq, edict, kmer=8,  bsite_cutoff=0.4, nbsite_cutoff=0.35):
+    elist = []
+    for i in range(0, len(seq)-kmer+1):
+        kmer_seq = seq[i:i+kmer]
+        elist.append(edict[kmer_seq])
+    if max(elist) < nbsite_cutoff:
+        return "unbound"
+    else:
+        isbound = False
+        for i in range(0,len(elist)):
+            if elist[i] > bsite_cutoff:
+                if isbound:
+                    return "bound"
+                else:
+                    isbound = True
+            else:
+                isbound = False
+        return "ambiguous"
+
+def isbound_escore(seq, etable, kmer=8, bsite_cutoff=0.4, nbsite_cutoff=0.35):
     nucleotides = {'A':0,'C':1,'G':2,'T':3}
     grapper = (2<<(8*2-1))-1
     binrep = seqtoi(seq[0:kmer])
     elist = [etable[binrep]]
     for i in range(kmer,len(seq)):
+        # take one more nucleotide each time and append to the last kmer-1
+        # characters
         binrep = ((binrep << 2) | seqtoi(seq[i])) & grapper
         elist.append(etable[binrep])
     if max(elist) < nbsite_cutoff:
@@ -61,10 +82,10 @@ def isbound_escore(seq,etable,kmer=8,bsite_cutoff=0.4,nbsite_cutoff=0.35):
 """
 return: "is bound wild > is bound mut"
 """
-def isbound_escore_18mer(seq18mer,pbm_name,escore_dir,spec_ecutoff=0.35,nonspec_ecutoff=0.4):
-    eshort_path = "%s/%s_escore.txt" % (escore_dir,pbm_name)
+def isbound_escore_18mer(seq18mer,eshort_path,short2long_map,spec_ecutoff=0.35,nonspec_ecutoff=0.4):
+    #eshort_path = "%s/%s_escore.txt" % (escore_dir,pbm_name)
     # TODO: avoid IO, maybe using global var?
-    short2long_map = "%s/index_short_to_long.csv" % (escore_dir)
+    #short2long_map = "%s/index_short_to_long.csv" % (escore_dir)
 
     #  -- this definitely needs to go to a database
     with open(eshort_path) as f:
