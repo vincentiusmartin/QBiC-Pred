@@ -1,4 +1,3 @@
-
 import pandas as pd
 import time
 import os
@@ -8,6 +7,8 @@ import scipy.stats
 import argparse
 import collections
 import sys
+import concurrent.futures as cc 
+import functools as ft
 
 from timeit import default_timer as timer
 
@@ -118,66 +119,27 @@ def predict(predlist, dataset, ready_count,
      filteropt=1: diff,z_score,tfname
      filteropt=2: diff,z_score,p_val,escore,tfname
     """
-    buggedtf = 0
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
     '''
     EDIT -- this only works for p-values, z-scores need a different memory access pattern
     '''
 
-    escore_total_time = 0.
     # store the results here
     res = []
 
-    #iterate for each transcription factor
-    for i in range(0,len(predlist)):
-        start = time.time()
-        pbmname = '.'.join(map(str,predlist[i].split(".")[1:-1]))
-        print("Processing " + pbmname)
-        with open(predlist[i], 'r') as f:
-            tf_df = pd.read_csv(f, delimiter=' ').round(5).fillna(0)
-            if tf_df.shape[0] < 4**12:
-                print("Skip %s since it has less rows than 4**12" % pbmname)
-                buggedtf += 1
-                continue
-  
-        # create a new local dataframe for computation + filtration
-        container = pd.DataFrame(dataset, columns = ['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'pbmname'])
-
-        # extract the z-scores and pvalues
-        container['z-score'] = tf_df.iloc[container['seqidx'], 1].values # copy values otherwise pd.Series index issue
-        container['p_val'] = scipy.stats.norm.sf(np.abs(container['z-score']))*2 
-
-        # drop the p values above threshold (insignificant)
-        container = container[container['p_val'] <= filterval]
-
-        # collect diff (done after thresholding)
-        container['diff'] = tf_df.iloc[container['seqidx'], 0].values # copy values otherwise pd.Series index issue
-
-        # create a bound column and set the pbmname
-        container['isbound'] = "N/A"
-        container['pbmname'] = pbmname
-
-        # resort columns
-        container = container[['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'p_val', 'isbound', 'pbmname']]  
-
-
-        if spec_ecutoff != -1 and nonspec_ecutoff != -1:
-            test_start = timer()
-            eshort_path = "%s/%s_escore.txt" % (config.ESCORE_DIR,pbmname)
-            short2long_map = "%s/index_short_to_long.csv" % (config.ESCORE_DIR)
-            container['isbound'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, eshort_path, short2long_map, spec_ecutoff, nonspec_ecutoff))
-            test_end = timer()
-            escore_total_time += (test_end-test_start)
-
-        print("Total e-score time %.5f" % escore_total_time)
-        ready_count.value += 1
-        print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
-
-    # drop columns no longer needed
-    container.drop(columns=['seqidx', '18mer'], inplace=True)
-
-    # append to list
-    res += [container]
+    if num_threads is  None:
+        #iterate for each transcription factor
+        for i in range(0,len(predlist)):
+            res += [predPvalueHelper(predlist[i], dataset, filterval, spec_ecutoff,nonspec_ecutoff)]
+            ready_count.value += 1
+    else:
+        # concurrent execution for improved I/O
+        pPH_partial = ft.partial(predPvalueHelper, **{'dataset':dataset, 'filterval':filterval, 
+                                                    'spec_ecutoff':spec_ecutoff, 'nonspec_ecutoff':nonspec_ecutoff})
+        # after a partial function is created, mapping is easier
+        with cc.ThreadPoolExecutor(max_workers = num_threads) as executor:
+            res = executor.map(pPH_partial, predlist)    
+            ready_count.value += len(predlist)
 
     # concatenate the individual tf containers
     res = pd.concat(res, axis=0, ignore_index=True)
@@ -197,6 +159,51 @@ def predict(predlist, dataset, ready_count,
     else:
         q.put(res)
         return None
+
+def predPvalueHelper(pred, dataset, filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
+    '''
+    Helper function to shorten predict. Returns a DataFrame of thresholded results 
+    '''
+    pbmname = '.'.join(map(str,pred.split(".")[1:-1]))
+    print("Processing " + pbmname)
+    start = time.time()
+
+    with open(pred, 'r') as f:
+        tf_df = pd.read_csv(f, delimiter=' ').round(5).fillna(0)
+        if tf_df.shape[0] < 4**12:
+            print("Skip %s since it has less rows than 4**12" % pbmname)
+            return None
+
+    # create a new local dataframe for computation + filtration
+    container = pd.DataFrame(dataset, columns = ['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'pbmname'])
+
+    # extract the z-scores and pvalues
+    container['z-score'] = tf_df.iloc[container['seqidx'], 1].values # copy values otherwise pd.Series index issue
+    container['p_val'] = scipy.stats.norm.sf(np.abs(container['z-score']))*2
+
+    # drop the p values above threshold (insignificant)
+    container = container[container['p_val'] <= filterval]
+
+    # collect diff (done after thresholding)
+    container['diff'] = tf_df.iloc[container['seqidx'], 0].values # copy values otherwise pd.Series index issue
+
+    # create a bound column and set the pbmname
+    container['isbound'] = "N/A"
+    container['pbmname'] = pbmname
+
+    # resort columns
+    container = container[['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'p_val', 'isbound', 'pbmname']]
+
+    if spec_ecutoff != -1 and nonspec_ecutoff != -1:
+        eshort_path = "%s/%s_escore.txt" % (config.ESCORE_DIR,pbmname)
+        short2long_map = "%s/index_short_to_long.csv" % (config.ESCORE_DIR)
+        container['isbound'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, eshort_path, short2long_map, spec_ecutoff, nonspec_ecutoff))
+
+    container.drop(columns=['seqidx', '18mer'], inplace=True)
+
+    print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
+
+    return container
 
 def format2tbl(tbl,gene_names,filteropt=1):
     '''
@@ -295,7 +302,7 @@ def do_prediction(intbl, pbms, gene_names,
     else: #z-score
         filterval = int(filterval)
     procs = [] # hold the processes
-
+    print('numthreads', num_threads)
     for pred in preds:
         p = mp.Process(target = predict, args = (pred, intbl, shared_ready_sum, filteropt, filterval, spec_ecutoff, nonspec_ecutoff, q, num_threads))
         p.start()
@@ -355,6 +362,8 @@ def main():
                         default=0.4, help='PBM E-score specific cutoff.')
     parser.add_argument('-e', '--escorenonspec', action="store", dest="escorenonspec", type=float,
                         default=0.35, help='PBM E-score non-specific cutoff.')
+    parser.add_argument('-n', '--numthreads', action="store", dest="numthreads", type=int,
+                        default=None, help='Number of concurrent file I/O threads to use (per core)')
     args = parser.parse_args()
 
     #python3 qbic.py -i testing_resources/single_mutations_sample.tsv -g testing_resources/gene_input.txt -c hg19
@@ -365,7 +374,7 @@ def main():
     tbl = inittbl(args.inputfile, args.chrver, filetype = args.filetype)
     input_genes = parse_tfgenes(args.genesfile)
     colnames, datavalues = do_prediction(tbl, input_genes["pbms"], input_genes["genes"], args.filteropt, args.filterval,
-                                         args.escorespec, args.escorenonspec)
+                                         args.escorespec, args.escorenonspec, args.numthreads)
     print("Writing output to %s" % args.outpath)
     pd.DataFrame(datavalues).to_csv(args.outpath, index = False, columns = colnames, sep="\t")
 
