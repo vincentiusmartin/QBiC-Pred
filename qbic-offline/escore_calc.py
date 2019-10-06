@@ -1,4 +1,3 @@
-import qbic
 import utils
 import argparse
 
@@ -49,6 +48,7 @@ if __name__ == "__main__":
     chrver = "hg19"
     filetype = "mut"
     """
+    import qbic # not a necessary import for isbound, so save an import conditionally
 
     parser = argparse.ArgumentParser(description = 'TF Mutation Predictions')
     parser.add_argument('-i', '--inputfile', action="store", dest="inputfile", type=str,
