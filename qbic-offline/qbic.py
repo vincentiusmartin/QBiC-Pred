@@ -147,13 +147,6 @@ def predict(predlist, dataset, ready_count,
     # may modify downstream tasks to accept dataframe
     # return res
 
-    # for now, convert into the same format
-    tuple_keys = zip(res['row_key'], res['12mer'])
-    tuple_values = map(list, zip(res['diff'],  res['z-score'], res['p_val'], res['binding_status'], res['pbmname']))
-
-    res = collections.defaultdict(list)
-    [res[k].extend([v]) for k,v in zip(tuple_keys, tuple_values)]
-
     if q is None:
         return res
     else:
@@ -211,16 +204,18 @@ def postprocess(datalist,gene_names,filteropt=1,filterval=1):
 
     TODO -- z-score
     '''
-    datalist.sort_values(by = ['rowidx', '12mer', 'p_val'], ascending=False, inplace=True)
+    datalist = pd.concat(datalist, ignore_index=True, axis=0)
 
-    pbmtohugo = pd.read_csv(config.PBM_HUGO_MAPPING, sep=':', index_col=0)[1].map(lambda x: x.strip().split(','))
+    datalist.sort_values(by = ['row_key', '12mer', 'p_val'], ascending=True, inplace=True)
+
+    pbmtohugo = pd.read_csv(config.PBM_HUGO_MAPPING, sep=':', index_col=0, header=None)[1].map(lambda x: x.strip().split(','))
 
     datalist['wild'] = datalist['12mer'].map(lambda x: x[:11])
     datalist['mutant'] = datalist['12mer'].map(lambda x: x[:5] + x[11] + x[6:11])
     datalist['TF_gene'] = datalist['pbmname'].apply(lambda x: x if x == 'None' else ",".join([gene for gene in pbmtohugo[x] if gene in gene_names]))
 
     # reindex and rename the columns
-    datalist = datalist['rowidx', 'wild', 'mutant', 'diff', 'z-score', 'p_val', 'TF_gene', 'binding_status', 'pbmname']
+    datalist = datalist[['row_key', 'wild', 'mutant', 'diff', 'z-score', 'p_val', 'TF_gene', 'binding_status', 'pbmname']]
     datalist.columns = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
 
     return datalist
@@ -272,9 +267,7 @@ def do_prediction(intbl, pbms, gene_names,
     q.join()
     q.close()
 
-    colnames,datavalues = postprocess(res,gene_names,filteropt,filterval)
-
-    return colnames,datavalues
+    return postprocess(res,gene_names,filteropt,filterval)
 
 def main():
     """nonspec_bind_cutoff = 0.35
@@ -325,10 +318,10 @@ def main():
 
     tbl = inittbl(args.inputfile, args.chrver, filetype = args.filetype)
     input_genes = parse_tfgenes(args.genesfile)
-    colnames, datavalues = do_prediction(tbl, input_genes["pbms"], input_genes["genes"], args.filteropt, args.filterval,
+    res = do_prediction(tbl, input_genes["pbms"], input_genes["genes"], args.filteropt, args.filterval,
                                          args.escorespec, args.escorenonspec, args.numthreads)
     print("Writing output to %s" % args.outpath)
-    pd.DataFrame(datavalues).to_csv(args.outpath, index = False, columns = colnames, sep="\t")
+    res.to_csv(args.outpath, index = False, sep="\t")
 
 if __name__=="__main__":
     main()
