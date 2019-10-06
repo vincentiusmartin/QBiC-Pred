@@ -7,7 +7,7 @@ import scipy.stats
 import argparse
 import collections
 import sys
-import concurrent.futures as cc 
+import concurrent.futures as cc
 import functools as ft
 
 from timeit import default_timer as timer
@@ -134,11 +134,11 @@ def predict(predlist, dataset, ready_count,
             ready_count.value += 1
     else:
         # concurrent execution for improved I/O
-        pPH_partial = ft.partial(predPvalueHelper, **{'dataset':dataset, 'filterval':filterval, 
+        pPH_partial = ft.partial(predPvalueHelper, **{'dataset':dataset, 'filterval':filterval,
                                                     'spec_ecutoff':spec_ecutoff, 'nonspec_ecutoff':nonspec_ecutoff})
         # after a partial function is created, mapping is easier
         with cc.ThreadPoolExecutor(max_workers = num_threads) as executor:
-            res = executor.map(pPH_partial, predlist)    
+            res = executor.map(pPH_partial, predlist)
             ready_count.value += len(predlist)
 
     # concatenate the individual tf containers
@@ -149,7 +149,7 @@ def predict(predlist, dataset, ready_count,
 
     # for now, convert into the same format
     tuple_keys = zip(res['row_key'], res['12mer'])
-    tuple_values = map(list, zip(res['diff'],  res['z-score'], res['p_val'], res['isbound'], res['pbmname']))
+    tuple_values = map(list, zip(res['diff'],  res['z-score'], res['p_val'], res['binding_status'], res['pbmname']))
 
     res = collections.defaultdict(list)
     [res[k].extend([v]) for k,v in zip(tuple_keys, tuple_values)]
@@ -162,7 +162,7 @@ def predict(predlist, dataset, ready_count,
 
 def predPvalueHelper(pred, dataset, filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
     '''
-    Helper function to shorten predict. Returns a DataFrame of thresholded results 
+    Helper function to shorten predict. Returns a DataFrame of thresholded results
     '''
     pbmname = '.'.join(map(str,pred.split(".")[1:-1]))
     print("Processing " + pbmname)
@@ -188,16 +188,16 @@ def predPvalueHelper(pred, dataset, filterval=0.001, spec_ecutoff=0.4, nonspec_e
     container['diff'] = tf_df.iloc[container['seqidx'], 0].values # copy values otherwise pd.Series index issue
 
     # create a bound column and set the pbmname
-    container['isbound'] = "N/A"
+    container['binding_status'] = "N/A"
     container['pbmname'] = pbmname
 
     # resort columns
-    container = container[['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'p_val', 'isbound', 'pbmname']]
+    container = container[['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'p_val', 'binding_status', 'pbmname']]
 
     if spec_ecutoff != -1 and nonspec_ecutoff != -1:
         eshort_path = "%s/%s_escore.txt" % (config.ESCORE_DIR,pbmname)
         short2long_map = "%s/index_short_to_long.csv" % (config.ESCORE_DIR)
-        container['isbound'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, eshort_path, short2long_map, spec_ecutoff, nonspec_ecutoff))
+        container['binding_status'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, eshort_path, short2long_map, spec_ecutoff, nonspec_ecutoff))
 
     container.drop(columns=['seqidx', '18mer'], inplace=True)
 
@@ -205,73 +205,25 @@ def predPvalueHelper(pred, dataset, filterval=0.001, spec_ecutoff=0.4, nonspec_e
 
     return container
 
-def format2tbl(tbl,gene_names,filteropt=1):
-    '''
-    This function saves tbl as csvstring
-
-    Input:
-      tbl is a dictionary of (rowidx,seq):[diff,zscore,tfname] or [diff,p-val,escore,tfname]
-    '''
-
-    with open(config.PBM_HUGO_MAPPING) as f:
-        pbmtohugo = {}
-        for line in f:
-            linemap = line.strip().split(":")
-            pbmtohugo[linemap[0]] = linemap[1].split(",")
-
-    #gapdata = read_gapfile(app.config['GAP_FILE'])
-
-    sorted_key = sorted(tbl.keys())
-    datavalues = []
-    for row_key in sorted_key:
-        if not tbl[row_key]: # probably empty row
-            continue
-        row = row_key[0]
-        seq = row_key[1]
-        wild = seq[0:5] + seq[5] + seq[6:11]
-        mut = seq[0:5] + seq[11] + seq[6:11]
-        sorted_val = sorted(tbl[row_key],reverse=True,key=lambda x:abs(x[1]))
-        for row_val in sorted_val: # [diff,zscore,pval,isbound,pbmname]
-            rowdict = {'row':row,'wild':wild,'mutant':mut,'diff':row_val[0]}
-            pbmname = row_val[4]
-            rowdict['z_score'] =  row_val[1]
-            rowdict['p_value'] =  row_val[2]
-            rowdict['binding_status'] = row_val[3]
-            if pbmname  == 'None':
-                rowdict['TF_gene'] = ""
-                rowdict['pbmname'] = "None"
-                #rowdict['gapmodel'] = "None" # vmartin: comment for now
-            else:
-                rowdict['TF_gene'] = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
-                rowdict['pbmname'] = pbmname
-                #rowdict['gapmodel'] = gapdata[pbmname] # vmartin: comment for now
-            datavalues.append(rowdict)
-
-    #colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"]
-    colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
-    return colnames,datavalues
-
 def postprocess(datalist,gene_names,filteropt=1,filterval=1):
     '''
     Aggregate the result from the different processes.
+
+    TODO -- z-score
     '''
-    maintbl = {}
-    for ddict in datalist:
-        if not maintbl:
-            maintbl = ddict
-        else:
-            if filteropt == 1: # z-score
-                for row_key in ddict:
-                    for row_val in ddict[row_key]:
-                        least_idx = min(enumerate(maintbl[row_key]),key=lambda x:abs(x[1][1]))[0]
-                        # row_val[1] is the t-value
-                        if abs(row_val[1]) > abs(maintbl[row_key][least_idx][1]):
-                            del maintbl[row_key][least_idx]
-                            maintbl[row_key].append(row_val)
-            else: # filteropt == 2 -- p-value
-                for row_key in ddict:
-                    maintbl[row_key].extend(ddict[row_key])
-    return format2tbl(maintbl,gene_names,filteropt)
+    datalist.sort_values(by = ['rowidx', '12mer', 'p_val'], ascending=False, inplace=True)
+
+    pbmtohugo = pd.read_csv(config.PBM_HUGO_MAPPING, sep=':', index_col=0)[1].map(lambda x: x.strip().split(','))
+
+    datalist['wild'] = datalist['12mer'].map(lambda x: x[:11])
+    datalist['mutant'] = datalist['12mer'].map(lambda x: x[:5] + x[11] + x[6:11])
+    datalist['TF_gene'] = datalist['pbmname'].apply(lambda x: x if x == 'None' else ",".join([gene for gene in pbmtohugo[x] if gene in gene_names]))
+
+    # reindex and rename the columns
+    datalist = datalist['rowidx', 'wild', 'mutant', 'diff', 'z-score', 'p_val', 'TF_gene', 'binding_status', 'pbmname']
+    datalist.columns = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
+
+    return datalist
 
 def parse_tfgenes(filepath, prefix = "prediction6mer.", sufix = ".txt"):
     genes = open(filepath).read().splitlines()
@@ -292,7 +244,7 @@ def do_prediction(intbl, pbms, gene_names,
     # move the comment here for testing
     predfiles = [config.PREDDIR + "/" + pbm for pbm in pbms] # os.listdir(preddir)
     preds = utils.chunkify(predfiles,config.PCOUNT) # chunks the predfiles for each process
-    
+
     # need to use manager here
     shared_ready_sum = mp.Manager().Value('i', 0)
 
