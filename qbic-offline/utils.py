@@ -67,7 +67,9 @@ def isbound_escore(seq, etable, kmer=8, bsite_cutoff=0.4, nbsite_cutoff=0.35):
     if max(elist) < nbsite_cutoff:
         return "unbound"
     else:
-        return 'bound' if sum([e>bsite_cutoff for e in elist]) > 1 else 'ambiguous'
+        # need to see if two consecutive items > bsite_cutoff
+        elist = [e_i > bsite_cutoff for e_i in elist]
+        return 'bound' if any(map(lambda x: x[0] and x[1], zip(elist, elist[1:]))) else 'ambiguous'
 
 """
 return: "is bound wild > is bound mut"
