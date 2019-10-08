@@ -250,8 +250,7 @@ def do_prediction(intbl, pbms, gene_names,
 
     # collect the short2long_map -- shared, so only one i/o
     emap = pd.read_csv("%s/index_short_to_long.csv" % (config.ESCORE_DIR), header=0, index_col=0, sep=',', dtype='Int32') # pd.DataFrame
-    emap = emap[emap.columns[0]].values 
-    emap -= np.ones_like(emap)
+    emap = emap[emap.columns[0]].values - 1 
 
     predict_partial = ft.partial(predict, **{'dataset':intbl, 'ready_count':shared_ready_sum, 'emap':emap,
             'filteropt':filteropt, 'filterval':filterval, 'spec_ecutoff':spec_ecutoff, 'nonspec_ecutoff':nonspec_ecutoff, 'num_threads':num_threads})
