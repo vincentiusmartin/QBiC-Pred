@@ -222,7 +222,7 @@ def postprocess(datalist,gene_names,filteropt=1,filterval=1):
 
 def parse_tfgenes(filepath, prefix = "prediction6mer.", sufix = ".txt"):
     genes = open(filepath).read().splitlines()
-    unique_pbms = [prefix + tf + sufix for gene in genes for tf in config.HUGO_PBM_MAPPING[gene]]
+    unique_pbms = list({prefix + tf + sufix for gene in genes for tf in config.HUGO_PBM_MAPPING[gene]})
     return {"genes":genes,"pbms":unique_pbms}
 
 def do_prediction(intbl, pbms, gene_names,
