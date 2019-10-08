@@ -72,15 +72,13 @@ def isbound_escore(seq, etable, kmer=8, bsite_cutoff=0.4, nbsite_cutoff=0.35):
 """
 return: "is bound wild > is bound mut"
 """
-def isbound_escore_18mer(seq18mer,eshort_path,short2long_map,spec_ecutoff=0.35,nonspec_ecutoff=0.4):
+def isbound_escore_18mer(seq18mer,eshort,emap,spec_ecutoff=0.35,nonspec_ecutoff=0.4):
     #eshort_path = "%s/%s_escore.txt" % (escore_dir,pbm_name)
     # TODO: avoid IO, maybe using global var?
-    #short2long_map = "%s/index_short_to_long.csv" % (escore_dir)
+    # <emap> = short2long_map = "%s/index_short_to_long.csv" % (escore_dir)
 
     #  -- this definitely needs to go to a database
-    eshort = pd.read_csv(eshort_path, header=None, index_col=None, dtype=np.float32)[0] # pd.Series
-    emap = pd.read_csv(short2long_map,  header=0, index_col=0, sep=',', dtype='Int32') # pd.DataFrame
-    elong = eshort.iloc[emap[emap.columns[0]].values - 1].values # this is a permutated matrix of eshort
+    elong = eshort.iloc[emap].values # this is a permutated matrix of eshort
 
     wild = seq18mer[:-1]
     mut = seq18mer[:8] + seq18mer[-1] + seq18mer[9:-1]

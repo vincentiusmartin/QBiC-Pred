@@ -9,7 +9,7 @@ import collections
 import sys
 import concurrent.futures as cc
 import functools as ft
-
+import ctypes # shared arr
 from timeit import default_timer as timer
 
 import utils
@@ -104,7 +104,7 @@ def inittbl(filename, chromosome_version, kmer = 6, filetype=""):
     print("Time to preprocess: {:.2f}secs".format(time.time()-start))
     return result
 
-def predict(predlist, dataset, ready_count,
+def predict(predlist, dataset, ready_count, emap, 
             filteropt="p-value", filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35,
             q=None, num_threads=None):
     """
@@ -130,11 +130,11 @@ def predict(predlist, dataset, ready_count,
     if num_threads is  None:
         #iterate for each transcription factor
         for i in range(0,len(predlist)):
-            res += [predPvalueHelper(predlist[i], dataset, filterval, spec_ecutoff,nonspec_ecutoff)]
+            res += [predPvalueHelper(predlist[i], dataset, emap=emap, filterval=filterval, spec_ecutoff=spec_ecutoff,nonspec_ecutoff=nonspec_ecutoff)]
             ready_count.value += 1
     else:
         # concurrent execution for improved I/O
-        pPH_partial = ft.partial(predPvalueHelper, **{'dataset':dataset, 'filterval':filterval,
+        pPH_partial = ft.partial(predPvalueHelper, **{'dataset':dataset, 'emap':emap, 'filterval':filterval,
                                                     'spec_ecutoff':spec_ecutoff, 'nonspec_ecutoff':nonspec_ecutoff})
         # after a partial function is created, mapping is easier
         with cc.ThreadPoolExecutor(max_workers = num_threads) as executor:
@@ -153,7 +153,7 @@ def predict(predlist, dataset, ready_count,
         q.put(res)
         return None
 
-def predPvalueHelper(pred, dataset, filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
+def predPvalueHelper(pred, dataset, emap, filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
     '''
     Helper function to shorten predict. Returns a DataFrame of thresholded results
     '''
@@ -189,8 +189,8 @@ def predPvalueHelper(pred, dataset, filterval=0.001, spec_ecutoff=0.4, nonspec_e
 
     if spec_ecutoff != -1 and nonspec_ecutoff != -1:
         eshort_path = "%s/%s_escore.txt" % (config.ESCORE_DIR,pbmname)
-        short2long_map = "%s/index_short_to_long.csv" % (config.ESCORE_DIR)
-        container['binding_status'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, eshort_path, short2long_map, spec_ecutoff, nonspec_ecutoff))
+        eshort = pd.read_csv(eshort_path, header=None, index_col=None, dtype=np.float32)[0] # pd.Series -- remove from utils
+        container['binding_status'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, eshort, emap, spec_ecutoff, nonspec_ecutoff))
 
     container.drop(columns=['seqidx', '18mer'], inplace=True)
 
@@ -248,7 +248,12 @@ def do_prediction(intbl, pbms, gene_names,
     else: #z-score
         filterval = int(filterval)
 
-    predict_partial = ft.partial(predict, **{'dataset':intbl, 'ready_count':shared_ready_sum,
+    # collect the short2long_map -- shared, so only one i/o
+    emap = pd.read_csv("%s/index_short_to_long.csv" % (config.ESCORE_DIR), header=0, index_col=0, sep=',', dtype='Int32') # pd.DataFrame
+    emap = emap[emap.columns[0]].values 
+    emap -= np.ones_like(emap)
+
+    predict_partial = ft.partial(predict, **{'dataset':intbl, 'ready_count':shared_ready_sum, 'emap':emap,
             'filteropt':filteropt, 'filterval':filterval, 'spec_ecutoff':spec_ecutoff, 'nonspec_ecutoff':nonspec_ecutoff, 'num_threads':num_threads})
 
     with cc.ProcessPoolExecutor(config.PCOUNT) as executor:
