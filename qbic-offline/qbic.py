@@ -243,29 +243,16 @@ def do_prediction(intbl, pbms, gene_names,
     # need to use manager here
     shared_ready_sum = mp.Manager().Value('i', 0)
 
-    q = mp.JoinableQueue(config.PCOUNT) # maxsize of queue is num processes
     if filteropt == "p-value":
         filterval = float(filterval)
     else: #z-score
         filterval = int(filterval)
-    procs = [] # hold the processes
-    print('numthreads', num_threads)
-    for pred in preds:
-        p = mp.Process(target = predict, args = (pred, intbl, shared_ready_sum, filteropt, filterval, spec_ecutoff, nonspec_ecutoff, q, num_threads))
-        p.start()
-        procs += [p]
 
-    # store queue results
-    res = []
+    predict_partial = ft.partial(predict, **{'dataset':intbl, 'ready_count':shared_ready_sum,
+            'filteropt':filteropt, 'filterval':filterval, 'spec_ecutoff':spec_ecutoff, 'nonspec_ecutoff':nonspec_ecutoff, 'num_threads':num_threads})
 
-    for p in procs:
-        res += [q.get()]
-        q.task_done()
-        p.join()
-        p.terminate()
-
-    q.join()
-    q.close()
+    with cc.ProcessPoolExecutor(config.PCOUNT) as executor:
+        res = executor.map(predict_partial, preds)
 
     return postprocess(res,gene_names,filteropt,filterval)
 
