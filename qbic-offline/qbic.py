@@ -171,14 +171,14 @@ def predPvalueHelper(pred, dataset, emap, filterval=0.001, spec_ecutoff=0.4, non
     container = pd.DataFrame(dataset, columns = ['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'pbmname'])
 
     # extract the z-scores and pvalues
-    container['z-score'] = tf_df.iloc[container['seqidx'], 1].values # copy values otherwise pd.Series index issue
+    container['z-score'] = tf_df.iloc[container['seqidx'], 1].to_numpy() # copy values otherwise pd.Series index issue
     container['p_val'] = scipy.stats.norm.sf(np.abs(container['z-score']))*2
 
     # drop the p values above threshold (insignificant)
     container = container[container['p_val'] <= filterval]
 
     # collect diff (done after thresholding)
-    container['diff'] = tf_df.iloc[container['seqidx'], 0].values # copy values otherwise pd.Series index issue
+    container['diff'] = tf_df.iloc[container['seqidx'], 0].to_numpy() # copy values otherwise pd.Series index issue
 
     # create a bound column and set the pbmname
     container['binding_status'] = "N/A"
@@ -250,7 +250,7 @@ def do_prediction(intbl, pbms, gene_names,
 
     # collect the short2long_map -- shared, so only one i/o
     emap = pd.read_csv("%s/index_short_to_long.csv" % (config.ESCORE_DIR), header=0, index_col=0, sep=',', dtype='Int32') # pd.DataFrame
-    emap = emap[emap.columns[0]].values - 1 
+    emap = emap[emap.columns[0]].to_numpy() - 1 
 
     predict_partial = ft.partial(predict, **{'dataset':intbl, 'ready_count':shared_ready_sum, 'emap':emap,
             'filteropt':filteropt, 'filterval':filterval, 'spec_ecutoff':spec_ecutoff, 'nonspec_ecutoff':nonspec_ecutoff, 'num_threads':num_threads})

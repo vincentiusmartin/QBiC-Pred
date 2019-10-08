@@ -80,7 +80,7 @@ def isbound_escore_18mer(seq18mer,eshort,emap,spec_ecutoff=0.35,nonspec_ecutoff=
     # <emap> = short2long_map = "%s/index_short_to_long.csv" % (escore_dir)
 
     #  -- this definitely needs to go to a database
-    elong = eshort.iloc[emap].values # this is a permutated matrix of eshort
+    elong = eshort.iloc[emap].to_numpy() # this is a permutated matrix of eshort
 
     wild = seq18mer[:-1]
     mut = seq18mer[:8] + seq18mer[-1] + seq18mer[9:-1]
