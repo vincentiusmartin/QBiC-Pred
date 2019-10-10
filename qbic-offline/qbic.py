@@ -190,7 +190,8 @@ def predPvalueHelper(pred, dataset, emap, filterval=0.001, spec_ecutoff=0.4, non
     if spec_ecutoff != -1 and nonspec_ecutoff != -1:
         eshort_path = "%s/%s_escore.txt" % (config.ESCORE_DIR,pbmname)
         eshort = pd.read_csv(eshort_path, header=None, index_col=None, dtype=np.float32)[0] # pd.Series -- remove from utils
-        container['binding_status'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, eshort, emap, spec_ecutoff, nonspec_ecutoff))
+        elong = eshort.iloc[emap].to_numpy() # Moved out of isbound_escore_18mer()
+        container['binding_status'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, elong, spec_ecutoff, nonspec_ecutoff))
 
     container.drop(columns=['seqidx', '18mer'], inplace=True)
 
