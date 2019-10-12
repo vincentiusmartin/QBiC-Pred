@@ -209,10 +209,12 @@ def postprocess(datalist,predfiles,gene_names,filteropt=1,filterval=1):
 
     datalist.sort_values(by = ['row_key', '12mer', 'p_val'], ascending=True, inplace=True)
 
-    pbmtohugo = pd.read_csv(config.PBM_HUGO_MAPPING, sep=':', index_col=0, header=None)[1].map(lambda x: x.strip().split(','))
+    # read in pbm to hugo map and split
+    pbmtohugo = pd.read_csv(config.PBM_HUGO_MAPPING, sep=':', index_col=0, header=None)[1].str.split(',')
 
-    datalist['wild'] = datalist['12mer'].map(lambda x: x[:11])
-    datalist['mutant'] = datalist['12mer'].map(lambda x: x[:5] + x[11] + x[6:11])
+    # reconstruct wild type and mutant strings
+    datalist['wild'] = datalist['12mer'].str.slice(stop=11)
+    datalist['mutant'] = datalist['12mer'].str.slice(stop=5) + datalist['12mer'].str.get(11)+ datalist['12mer'].str.slice(start=6, stop=11)
 
     gene_names_set = set(gene_names)
     predfiles = ['.'.join(p.split(".")[1:-1]) for p in predfiles]
