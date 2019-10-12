@@ -157,7 +157,7 @@ def predPvalueHelper(pred, dataset, emap, filterval=0.001, spec_ecutoff=0.4, non
     '''
     Helper function to shorten predict. Returns a DataFrame of thresholded results
     '''
-    pbmname = '.'.join(map(str,pred.split(".")[1:-1]))
+    pbmname = '.'.join(pred.split(".")[1:-1])
     print("Processing " + pbmname)
     start = time.time()
 
@@ -199,7 +199,7 @@ def predPvalueHelper(pred, dataset, emap, filterval=0.001, spec_ecutoff=0.4, non
 
     return container
 
-def postprocess(datalist,gene_names,filteropt=1,filterval=1):
+def postprocess(datalist,predfiles,gene_names,filteropt=1,filterval=1):
     '''
     Aggregate the result from the different processes.
 
@@ -213,7 +213,11 @@ def postprocess(datalist,gene_names,filteropt=1,filterval=1):
 
     datalist['wild'] = datalist['12mer'].map(lambda x: x[:11])
     datalist['mutant'] = datalist['12mer'].map(lambda x: x[:5] + x[11] + x[6:11])
-    datalist['TF_gene'] = datalist['pbmname'].apply(lambda x: x if x == 'None' else ",".join([gene for gene in pbmtohugo[x] if gene in gene_names]))
+
+    gene_names_set = set(gene_names)
+    predfiles = ['.'.join(p.split(".")[1:-1]) for p in predfiles]
+    tf_gene_dict = {p: ",".join([gene for gene in pbmtohugo[p] if gene in gene_names_set]) for p in predfiles}
+    datalist['TF_gene'] = datalist['pbmname'].apply(lambda x: tf_gene_dict.get(x, x))
 
     # reindex and rename the columns
     datalist = datalist[['row_key', 'wild', 'mutant', 'diff', 'z-score', 'p_val', 'TF_gene', 'binding_status', 'pbmname']]
@@ -259,7 +263,7 @@ def do_prediction(intbl, pbms, gene_names,
     with cc.ProcessPoolExecutor(config.PCOUNT) as executor:
         res = executor.map(predict_partial, preds)
 
-    return postprocess(res,gene_names,filteropt,filterval)
+    return postprocess(res,predfiles,gene_names,filteropt,filterval)
 
 def main():
     """nonspec_bind_cutoff = 0.35
