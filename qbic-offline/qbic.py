@@ -78,30 +78,35 @@ def inittbl(filename, chromosome_version, kmer = 6, filetype=""):
             raise Exception("File type is not recognized")
 
         # remove "chr" from all chromosomes
-        df['chromosome'] = df['chromosome'].map(lambda x:x.replace("chr",""))
+        df['chromosome'] = df['chromosome'].str.replace("chr", "")
 
         grouped = df.groupby('chromosome',sort=True)
         dataset = {key:item for key,item in grouped}
 
-        for cidx in [str(a) for a in range(1,23)] + ['X','Y']:
-            if cidx not in dataset:
-                continue
-            print("Iterating dataset for chromosome {}...".format(cidx))
-            chromosome = utils.get_chrom(config.CHRDIR + "/" + chromosome_version + "/chr" + str(cidx) + '.fa.gz')
-            for idx,row in dataset[cidx].iterrows():
-                pos = row['pos'] - 1
-                if row['mutated_from'] != chromosome[pos]:
-                    cver = cpath.split("/")[-1]
-                    error = "For the input mutation %s>%s at position %s in chromosome %s, the mutated_from nucleotide (%s) does not match the nucleotide in the %s reference genome (%s). Please check the input data and verify that the correct version of the reference human genome was used." % (row['mutated_from'], row['mutated_to'], row['pos'], row['chromosome'], row['mutated_from'], cver, chromosome[pos])
-                    raise Exception(error)
-                seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to'] #-5,+6
-                # for escore, just use 8?
-                escore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to']
-                result.append([idx,seq,escore_seq,utils.seqtoi(seq),0,0,"None"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
-
+        cidx_list = [str(a) for a in list(range(1,23))+['X','Y'] if str(a) in dataset]
+        with cc.ThreadPoolExecutor(config.PCOUNT) as executor:
+            result = executor.map(lambda x: chrom_cidx_helper(*x), [(cidx, dataset[cidx], chromosome_version, kmer) for cidx in cidx_list])
+        result = [r for group in result for r in group] # flatten list
+   
     result = sorted(result,key=lambda result:result[0])
     # example row in result: [73, 'CCAACCAACCCA', 'ATTCCAACCAACCCCCTA', 5263444, 0, 0, 'None']
     print("Time to preprocess: {:.2f}secs".format(time.time()-start))
+    return result
+
+def chrom_cidx_helper(cidx, cidx_dataset, chromosome_version, kmer):
+    print("Iterating dataset for chromosome {}...".format(cidx))
+    chromosome = utils.get_chrom(config.CHRDIR + "/" + chromosome_version + "/chr" + str(cidx) + '.fa.gz')
+    result = []
+    for idx,row in cidx_dataset.iterrows():
+        pos = row['pos'] - 1
+        if row['mutated_from'] != chromosome[pos]:
+            cver = cpath.split("/")[-1]
+            error = "For the input mutation %s>%s at position %s in chromosome %s, the mutated_from nucleotide (%s) does not match the nucleotide in the %s reference genome (%s). Please check the input data and verify that the correct version of the reference human genome was used." % (row['mutated_from'], row['mutated_to'], row['pos'], row['chromosome'], row['mutated_from'], cver, chromosome[pos])
+            raise Exception(error)
+        seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to'] #-5,+6
+        # for escore, just use 8?
+        escore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to']
+        result.append([idx,seq,escore_seq,utils.seqtoi(seq),0,0,"None"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
     return result
 
 def predict(predlist, dataset, ready_count, emap, 
