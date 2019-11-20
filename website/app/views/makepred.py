@@ -24,18 +24,22 @@ def allowed_file(filename):
 def is_valid_cols(filepath):
     file_extension = os.path.splitext(filepath)[1]
     if file_extension == ".tsv" or file_extension == ".csv":
-        required = ['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele']
+        required = [['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele'],
+                    ['chromosome', 'chromosome_pos', 'mutated_from', 'mutated_to']]
         with open(filepath) as f:
             file_extension = os.path.splitext(filepath)[1]
             if file_extension == ".tsv":
                 incols = f.readline().strip().split("\t")
             else: # must be csv since we checked it
                 incols = f.readline().strip().split(",")
-        if not all(elem in incols for elem in required):
+        flag = False
+        for req in required:
+            if all(elem in incols for elem in req):
+                flag = True
+                break
+        if not flag:
             os.remove(filepath)
-            return False
-        else:
-            return True
+        return flag
     elif file_extension == ".vcf":
         with open(filepath) as f:
             if len(f.readline().strip().split("\t")) == 5:
