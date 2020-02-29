@@ -46,11 +46,21 @@ def inittbl(filename, chromosome_version, kmer = 6, filetype=""):
         with open(filename) as f:
             idx = 0
             for line in f:
-                if "\t" in line:
+                line = line.strip() # removing any whitespace
+                if not line.strip(): # empty line
+                    continue
+                elif "\t" in line:
                     line = line.split("\t")
                 else:
                     line = line.split()
                 idx += 1
+                # Input checking
+                if line[1] == "*":
+                    print("Found * (deletion) in the alt field. Currrently it is not handled by QBiC, this line will be skipped")
+                    continue
+                elif line[1].upper() not in ['A','C','G','T']:
+                    print("%s is not a valid nucleotide (A,C,G,T)")
+                    continue
                 # line[1] is the base mid nucleotide mutated to
                 escore_seq = line[0] + line[1]
                 mid_seq = escore_seq[len(escore_seq)//2-6:len(escore_seq)//2+5] + line[1] # the 12mer seq
@@ -125,6 +135,76 @@ def predict(predlist, dataset, ready_count, emap,
      filteropt=2: diff,z_score,p_val,escore,tfname
     """
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
+
+    if filteropt == "p-value": #t-value
+        # leave this empty as for p-value, we don't have to compare and the size is dynamic
+        container = {tuple(row[:4]):[] for row in dataset}
+    else:
+        container = {tuple(row[:4]):[[0,0,1,"None","None"]] for row in dataset} # rowidx,12mer,18mer,seqidx : [diff,z,p,bind,pbmname]
+
+    escore_total_time = 0
+    # iterate for each transcription factor
+    for i in range(0,len(predlist)):
+        start = time.time()
+        pbmname = '.'.join(map(str,predlist[i].split(".")[1:-1]))
+        print("Processing " + pbmname)
+        with open(predlist[i], 'r') as f:
+            tflist = pd.read_csv(f, delimiter=' ').round(5).values.tolist()
+        if len(tflist) < 4**12:
+            print("Skip %s since it has less rows than 4**12" % pbmname)
+            buggedtf += 1
+            continue
+        for row_key in container:
+            seqidx = row_key[3]
+            diff = tflist[seqidx][0]
+            zscore = tflist[seqidx][1]
+            if np.isnan(zscore):
+                zscore = 0
+            if np.isnan(diff):
+                diff = 0
+            pval = scipy.stats.norm.sf(abs(zscore))*2
+            add = True
+            if filteropt == 1:
+                # if z-score is chosen then filterval is the maximum of item shown
+                if len(container[row_key]) >= filterval:
+                    least_idx = min(enumerate(container[row_key]),key=lambda x:abs(x[1][1]))[0]
+                    if abs(tflist[seqidx][1]) > abs(container[row_key][least_idx][1]):
+                        del container[row_key][least_idx]
+                    else:
+                        add = False
+            # filteropt = 2, if z-score is chosen then filterval is the p-val threshold
+            elif pval > filterval:
+                    add = False
+            # E-score calculation is here
+            if add:
+                # we don't do escore calculation here
+                if spec_ecutoff == -1 or nonspec_ecutoff == -1:
+                    container[row_key].append([diff,zscore,pval,"N/A",pbmname])
+                else:
+                    test_start = timer()
+                    # E-score calculation: 0.05 seconds each
+                    # For 10k rows, total: 141.34secs, from e-score 128.56331secs
+                    # For 50k rows, total: 771.42 secs, from e-score: 752.123secs
+                    # another example: 2547.41secs, from e-score: 2523.96897secs
+                    eshort_path = "%s/%s_escore.txt" % (config.ESCORE_DIR,pbmname)
+                    short2long_map = "%s/index_short_to_long.csv" % (config.ESCORE_DIR)
+                    isbound = utils.isbound_escore_18mer(row_key[2], eshort_path, short2long_map, spec_ecutoff, nonspec_ecutoff)
+                    container[row_key].append([diff,zscore,pval,isbound,pbmname])
+                    test_end = timer()
+                    escore_total_time += (test_end-test_start)
+
+        print("Total e-score time %.5f" % escore_total_time)
+        ready_count.value += 1
+        print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
+
+    # remove seqidx and 18mer as it is not needed anymore
+    newcontainer = {}
+    for row_key in container:
+        newcontainer[row_key[:-2]] = container[row_key]
+    return newcontainer
+
+def format2tbl(tbl,gene_names,filteropt=1):
+
     '''
     EDIT -- this only works for p-values, z-scores need a different memory access pattern
     '''
@@ -294,7 +374,7 @@ def main():
     parser = argparse.ArgumentParser(description = 'TF Mutation Predictions')
     parser.add_argument('-i', '--inputfile', action="store", dest="inputfile", type=str,
                         help='Input mutation file in .vcf, .tsv, .csv, or .txt format.')
-    parser.add_argument('-g', '--genesfile', action="store", dest="genesfile", type=str,
+    parser.add_argument('-g', '--genefile', action="store", dest="genefile", type=str,
                         help='A file that contains all TF genes that are desired.')
     parser.add_argument('-t', '--filetype', action="store", dest="filetype", type=str,
                         default="", help='File type can specify: vcf, icgc, customseq, or mut')
@@ -319,10 +399,15 @@ def main():
     # -t mut
     #TfX E2F
 
+    if not args.inputfile or not args.genefile:
+        raise Exception('-i (--inputfile) and -g (--genefile) are required')
+
     tbl = inittbl(args.inputfile, args.chrver, filetype = args.filetype)
+
     input_genes = parse_tfgenes(args.genesfile)
     res = do_prediction(tbl, input_genes["pbms"], input_genes["genes"], args.filteropt, args.filterval,
                                          args.escorespec, args.escorenonspec, args.numthreads)
+
     print("Writing output to %s" % args.outpath)
     res.to_csv(args.outpath, index = False, sep="\t")
 

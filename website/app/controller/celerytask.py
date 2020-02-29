@@ -52,14 +52,16 @@ def inittbl(self,filename,cpath):
                 separator = "\t"
             else: # must be csv since we checked it, TODO: can also return error here
                 separator = ","
-            df = pd.read_csv(filename,
-                        sep=separator,
-                        usecols=['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele'])
-            df = df[df['mutation_type'].apply(lambda x: "single base substitution" == x)].drop('mutation_type',1).drop_duplicates() # only take single base mutation
-            df = df.rename(columns={"chromosome_start":"pos","mutated_from_allele":"mutated_from","mutated_to_allele":"mutated_to"})
-
+            df = pd.read_csv(filename, sep=separator)
+            # if icgc then only take a subset of the columns
+            if set(['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele']).issubset(df.columns):
+                df = df[['chromosome','chromosome_start','mutation_type','mutated_from_allele','mutated_to_allele']]
+                df = df[df['mutation_type'].apply(lambda x: "single base substitution" == x)].drop('mutation_type',1).drop_duplicates() # only take single base mutation
+                df = df.rename(columns={"chromosome_start":"pos","mutated_from_allele":"mutated_from","mutated_to_allele":"mutated_to"})
+            else: # ['chromosome', 'chromosome_pos', 'mutated_from', 'mutated_to']
+                df = df.rename(columns={"chromosome_pos":"pos","mutated_from_allele":"mutated_from","mutated_to_allele":"mutated_to"})
         grouped = df.groupby('chromosome',sort=True)
-        dataset = {key:item for key,item in grouped}
+        dataset = {str(key):item for key,item in grouped}
 
         for cidx in [str(a) for a in range(1,23)] + ['X','Y']:
             self.update_state(state='PROGRESS',
