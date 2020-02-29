@@ -1,6 +1,8 @@
 import gzip
 import os
 import subprocess
+import pandas as pd
+import numpy as np
 
 def get_chrom(cfile):
     with gzip.open(cfile,'rb') as f:
@@ -24,17 +26,14 @@ does not append 1, used for integer indexing
 def seqtoi(seq):
     nucleotides = {'A':0,'C':1,'G':2,'T':3}
     binrep = 0
-    for i in range(0,len(seq)):
-        binrep <<= 2
-        binrep |= nucleotides[seq[i]]
+    for s in seq:
+        binrep = 4 * binrep | nucleotides[s]
     return binrep
 
 def is_dna(sequence,length=0):
     valid_dna = 'ACGT'
     check = all(i in valid_dna for i in sequence.upper())
-    if check and length > 0:
-        check = (len(sequence) == length)
-    return check
+    return check and len(sequence) == length
 
 def isbound_escore_8merdict(seq, edict, kmer=8,  bsite_cutoff=0.4, nbsite_cutoff=0.35):
     elist = []
@@ -63,38 +62,25 @@ def isbound_escore(seq, etable, kmer=8, bsite_cutoff=0.4, nbsite_cutoff=0.35):
     for i in range(kmer,len(seq)):
         # take one more nucleotide each time and append to the last kmer-1
         # characters
-        binrep = ((binrep << 2) | seqtoi(seq[i])) & grapper
+        binrep = (binrep * 4 | seqtoi(seq[i])) & grapper
         elist.append(etable[binrep])
     if max(elist) < nbsite_cutoff:
         return "unbound"
     else:
-        isbound = False
-        for i in range(0,len(elist)):
-            if elist[i] > bsite_cutoff:
-                if isbound:
-                    return "bound"
-                else:
-                    isbound = True
-            else:
-                isbound = False
-        return "ambiguous"
+        # need to see if two consecutive items > bsite_cutoff
+        elist = [e_i > bsite_cutoff for e_i in elist]
+        return 'bound' if any(map(lambda x: x[0] and x[1], zip(elist, elist[1:]))) else 'ambiguous'
 
 """
 return: "is bound wild > is bound mut"
 """
-def isbound_escore_18mer(seq18mer,eshort_path,short2long_map,spec_ecutoff=0.35,nonspec_ecutoff=0.4):
+def isbound_escore_18mer(seq18mer,elong,spec_ecutoff=0.35,nonspec_ecutoff=0.4):
     #eshort_path = "%s/%s_escore.txt" % (escore_dir,pbm_name)
     # TODO: avoid IO, maybe using global var?
-    #short2long_map = "%s/index_short_to_long.csv" % (escore_dir)
+    # <emap> = short2long_map = "%s/index_short_to_long.csv" % (escore_dir)
 
     #  -- this definitely needs to go to a database
-    with open(eshort_path) as f:
-        eshort = [float(line) for line in f]
-    with open(short2long_map) as f:
-        next(f)
-        emap = [int(line.split(",")[1])-1 for line in f]
-
-    elong = [eshort[idx] for idx in emap]
+    # elong = eshort.iloc[emap].to_numpy() # this is a permutated matrix of eshort, moved out of this function
 
     wild = seq18mer[:-1]
     mut = seq18mer[:8] + seq18mer[-1] + seq18mer[9:-1]

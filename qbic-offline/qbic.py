@@ -1,4 +1,3 @@
-
 import pandas as pd
 import time
 import os
@@ -6,7 +5,11 @@ import multiprocessing as mp
 import numpy as np
 import scipy.stats
 import argparse
-
+import collections
+import sys
+import concurrent.futures as cc
+import functools as ft
+import ctypes # shared arr
 from timeit import default_timer as timer
 
 import utils
@@ -85,37 +88,43 @@ def inittbl(filename, chromosome_version, kmer = 6, filetype=""):
             raise Exception("File type is not recognized")
 
         # remove "chr" from all chromosomes
-        df['chromosome'] = df['chromosome'].map(lambda x:x.replace("chr",""))
+        df['chromosome'] = df['chromosome'].str.replace("chr", "")
 
         grouped = df.groupby('chromosome',sort=True)
         dataset = {key:item for key,item in grouped}
 
-        for cidx in [str(a) for a in range(1,23)] + ['X','Y']:
-            if cidx not in dataset:
-                continue
-            print("Iterating dataset for chromosome {}...".format(cidx))
-            chromosome = utils.get_chrom(config.CHRDIR + "/" + chromosome_version + "/chr." + str(cidx) + '.fa.gz')
-            for idx,row in dataset[cidx].iterrows():
-                pos = row['pos'] - 1
-                if row['mutated_from'] != chromosome[pos]:
-                    cver = cpath.split("/")[-1]
-                    error = "For the input mutation %s>%s at position %s in chromosome %s, the mutated_from nucleotide (%s) does not match the nucleotide in the %s reference genome (%s). Please check the input data and verify that the correct version of the reference human genome was used." % (row['mutated_from'], row['mutated_to'], row['pos'], row['chromosome'], row['mutated_from'], cver, chromosome[pos])
-                    raise Exception(error)
-                seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to'] #-5,+6
-                # for escore, just use 8?
-                escore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to']
-                result.append([idx,seq,escore_seq,utils.seqtoi(seq),0,0,"None"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
-
+        cidx_list = [str(a) for a in list(range(1,23))+['X','Y'] if str(a) in dataset]
+        with cc.ThreadPoolExecutor(config.PCOUNT) as executor:
+            result = executor.map(lambda x: chrom_cidx_helper(*x), [(cidx, dataset[cidx], chromosome_version, kmer) for cidx in cidx_list])
+        result = [r for group in result for r in group] # flatten list
+   
     result = sorted(result,key=lambda result:result[0])
     # example row in result: [73, 'CCAACCAACCCA', 'ATTCCAACCAACCCCCTA', 5263444, 0, 0, 'None']
     print("Time to preprocess: {:.2f}secs".format(time.time()-start))
     return result
 
-def predict(predlist, dataset, ready_count,
-            filteropt="p-value", filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
+def chrom_cidx_helper(cidx, cidx_dataset, chromosome_version, kmer):
+    print("Iterating dataset for chromosome {}...".format(cidx))
+    chromosome = utils.get_chrom(config.CHRDIR + "/" + chromosome_version + "/chr" + str(cidx) + '.fa.gz')
+    result = []
+    for idx,row in cidx_dataset.iterrows():
+        pos = row['pos'] - 1
+        if row['mutated_from'] != chromosome[pos]:
+            cver = cpath.split("/")[-1]
+            error = "For the input mutation %s>%s at position %s in chromosome %s, the mutated_from nucleotide (%s) does not match the nucleotide in the %s reference genome (%s). Please check the input data and verify that the correct version of the reference human genome was used." % (row['mutated_from'], row['mutated_to'], row['pos'], row['chromosome'], row['mutated_from'], cver, chromosome[pos])
+            raise Exception(error)
+        seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to'] #-5,+6
+        # for escore, just use 8?
+        escore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to']
+        result.append([idx,seq,escore_seq,utils.seqtoi(seq),0,0,"None"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
+    return result
+
+def predict(predlist, dataset, ready_count, emap, 
+            filteropt="p-value", filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35,
+            q=None, num_threads=None):
     """
     for the container list, key is a tuple of: (rowidx,sequence,seqidx)
-    and each element in value is a list if: [diff,z-score,pbmname]
+    and each element in value is a list of: [diff,z-score,pbmname]
     If spec_ecutoff and nonspec_ecutoff == -1 then no escore calculation is done
 
     filteropt = p-value, t-value, none
@@ -123,10 +132,10 @@ def predict(predlist, dataset, ready_count,
 
     return:
      filteropt=1: diff,z_score,tfname
-     filteropt=2: diff,p_val,escore,tfname
+     filteropt=2: diff,z_score,p_val,escore,tfname
     """
-    buggedtf = 0
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
+
     if filteropt == "p-value": #t-value
         # leave this empty as for p-value, we don't have to compare and the size is dynamic
         container = {tuple(row[:4]):[] for row in dataset}
@@ -195,72 +204,113 @@ def predict(predlist, dataset, ready_count,
     return newcontainer
 
 def format2tbl(tbl,gene_names,filteropt=1):
-    '''
-    This function saves tbl as csvstring
 
-    Input:
-      tbl is a dictionary of (rowidx,seq):[diff,zscore,tfname] or [diff,p-val,escore,tfname]
+    '''
+    EDIT -- this only works for p-values, z-scores need a different memory access pattern
     '''
 
-    with open(config.PBM_HUGO_MAPPING) as f:
-        pbmtohugo = {}
-        for line in f:
-            linemap = line.strip().split(":")
-            pbmtohugo[linemap[0]] = linemap[1].split(",")
+    # store the results here
+    res = []
 
-    #gapdata = read_gapfile(app.config['GAP_FILE'])
+    if num_threads is  None:
+        #iterate for each transcription factor
+        for i in range(0,len(predlist)):
+            res += [predPvalueHelper(predlist[i], dataset, emap=emap, filterval=filterval, spec_ecutoff=spec_ecutoff,nonspec_ecutoff=nonspec_ecutoff)]
+            ready_count.value += 1
+    else:
+        # concurrent execution for improved I/O
+        pPH_partial = ft.partial(predPvalueHelper, **{'dataset':dataset, 'emap':emap, 'filterval':filterval,
+                                                    'spec_ecutoff':spec_ecutoff, 'nonspec_ecutoff':nonspec_ecutoff})
+        # after a partial function is created, mapping is easier
+        with cc.ThreadPoolExecutor(max_workers = num_threads) as executor:
+            res = executor.map(pPH_partial, predlist)
+            ready_count.value += len(predlist)
 
-    sorted_key = sorted(tbl.keys())
-    datavalues = []
-    for row_key in sorted_key:
-        if not tbl[row_key]: # probably empty row
-            continue
-        row = row_key[0]
-        seq = row_key[1]
-        wild = seq[0:5] + seq[5] + seq[6:11]
-        mut = seq[0:5] + seq[11] + seq[6:11]
-        sorted_val = sorted(tbl[row_key],reverse=True,key=lambda x:abs(x[1]))
-        for row_val in sorted_val: # [diff,zscore,pval,isbound,pbmname]
-            rowdict = {'row':row,'wild':wild,'mutant':mut,'diff':row_val[0]}
-            pbmname = row_val[4]
-            rowdict['z_score'] =  row_val[1]
-            rowdict['p_value'] =  row_val[2]
-            rowdict['binding_status'] = row_val[3]
-            if pbmname  == 'None':
-                rowdict['TF_gene'] = ""
-                rowdict['pbmname'] = "None"
-                #rowdict['gapmodel'] = "None" # vmartin: comment for now
-            else:
-                rowdict['TF_gene'] = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
-                rowdict['pbmname'] = pbmname
-                #rowdict['gapmodel'] = gapdata[pbmname] # vmartin: comment for now
-            datavalues.append(rowdict)
+    # concatenate the individual tf containers
+    res = pd.concat(res, axis=0, ignore_index=True)
 
-    #colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"]
-    colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
-    return colnames,datavalues
+    # may modify downstream tasks to accept dataframe
+    # return res
 
-def postprocess(datalist,gene_names,filteropt=1,filterval=1):
+    if q is None:
+        return res
+    else:
+        q.put(res)
+        return None
+
+def predPvalueHelper(pred, dataset, emap, filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
+    '''
+    Helper function to shorten predict. Returns a DataFrame of thresholded results
+    '''
+    pbmname = '.'.join(pred.split(".")[1:-1])
+    print("Processing " + pbmname)
+    start = time.time()
+
+    with open(pred, 'r') as f:
+        tf_df = pd.read_csv(f, delimiter=' ').round(5).fillna(0)
+        if tf_df.shape[0] < 4**12:
+            print("Skip %s since it has less rows than 4**12" % pbmname)
+            return None
+
+    # create a new local dataframe for computation + filtration
+    container = pd.DataFrame(dataset, columns = ['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'pbmname'])
+
+    # extract the z-scores and pvalues
+    container['z-score'] = tf_df.iloc[container['seqidx'], 1].to_numpy() # copy values otherwise pd.Series index issue
+    container['p_val'] = scipy.stats.norm.sf(np.abs(container['z-score']))*2
+
+    # drop the p values above threshold (insignificant)
+    container = container[container['p_val'] <= filterval]
+
+    # collect diff (done after thresholding)
+    container['diff'] = tf_df.iloc[container['seqidx'], 0].to_numpy() # copy values otherwise pd.Series index issue
+
+    # create a bound column and set the pbmname
+    container['binding_status'] = "N/A"
+    container['pbmname'] = pbmname
+
+    # resort columns
+    container = container[['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'p_val', 'binding_status', 'pbmname']]
+
+    if spec_ecutoff != -1 and nonspec_ecutoff != -1:
+        eshort_path = "%s/%s_escore.txt" % (config.ESCORE_DIR,pbmname)
+        eshort = pd.read_csv(eshort_path, header=None, index_col=None, dtype=np.float32)[0] # pd.Series -- remove from utils
+        elong = eshort.iloc[emap].to_numpy() # Moved out of isbound_escore_18mer()
+        container['binding_status'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, elong, spec_ecutoff, nonspec_ecutoff))
+
+    container.drop(columns=['seqidx', '18mer'], inplace=True)
+
+    print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
+
+    return container
+
+def postprocess(datalist,predfiles,gene_names,filteropt=1,filterval=1):
     '''
     Aggregate the result from the different processes.
+
+    TODO -- z-score
     '''
-    maintbl = {}
-    for ddict in datalist:
-        if not maintbl:
-            maintbl = ddict
-        else:
-            if filteropt == 1: # z-score
-                for row_key in ddict:
-                    for row_val in ddict[row_key]:
-                        least_idx = min(enumerate(maintbl[row_key]),key=lambda x:abs(x[1][1]))[0]
-                        # row_val[1] is the t-value
-                        if abs(row_val[1]) > abs(maintbl[row_key][least_idx][1]):
-                            del maintbl[row_key][least_idx]
-                            maintbl[row_key].append(row_val)
-            else: # filteropt == 2 -- p-value
-                for row_key in ddict:
-                    maintbl[row_key].extend(ddict[row_key])
-    return format2tbl(maintbl,gene_names,filteropt)
+    datalist = pd.concat(datalist, ignore_index=True, axis=0)
+
+    datalist.sort_values(by = ['row_key', '12mer', 'p_val'], ascending=True, inplace=True)
+
+    # read in pbm to hugo map and split
+    pbmtohugo = pd.read_csv(config.PBM_HUGO_MAPPING, sep=':', index_col=0, header=None)[1].str.split(',')
+
+    # reconstruct wild type and mutant strings
+    datalist['wild'] = datalist['12mer'].str.slice(stop=11)
+    datalist['mutant'] = datalist['12mer'].str.slice(stop=5) + datalist['12mer'].str.get(11)+ datalist['12mer'].str.slice(start=6, stop=11)
+
+    gene_names_set = set(gene_names)
+    predfiles = ['.'.join(p.split(".")[1:-1]) for p in predfiles]
+    tf_gene_dict = {p: ",".join([gene for gene in pbmtohugo[p] if gene in gene_names_set]) for p in predfiles}
+    datalist['TF_gene'] = datalist['pbmname'].apply(lambda x: tf_gene_dict.get(x, x))
+
+    # reindex and rename the columns
+    datalist = datalist[['row_key', 'wild', 'mutant', 'diff', 'z-score', 'p_val', 'TF_gene', 'binding_status', 'pbmname']]
+    datalist.columns = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
+
+    return datalist
 
 def parse_tfgenes(filepath, prefix = "prediction6mer.", sufix = ".txt"):
     genes = open(filepath).read().splitlines()
@@ -268,7 +318,7 @@ def parse_tfgenes(filepath, prefix = "prediction6mer.", sufix = ".txt"):
     return {"genes":genes,"pbms":unique_pbms}
 
 def do_prediction(intbl, pbms, gene_names,
-                  filteropt="p-value", filterval=0.0001, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
+                  filteropt="p-value", filterval=0.0001, spec_ecutoff=0.4, nonspec_ecutoff=0.35, num_threads=None):
     """
     intbl: preprocessed table
     filteropt: p-value or z-score
@@ -285,23 +335,22 @@ def do_prediction(intbl, pbms, gene_names,
     # need to use manager here
     shared_ready_sum = mp.Manager().Value('i', 0)
 
-    pool = mp.Pool(processes=config.PCOUNT)
     if filteropt == "p-value":
         filterval = float(filterval)
     else: #z-score
         filterval = int(filterval)
-    async_pools = [pool.apply_async(predict, (preds[i], intbl, shared_ready_sum, filteropt, filterval, spec_ecutoff, nonspec_ecutoff)) for i in range(0,len(preds))]
 
-    total = len(predfiles)
-    while not all([p.ready() for p in async_pools]):
-        time.sleep(2)
+    # collect the short2long_map -- shared, so only one i/o
+    emap = pd.read_csv("%s/index_short_to_long.csv" % (config.ESCORE_DIR), header=0, index_col=0, sep=',', dtype='Int32') # pd.DataFrame
+    emap = emap[emap.columns[0]].to_numpy() - 1 
 
-    res = [p.get() for p in async_pools]
-    pool.terminate()
+    predict_partial = ft.partial(predict, **{'dataset':intbl, 'ready_count':shared_ready_sum, 'emap':emap,
+            'filteropt':filteropt, 'filterval':filterval, 'spec_ecutoff':spec_ecutoff, 'nonspec_ecutoff':nonspec_ecutoff, 'num_threads':num_threads})
 
-    colnames,datavalues = postprocess(res,gene_names,filteropt,filterval)
+    with cc.ProcessPoolExecutor(config.PCOUNT) as executor:
+        res = executor.map(predict_partial, preds)
 
-    return colnames,datavalues
+    return postprocess(res,predfiles,gene_names,filteropt,filterval)
 
 def main():
     """nonspec_bind_cutoff = 0.35
@@ -312,6 +361,15 @@ def main():
     fileinput = "inputs/test.vcf"
     genelist = "inputs/gene_input.txt"
     outpath = "result.csv"""
+
+    # cProfile capitulation
+    # https://stackoverflow.com/questions/53890693/cprofile-causes-pickling-error-when-running-multiprocessing-python-code
+    import cProfile
+    if sys.modules['__main__'].__file__ == cProfile.__file__:
+        import qbic # re-import main (does *not* use cache or execute as __main__)
+        globals().update(vars(qbic))  # Replaces current contents with newly imported stuff
+        sys.modules['__main__'] = qbic  # Ensures pickle lookups on __main__ find matching version
+
 
     parser = argparse.ArgumentParser(description = 'TF Mutation Predictions')
     parser.add_argument('-i', '--inputfile', action="store", dest="inputfile", type=str,
@@ -332,6 +390,8 @@ def main():
                         default=0.4, help='PBM E-score specific cutoff.')
     parser.add_argument('-e', '--escorenonspec', action="store", dest="escorenonspec", type=float,
                         default=0.35, help='PBM E-score non-specific cutoff.')
+    parser.add_argument('-n', '--numthreads', action="store", dest="numthreads", type=int,
+                        default=None, help='Number of concurrent file I/O threads to use (per core)')
     args = parser.parse_args()
 
     #python3 qbic.py -i testing_resources/single_mutations_sample.tsv -g testing_resources/gene_input.txt -c hg19
@@ -344,12 +404,12 @@ def main():
 
     tbl = inittbl(args.inputfile, args.chrver, filetype = args.filetype)
 
-    input_genes = parse_tfgenes(args.genefile)
-    colnames, datavalues = do_prediction(tbl, input_genes["pbms"], input_genes["genes"], args.filteropt, args.filterval,
-                                         args.escorespec, args.escorenonspec)
+    input_genes = parse_tfgenes(args.genesfile)
+    res = do_prediction(tbl, input_genes["pbms"], input_genes["genes"], args.filteropt, args.filterval,
+                                         args.escorespec, args.escorenonspec, args.numthreads)
 
     print("Writing output to %s" % args.outpath)
-    pd.DataFrame(datavalues).to_csv(args.outpath, index = False, columns = colnames, sep="\t")
+    res.to_csv(args.outpath, index = False, sep="\t")
 
 if __name__=="__main__":
     main()

@@ -1,4 +1,3 @@
-import qbic
 import utils
 import argparse
 
@@ -22,8 +21,8 @@ def isbound_escore_18mer_list(seq18mer_list,escore_path,short2long_map="",spec_e
         elong = [eshort[idx] for idx in emap]
     else: # making escore using normal escore file
         df = pd.read_csv(escore_path, sep="\t")
-        d1 = pd.Series(df["E-score"].values,index=df["8-mer"]).to_dict()
-        d2 = pd.Series(df["E-score"].values,index=df["8-mer.1"]).to_dict()
+        d1 = pd.Series(df["E-score"].to_numpy(),index=df["8-mer"]).to_dict()
+        d2 = pd.Series(df["E-score"].to_numpy(),index=df["8-mer.1"]).to_dict()
         elong = {**d1, **d2}
 
     bound_list = []
@@ -49,6 +48,7 @@ if __name__ == "__main__":
     chrver = "hg19"
     filetype = "mut"
     """
+    import qbic # not a necessary import for isbound, so save an import conditionally
 
     parser = argparse.ArgumentParser(description = 'TF Mutation Predictions')
     parser.add_argument('-i', '--inputfile', action="store", dest="inputfile", type=str,
