@@ -12,3 +12,4 @@ scipy
 redisearch
 configparser
 pymongo
+dnspython

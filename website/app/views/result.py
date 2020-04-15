@@ -334,6 +334,7 @@ def get_res_tbl(task_id):
         rowdict['pbmname'] = htmlformat(doc['pbmname'],"filter","pbmname")
         retlist.append([rowdict[col] for col in cols])
 
+    print(retlist)
     return jsonify({
         "draw": draw,
         "recordsTotal": filtered_db['recordsTotal'],
