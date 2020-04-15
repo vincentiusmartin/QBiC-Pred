@@ -151,7 +151,7 @@ def query_filter(search_filter):
                 # I think it's fine to use expr here
                 query["$expr"] =  {op: [ {"$abs": "$z_score"} , abs(thres) ] }
         elif q["searchOpt"] == "exact":
-            query[q["searchCol"]] = q["searchKey"]
+            query[q["searchCol"]] = {"$regex":re.compile(q["searchKey"], re.I)}
 
     # make the query
     query_and = [{"$or":v} for k,v in query_or.items() if k != "z-score" and k != "p-value"]
