@@ -134,6 +134,7 @@ def query_filter(search_filter):
     query_or = {}
     query = {}
     inseq_substr = ""
+    exact_cols = []
     for q in search_filter:
         if q["searchOpt"] == "in sequence":
             inseq_substr += "%s|" % q["searchKey"]
@@ -151,7 +152,14 @@ def query_filter(search_filter):
                 # I think it's fine to use expr here
                 query["$expr"] =  {op: [ {"$abs": "$z_score"} , abs(thres) ] }
         elif q["searchOpt"] == "exact":
-            query[q["searchCol"]] = {"$regex":re.compile(q["searchKey"], re.I)}
+            if q["searchCol"] not in query:
+                exact_cols.append(q["searchCol"])
+                query[q["searchCol"]] = ""
+            query[q["searchCol"]] += "%s|" % q["searchKey"]
+
+    # change all exact to regex
+    for col in exact_cols:
+        query[col] = {"$regex":re.compile(query[col][:-1], re.I)}
 
     # make the query
     query_and = [{"$or":v} for k,v in query_or.items() if k != "z-score" and k != "p-value"]
