@@ -3,7 +3,7 @@ sys.path.insert(0, '..')
 
 from flask import jsonify,request,url_for
 
-from app import app,db
+from app import app,redisdb
 
 import redisearch
 import json
@@ -15,7 +15,7 @@ def get_recent_jobs():
         if key.startswith("qbic_recents:"):
             id = key.split(":",1)[1]
 
-            if db.exists(id):
+            if redisdb.exists(id):
                 # TODO: remove the job from recent as soon as docs are empty
                 #client = redisearch.Client(id)
                 #firstdoc = client.load_document(i)

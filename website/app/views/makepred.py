@@ -8,7 +8,7 @@ import ast
 import json
 
 from celery import Celery,chain
-from app import app,db
+from app import app,redisdb
 
 import app.controller.celerytask as celerytask
 import app.controller.utils as utils
@@ -147,7 +147,6 @@ def handle_upload():
             select_list = [elm.split(":")[1] for elm in request.form.getlist('pred-select')]
             unique_pbms = list({tfpref+x+tfext for pbm in select_list for x in pbm.split(',')})
 
-            print(unique_pbms, genes_selected)
             chrver = request.form.get('genome-select')
 
             filteropt = int(request.form.get('optradio'))
@@ -180,10 +179,10 @@ def handle_upload():
                             "spec_escore_thres":spec_escore_thres,
                             "nonspec_escore_thres":nonspec_escore_thres
                             }
-            if db.exists(task.id):
-                db.delete(task.id)
-            db.hmset(task.id,session_info)
-            db.expire(task.id, app.config['USER_DATA_EXPIRY'])
+            if redisdb.exists(task.id):
+                redisdb.delete(task.id)
+            redisdb.hmset(task.id,session_info)
+            redisdb.expire(task.id, app.config['USER_DATA_EXPIRY'])
             # ================================
             task.forget() # not sure if needed???
 

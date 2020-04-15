@@ -2,7 +2,7 @@ import sys
 sys.path.insert(0, '..')
 
 from flask import send_from_directory,jsonify,request,render_template,url_for,Response,abort
-from app import app,db,celery
+from app import app,redisdb,celery,mongodb
 
 import redisearch
 import billiard # just for contrive error catching
@@ -10,8 +10,8 @@ import billiard # just for contrive error catching
 # ast is used to convert string literal representation of list to a list,
 # this is needed since redis stores list as string
 import json,ast
-
 import pandas as pd
+import re
 
 '''
 job_id: from last task in the pipeline
@@ -19,7 +19,7 @@ job_id: from last task in the pipeline
 @app.route('/process/<job_id>', methods=['GET'])
 def process_request(job_id):
     # get the task data from redis
-    taskdata = db.hgetall(job_id)
+    taskdata = redisdb.hgetall(job_id)
     if "parent_id" not in taskdata:
         abort(404)
     p0 = taskdata["parent_id"]
@@ -41,18 +41,22 @@ def get_file_fromtbl(filetype,task_id,filters): #taskid,filters
     else:
         sep = ","
 
-    cols = ast.literal_eval(db.hgetall("%s:cols"%task_id)['cols'])
+    cols = get_mongocols(task_id)
     tblret = sep.join(cols) + "\n"
     for doc in filtered['data']:
         try: # TODO: handle this
             row = []
             for col in cols: # need to do this because we can have multiple TF_genes
                 if col == "TF_gene":
-                    row.append("\"%s\""%getattr(doc,col))
+                    row.append("\"%s\""%doc[col])
+                elif col == "p_value":
+                    row.append('{:0.3e}'.format(doc[col]))
                 else:
-                    row.append(getattr(doc,col))
+                    row.append(str(doc[col]))
+            print("asdsd",row)
             tblret += sep.join(row) + "\n"
-        except: #now: if not found, just return 404
+        except Exception as e: #now: if not found, just return 404
+            print("Exception: " + str(e))
             abort(404)
     return Response(
         tblret[:-1],
@@ -63,8 +67,8 @@ def get_file_fromtbl(filetype,task_id,filters): #taskid,filters
 @app.route('/filesdb/<filetype>/<taskid>')
 def get_file_fromdb(filetype,taskid):
     """Download a file."""
-    task = db.hgetall("%s:cols"%taskid)
-    cols = ast.literal_eval(task['cols'])
+    #task = db.hgetall("%s:cols"%taskid)
+    cols = get_mongocols(taskid)
     sep = "\t" if filetype=="tsv" else ","
     csv = "%s\n" % sep.join(cols)
 
@@ -90,10 +94,17 @@ def get_file_fromdb(filetype,taskid):
         headers={"Content-disposition":
                  "attachment; filename=prediction_result-%s.%s"%(taskid,filetype)})
 
+def get_mongocols(task_id):
+    if task_id in mongodb.list_collection_names():
+        collection = mongodb[task_id]
+        cols = list(collection.find_one().keys()) # get column name
+        cols.remove("_id")
+        return cols
+    else: # just return an empty list
+        return []
+
 @app.route('/getrescol/<task_id>',methods=['GET'])
 def get_res_col(task_id):
-    cols = []
-    col_id = "%s:cols"%task_id
     colmap = { # hardcoded, need to fix this
     "row":"Index",
     "wild":"Ref",
@@ -106,61 +117,57 @@ def get_res_col(task_id):
     #"gapmodel":"Gap model", #vmartin: comment this
     "pbmname":"PBM filename"
     }
-    if db.exists(col_id):
-        cols_fromdb = ast.literal_eval(db.hgetall(col_id)['cols'])
-        # add conditional to ignore if there is any undefined column
-        cols = [{"title":colmap[title]} for title in cols_fromdb if title in colmap] #vmartin: hide gap model
-    # else just return an empty list
+    cols_fromdb = get_mongocols(task_id)
+    cols = []
+    orderable_cols = ['diff','row','z_score','p_value']
+    for title in cols_fromdb:
+        # we only provide sort on some columns
+         #vmartin: hide gap model
+        if title in colmap:
+            if title not in orderable_cols:
+                cols.append({"title":colmap[title], "orderable": 0})
+            else:
+                cols.append({"title":colmap[title], "orderable": 1})
     return jsonify(cols)
 
-def dofilter(infilter,doc):
-    search_filter = list(infilter)
-    # first get all the OR filter
-    or_filter = {}
-    newlist = []
-    for filter in search_filter:
-        if filter["searchOpt"] == "or":
-            if filter["searchCol"] in or_filter:
-                or_filter[filter["searchCol"]].append(filter["searchKey"])
-            else:
-                or_filter[filter["searchCol"]] = [filter["searchKey"]]
-        else:
-            newlist.append(filter)
-    for col in or_filter:
-        searchval = getattr(doc,col).split(",")
-        found = any(x in or_filter[col] for x in searchval)
-        if not found:
-            return False
+def query_filter(search_filter):
+    query_or = {}
+    query = {}
+    inseq_substr = ""
+    for q in search_filter:
+        if q["searchOpt"] == "in sequence":
+            inseq_substr += "%s|" % q["searchKey"]
+        elif  q["searchOpt"] == "or":
+            if q["searchCol"] not in query_or:
+                query_or[q["searchCol"]] = []
+            query_or[q["searchCol"]].append({q["searchCol"]:q["searchKey"]})
+        elif q["searchOpt"] == "at most" or q["searchOpt"] == "at least":
+            op = "$lte" if  q["searchOpt"] == "at most" else "$gte"
+            thres = float(q["searchKey"])
+            if q["searchCol"] == "p-value":
+                query["p_value"] = {op:thres}
+            elif q["searchCol"] == "z-score":
+                # use absolute value if z-score, for now we only do this for z_score, so
+                # I think it's fine to use expr here
+                query["$expr"] =  {op: [ {"$abs": "$z_score"} , abs(thres) ] }
+        elif q["searchOpt"] == "exact":
+            query[q["searchCol"]] = q["searchKey"]
 
-    # checking other filters
-    flag = True
-    search_filter = list(newlist)
-    for filter in search_filter:
-        if filter["searchOpt"] == "in sequence":
-            if filter["searchKey"] in doc.wild or filter["searchKey"] in doc.mutant:
-                continue
-        elif filter["searchOpt"] == "at least" or filter["searchOpt"] == "at most":
-            col = filter["searchCol"].replace("-","_")
-            searchval = float(getattr(doc,col))
-            threshold = float(filter["searchKey"])
-            if (filter["searchOpt"] == "at least" and searchval >= threshold) or \
-                (filter["searchOpt"] == "at most" and searchval <= threshold):
-                continue
-        else:
-            searchval = getattr(doc,filter["searchCol"])
-            if filter["searchCol"] == "TF_gene": # easy fix for now, think about it later
-                if (filter["searchOpt"] == "exact" and filter["searchKey"] in searchval) or \
-                   (filter["searchOpt"] == "exclude" and filter["searchKey"] not in searchval):
-                   continue
-            else:
-                if (filter["searchOpt"] == "exact" and filter["searchKey"] == searchval) or \
-                   (filter["searchOpt"] == "exclude" and filter["searchKey"] != searchval):
-                   continue
-        flag = False
-        break
-    return flag
+    # make the query
+    query_and = [{"$or":v} for k,v in query_or.items() if k != "z-score" and k != "p-value"]
 
-def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_asc=True):
+    # take care of the string sequence
+    if inseq_substr: # if the query exist
+        inseq_substr = inseq_substr[:-1]
+        pat = re.compile(inseq_substr, re.I)
+        query_str = {"$or":[{"wild":{"$regex":inseq_substr}}, {"mutant":{"$regex":inseq_substr}}]}
+        query_and.append(query_str)
+
+    if query_and:
+        query["$and"] = query_and
+    return query
+
+def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_asc=1):
     '''
     task_id,
     search_filter,
@@ -169,26 +176,33 @@ def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_as
     order_asc=True
     '''
     result = {}
-    client = redisearch.Client(task_id)
-    result['recordsTotal'] = int(client.info()['num_docs'])
+    collection = mongodb[task_id]
+    result['recordsTotal'] = collection.count()
 
     #manual = False # manually made because redisearch sucks
     if length == -1:
         length = result['recordsTotal'] - start
 
+    print(search_filter)
     # if there is filter or length == -1 we return everything
     # hay que devolver todo porque necesitamos contar el número de filas
     if search_filter:
-        query = redisearch.Query("*").sort_by(order_col,order_asc).paging(0,result['recordsTotal'])
-        documents = client.search(query).docs
-        filtered_docs = list(filter(lambda doc: dofilter(search_filter,doc),documents))
-        result['recordsFiltered'] = len(filtered_docs)
-        result['data'] = filtered_docs[start:start+length]
-    else:
-        query = redisearch.Query("*").sort_by(order_col,order_asc).paging(start,length)
-        res = client.search(query)
-        result['recordsFiltered'] = res.total
-        result['data'] = res.docs
+        #filtered_docs = collection.find({}, {'_id': False}).sort(order_col,order_asc)
+        #filtered = dofilter(search_filter,collection)
+        query = query_filter(search_filter) # count_documents()
+        documents = collection.find(query, {'_id': False}) #.sort(order_col,order_asc)
+        result['recordsFiltered'] = documents.count()
+        sorted_res = documents.sort(order_col,order_asc) \
+                               .skip(start) \
+                               .limit(length)
+    else: # list(collection.find({}, {'_id': False}))
+        # if there is no filter, get the paging
+        result['recordsFiltered'] = result['recordsTotal']
+        sorted_res = collection.find({}, {'_id': False}) \
+                               .sort(order_col,order_asc) \
+                               .skip(start) \
+                               .limit(length)
+    result['data'] = list(sorted_res)
 
     #if searchtype == "exclude":
     #    #searchtext = searchquery.replace(">","\\>") -- @col:query
@@ -273,12 +287,17 @@ def get_res_tbl(task_id):
     # check orderable -- orderMulti is disabled in result.js so we can assume
     # one column ordering.
     order_col = int(request.args["order[0][column]"])
-    order_asc = True if request.args["order[0][dir]"] == "asc" else False
+    if request.args['columns[%d][orderable]' % order_col] == '0':
+        order_col = 0
+        order_asc = 1
+    else:
+        order_asc = 1 if request.args["order[0][dir]"] == "asc" else -1
 
     retlist = []
     #res_csv = pd.read_csv("%s%s.csv"%(app.config['UPLOAD_FOLDER'],task_id)).values.tolist()
 
-    cols = ast.literal_eval(db.hgetall("%s:cols"%task_id)['cols'])
+
+    cols = get_mongocols(task_id) # ast.literal_eval(
 
     filtered_db = filter_fromdb(task_id,searchFilter,start,length,cols[order_col],order_asc)
     # filtered = filter_fromdb(task_id,search_filter,start=0,length=-1) -- in download
@@ -286,7 +305,7 @@ def get_res_tbl(task_id):
     retlist = []
 
     # for now, if nothing found then return an empty table
-    if filtered_db['data'] and not hasattr(filtered_db['data'][0],'row'):
+    if filtered_db['data'] and len(filtered_db['data']) == 0: #not hasattr(filtered_db['data'][0],'row'): # hasattr
         return jsonify({
             "draw": 0,
             "recordsTotal": 0,
@@ -303,16 +322,16 @@ def get_res_tbl(task_id):
         #except: #now: if not found, just return 404
         #    abort(404)
         rowdict = {}
-        rowdict['row'] = doc.row
-        rowdict['wild'] = doc.wild[:5] + '<span class="bolded-red">' + doc.wild[5] + '</span>' + doc.wild[6:]
-        rowdict['mutant'] = doc.mutant[:5] + '<span class="bolded-red">' + doc.mutant[5] + '</span>' + doc.mutant[6:]
-        rowdict['diff'] = doc.diff
-        rowdict['z_score'] = customround(doc.z_score)
-        rowdict['p_value'] = customround(doc.p_value)
-        rowdict['binding_status'] = htmlformat(doc.binding_status,"filter","binding_status") #vmartin: binding-flag
+        rowdict['row'] = doc['row']
+        rowdict['wild'] = doc['wild'][:5] + '<span class="bolded-red">' + doc['wild'][5] + '</span>' + doc['wild'][6:]
+        rowdict['mutant'] = doc['mutant'][:5] + '<span class="bolded-red">' + doc['mutant'][5] + '</span>' + doc['mutant'][6:]
+        rowdict['diff'] = doc['diff']
+        rowdict['z_score'] = customround(doc['z_score'])
+        rowdict['p_value'] = customround(doc['p_value'])
+        rowdict['binding_status'] = htmlformat(doc['binding_status'],"filter","binding_status") #vmartin: binding-flag
         #rowdict['gapmodel'] = htmlformat(doc.gapmodel,"filter","gapmodel")
-        rowdict['TF_gene'] = htmlformat(doc.TF_gene,"filter","TF_gene")
-        rowdict['pbmname'] = htmlformat(doc.pbmname,"filter","pbmname")
+        rowdict['TF_gene'] = htmlformat(doc['TF_gene'],"filter","TF_gene")
+        rowdict['pbmname'] = htmlformat(doc['pbmname'],"filter","pbmname")
         retlist.append([rowdict[col] for col in cols])
 
     return jsonify({
@@ -381,6 +400,6 @@ def task_status(task_id):
 @app.route('/getinputparam/<job_id>', methods=['GET'])
 def get_input_param(job_id):
     # key: filename,pbmselected,filteropt,filterval,chrver
-    indict = db.hgetall(job_id)
+    indict = redisdb.hgetall(job_id)
     indict["genes_selected"] = ast.literal_eval(indict["genes_selected"])
     return json.dumps(indict) # must return a json

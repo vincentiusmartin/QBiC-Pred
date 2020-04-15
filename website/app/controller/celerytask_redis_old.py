@@ -1,7 +1,6 @@
 
 from celery import Celery,chain
-from app import app,celery,mongodb,redisdb
-import pymongo
+from app import app,celery,db
 
 import redisearch
 import time,sys
@@ -249,38 +248,32 @@ def postprocess(datalist,gene_names,filteropt=1,filterval=1):
 
 #==========================================================
 @celery.task()
-def drop_collection(task_id):
+def drop_index(task_id):
     '''
     Make this a celery task so we can schedule it -- done?
     '''
-    print("Remove key/index for %s from db"%task_id)
-    """
+    print("Remove key/index for %s from redis"%task_id)
     client = redisearch.Client(task_id)
     client.drop_index()
     db.delete(task_id)
     db.delete("%s:cols"%task_id)
-    """
-    collection = mongodb[task_id]
-    collection.drop()
 
-def savetomongo(req_id,colnames,datavalues,expired_time):
-    """
-    datavalues: list of dictionary of values to be put in the database
-    """
-    collection = mongodb[req_id]
-    #collection.insert_many(df.to_dict("records"))
+def savetoredis(req_id,colnames,datavalues,expired_time):
+    db.hmset("%s:cols"%req_id,{'cols':colnames})
+    client = redisearch.Client(req_id)
     indexes = []
-    collection.insert_many(datavalues)
-    collection.create_index([
-                    ("row", pymongo.ASCENDING), ("row", pymongo.DESCENDING),
-                    ("diff", pymongo.ASCENDING), ("diff", pymongo.DESCENDING),
-                    ("z_score", pymongo.ASCENDING), ("z_score", pymongo.DESCENDING),
-                    ("p_value", pymongo.ASCENDING), ("p_value", pymongo.DESCENDING),
-                    ("wild", pymongo.TEXT), ("mutant", pymongo.TEXT)
-                ])
-    print("Save collection %s to database" % req_id)
+    for col in colnames:
+        if "score" in col or "diff" in col or "row" in col or "z_score" in col or "p_value" in col:
+            indexes.append(redisearch.NumericField(col,sortable=True))
+        else:
+            indexes.append(redisearch.TextField(col,sortable=True))
+    client.create_index(indexes)
+    for i in range(0,len(datavalues)):
+        fields = {colnames[j]:datavalues[i][colnames[j]] for j in range(0,len(colnames))}
+        client.add_document("%s_%d"%(req_id,i), **fields)
     # ---- set expiry for columns and documents ----
-    drop_collection.apply_async((req_id,), countdown=expired_time)
+    #db.expire("%s:cols"%req_id,expired_time) let's comment for now and see how it goes
+    drop_index.apply_async((req_id,), countdown=expired_time)
 
 #https://github.com/MehmetKaplan/Redis_Table
 @celery.task(bind=True)
@@ -329,7 +322,7 @@ def do_prediction(self, intbl, selections, gene_names,
 
     ''' SET the values in redis '''
     #print("marktesting",colnames,datavalues)
-    savetomongo(self.request.id,colnames,datavalues,app.config['USER_DATA_EXPIRY'])
+    savetoredis(self.request.id,colnames,datavalues,app.config['USER_DATA_EXPIRY'])
     # significance_score can be z-score or p-value depending on the out_type
 
     #db.expire("%s:vals:*" % self.request.id, app.config['USER_DATA_EXPIRY'])

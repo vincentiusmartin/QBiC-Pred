@@ -1,6 +1,6 @@
 from flask import render_template,request,jsonify,make_response,url_for
 from werkzeug.utils import secure_filename
-from app import app,db
+from app import app,redisdb
 import os
 import uuid
 

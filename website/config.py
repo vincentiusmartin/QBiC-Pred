@@ -38,6 +38,9 @@ if config["Flask Conf"]["PCOUNT"] == "cpu.count":
 else:
     PCOUNT = int(config["Flask Conf"]["PCOUNT"])
 
+''' [MongoDB Conf] '''
+CONN_URL = config["MongoDB Conf"]["CONN_URL"]
+
 ''' [Directory Setting] '''
 PREDDIR = config["Directory Setting"]["PREDDIR"]
 UPLOAD_FOLDER = config["Directory Setting"]["UPLOAD_FOLDER"]

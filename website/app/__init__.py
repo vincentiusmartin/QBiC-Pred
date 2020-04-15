@@ -2,6 +2,7 @@
 
 from flask import Flask,session
 from celery import Celery
+from pymongo import MongoClient
 import redis
 
 from datetime import timedelta
@@ -16,7 +17,9 @@ app.permanent_session_lifetime = timedelta(minutes=3600)
 # Load the config file
 app.config.from_object('config')
 
-db = redis.Redis('localhost', decode_responses=True) # decode->make it in utf8,TODO
+redisdb = redis.Redis('localhost', decode_responses=True) # decode->make it in utf8,TODO
+mongoclient = MongoClient(app.config['CONN_URL'])
+mongodb = mongoclient.get_database("qbic_db")
 
 celery = Celery(app.name, backend=app.config['CELERY_RESULT_BACKEND'], broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)

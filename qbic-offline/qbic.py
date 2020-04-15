@@ -157,6 +157,7 @@ def predict(predlist, dataset, ready_count, emap,
     else:
         # concurrent execution for improved I/O,
         # after a partial function is created, mapping is easier
+        # not necessarily give benefit but can be
         with cc.ThreadPoolExecutor(max_workers = num_threads) as executor:
             res = executor.map(pph_partial, predlist)
             ready_count.value += len(predlist)
@@ -201,6 +202,8 @@ def pred_helper(pred, dataset, emap, filterval=0.001, filteropt="p-value",spec_e
         container = container[container['p-val'] <= filterval]
     else: # "z-score"
         # if z-score, we take the maximum "filterval"
+        # change this to heap
+        # nlargest equivalent to below but a bit faster
         container = container.sort_values('z-score',ascending = False).head(filterval)
 
     # collect diff (done after thresholding)
