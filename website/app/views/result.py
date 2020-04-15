@@ -95,10 +95,11 @@ def get_file_fromdb(filetype,taskid):
 
 def get_mongocols(task_id):
     if task_id in mongodb.list_collection_names():
-        collection = mongodb[task_id]
-        cols = list(collection.find_one().keys()) # get column name
-        cols.remove("_id")
-        return cols
+        # collection = mongodb[task_id]
+        # cols = list(collection.find_one().keys()) # get column name
+        # cols.remove("_id")
+        # return cols
+        return ['row', 'wild', 'mutant', 'diff', 'z_score', 'p_value', 'binding_status', 'TF_gene', 'pbmname']
     else: # just return an empty list
         return []
 
@@ -116,7 +117,7 @@ def get_res_col(task_id):
     #"gapmodel":"Gap model", #vmartin: comment this
     "pbmname":"PBM filename"
     }
-    cols_fromdb = ['row', 'wild', 'mutant', 'diff', 'z_score', 'p_value', 'binding_status', 'TF_gene', 'pbmname']  #get_mongocols(task_id)
+    cols_fromdb =  get_mongocols(task_id)
     cols = []
     orderable_cols = ['diff','row','z_score','p_value']
     for title in cols_fromdb:
