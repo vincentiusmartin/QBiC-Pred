@@ -135,8 +135,8 @@ def query_filter(search_filter):
     query = {}
     inseq_substr = ""
     exact_cols = []
+    print(search_filter)
     for q in search_filter:
-        print(q["searchOpt"])
         if q["searchOpt"] == "in sequence":
             inseq_substr += "%s|" % q["searchKey"]
         elif  q["searchOpt"] == "or":
@@ -342,7 +342,6 @@ def get_res_tbl(task_id):
         rowdict['pbmname'] = htmlformat(doc['pbmname'],"filter","pbmname")
         retlist.append([rowdict[col] for col in cols])
 
-    print(cols)
     return jsonify({
         "draw": draw,
         "recordsTotal": filtered_db['recordsTotal'],
