@@ -136,6 +136,7 @@ def query_filter(search_filter):
     inseq_substr = ""
     exact_cols = []
     for q in search_filter:
+        print(q["searchOpt"])
         if q["searchOpt"] == "in sequence":
             inseq_substr += "%s|" % q["searchKey"]
         elif  q["searchOpt"] == "or":
