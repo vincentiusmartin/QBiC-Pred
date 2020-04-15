@@ -263,7 +263,7 @@ def drop_collection(task_id):
     collection = mongodb[task_id]
     collection.drop()
 
-def savetomongo(req_id,colnames,datavalues,expired_time):
+def savetomongo(req_id,datavalues,expired_time):
     """
     datavalues: list of dictionary of values to be put in the database
     """
@@ -329,7 +329,7 @@ def do_prediction(self, intbl, selections, gene_names,
 
     ''' SET the values in redis '''
     #print("marktesting",colnames,datavalues)
-    savetomongo(self.request.id,colnames,datavalues,app.config['USER_DATA_EXPIRY'])
+    savetomongo(self.request.id,datavalues,app.config['USER_DATA_EXPIRY'])
     # significance_score can be z-score or p-value depending on the out_type
 
     #db.expire("%s:vals:*" % self.request.id, app.config['USER_DATA_EXPIRY'])

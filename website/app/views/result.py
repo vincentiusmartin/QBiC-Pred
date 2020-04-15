@@ -53,7 +53,6 @@ def get_file_fromtbl(filetype,task_id,filters): #taskid,filters
                     row.append('{:0.3e}'.format(doc[col]))
                 else:
                     row.append(str(doc[col]))
-            print("asdsd",row)
             tblret += sep.join(row) + "\n"
         except Exception as e: #now: if not found, just return 404
             print("Exception: " + str(e))
@@ -117,7 +116,7 @@ def get_res_col(task_id):
     #"gapmodel":"Gap model", #vmartin: comment this
     "pbmname":"PBM filename"
     }
-    cols_fromdb = get_mongocols(task_id)
+    cols_fromdb = ['row', 'wild', 'mutant', 'diff', 'z_score', 'p_value', 'binding_status', 'TF_gene', 'pbmname']  #get_mongocols(task_id)
     cols = []
     orderable_cols = ['diff','row','z_score','p_value']
     for title in cols_fromdb:
@@ -183,7 +182,6 @@ def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_as
     if length == -1:
         length = result['recordsTotal'] - start
 
-    print(search_filter)
     # if there is filter or length == -1 we return everything
     # hay que devolver todo porque necesitamos contar el número de filas
     if search_filter:
