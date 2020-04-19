@@ -152,7 +152,7 @@ def query_filter(search_filter):
                 # use absolute value if z-score, for now we only do this for z_score, so
                 # I think it's fine to use expr here
                 query["$expr"] =  {op: [ {"$abs": "$z_score"} , abs(thres) ] }
-        elif q["searchOpt"] == "exact":
+        elif q["searchOpt"] == "exact" or q["searchOpt"] == "exclude":
             if q["searchCol"] not in query:
                 exact_cols.append(q["searchCol"])
                 query[q["searchCol"]] = ""
