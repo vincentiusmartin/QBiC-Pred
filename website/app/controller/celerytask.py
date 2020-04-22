@@ -131,159 +131,201 @@ def chrom_cidx_helper(self, cidx, cidx_dataset, chromosome_path, kmer):
 #==================================== Prediction Part ====================================
 
 def predict(predlist, dataset, ready_count, emap,
-            filteropt=1, filterval=1, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
-    '''
+            filteropt="p-value", filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
+    """
     for the container list, key is a tuple of: (rowidx,sequence,seqidx)
-    and each element in value is a list if: [diff,z-score,pbmname]
+    and each element in value is a list of: [diff,z-score,pbmname]
+    If spec_ecutoff and nonspec_ecutoff == -1 then no escore calculation is done
+
+    filteropt = p-value, t-value, none
+                if none then just calculate escore
 
     return:
      filteropt=1: diff,z_score,tfname
-     filteropt=2: diff,p_val,escore,tfname
-    '''
-    buggedtf = 0
+     filteropt=2: diff,z_score,p_val,escore,tfname
+    """
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
-    if filteropt == 1: #t-value
-        container = {tuple(row[:4]):[[0,0,1,"None","None"]] for row in dataset} # rowidx,12mer,18mer,seqidx : [diff,z,p,bind,pbmname]
-    else: #p-value
-        # leave this empty as for p-value, we don't have to compare and the size is dynamic
-        container = {tuple(row[:4]):[] for row in dataset}
+    '''
+    EDIT -- this only works for p-values, z-scores need a different memory access pattern
+    '''
 
-    test_total_time = 0
+    # store the results here
+    res = []
 
-    # iterate for each transcription factor
+    # move here so we just use partial function
+    pph_partial = ft.partial(pred_helper, **{'dataset':dataset, 'emap':emap, 'filterval':filterval,
+                                                'spec_ecutoff':spec_ecutoff, 'nonspec_ecutoff':nonspec_ecutoff})
+    #iterate for each transcription factor
     for i in range(0,len(predlist)):
-        start = time.time()
-        pbmname = '.'.join(map(str,predlist[i].split(".")[1:-1]))
-        print("Processing " + pbmname)
-        with open(predlist[i], 'r') as f:
-            tflist = pd.read_csv(f, delimiter=' ').round(5).values.tolist()
-        if len(tflist) < 4**12:
-            print("Skip %s since it has less rows than 4**12" % pbmname)
-            buggedtf += 1
-            continue
-        for row_key in container:
-            seqidx = row_key[3]
-            diff = tflist[seqidx][0]
-            zscore = tflist[seqidx][1]
-            if np.isnan(zscore):
-                zscore = 0
-            if np.isnan(diff):
-                diff = 0
-            pval = scipy.stats.norm.sf(abs(zscore))*2
-            add = True
-            if filteropt == 1:
-                # if z-score is chosen then filterval is the maximum of item shown
-                if len(container[row_key]) >= filterval:
-                    least_idx = min(enumerate(container[row_key]),key=lambda x:abs(x[1][1]))[0]
-                    if abs(tflist[seqidx][1]) > abs(container[row_key][least_idx][1]):
-                        del container[row_key][least_idx]
-                    else:
-                        add = False
-            # filteropt = 2, if z-score is chosen then filterval is the p-val threshold
-            elif pval > filterval:
-                    add = False
-            # E-score calculation is here
-            if add:
-                if spec_ecutoff == -1 or nonspec_ecutoff == -1:
-                    container[row_key].append([diff,zscore,pval,"N/A",pbmname])
-                else:
-                    test_start = timer()
-                    # E-score calculation: 0.05 seconds each
-                    # For 10k rows, total: 141.34secs, from e-score 128.56331secs
-                    # For 50k rows, total: 771.42 secs, from e-score: 752.123secs
-                    # another example: 2547.41secs, from e-score: 2523.96897secs
-
-                    # prepare escore table
-                    eshort_path = "%s/%s_escore.txt" % (app.config["ESCORE_DIR"],pbmname)
-                    eshort = pd.read_csv(eshort_path, header=None, index_col=None, dtype=np.float32)[0] # pd.Series -- remove from utils
-                    elong = np.array(eshort.iloc[emap]) #.to_numpy() # Moved out of isbound_escore_18mer()
-
-                    isbound = utils.isbound_escore_18mer(row_key[2],elong,spec_ecutoff,nonspec_ecutoff)
-                    container[row_key].append([diff,zscore,pval,isbound,pbmname])
-                    test_end = timer()
-                    test_total_time += (test_end-test_start)
-
-        print("Total e-score time %.5f" % test_total_time)
+        res += [pph_partial(predlist[i])]
         ready_count.value += 1
-        print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
 
-    # remove seqidx and 18mer as it is not needed anymore
-    newcontainer = {}
-    for row_key in container:
-        newcontainer[row_key[:-2]] = container[row_key]
-    return newcontainer
+    # concatenate the individual tf containers
+    res = pd.concat(res, axis=0, ignore_index=True)
+
+    # may modify downstream tasks to accept dataframe
+    # return res
+    return res
+
+def pred_helper(pred, dataset, emap, filterval=0.001, filteropt="p-value",spec_ecutoff=0.4, nonspec_ecutoff=0.35):
+    '''
+    Helper function to shorten predict. Returns a DataFrame of thresholded results
+    pred: the 12-mer prediction tables
+    '''
+    pbmname = '.'.join(pred.split(".")[1:-1])
+    print("Processing " + pbmname)
+    start = time.time()
+
+    with open(pred, 'r') as f:
+        tf_df = pd.read_csv(f, delimiter=' ').round(5).fillna(0)
+        if tf_df.shape[0] < 4**12:
+            print("Skip %s since it has less rows than 4**12" % pbmname)
+            return None
+
+    # create a new local dataframe for computation + filtration
+    container = pd.DataFrame(dataset, columns = ['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'pbmname'])
+
+    # extract the z-scores and pvalues
+    container['z-score'] = np.array(tf_df.iloc[container['seqidx'], 1]) #.to_numpy() # copy values otherwise pd.Series index issue
+    container['p-val'] = scipy.stats.norm.sf(np.abs(container['z-score']))*2
+
+    if filteropt == "p-value":
+        # drop the p values above threshold (insignificant)
+        container = container[container['p-val'] <= filterval]
+    else: # "z-score"
+        # if z-score, we take the maximum "filterval"
+        # change this to heap
+        # nlargest equivalent to below but a bit faster
+        container = container.sort_values('z-score',ascending = False).head(filterval)
+
+    # collect diff (done after thresholding)
+    container['diff'] = np.array(tf_df.iloc[container['seqidx'], 0]) #.to_numpy() # copy values otherwise pd.Series index issue
+
+    # create a bound column and set the pbmname
+    container['binding_status'] = "N/A"
+    container['pbmname'] = pbmname
+
+    # resort columns
+    container = container[['row_key', '12mer', '18mer', 'seqidx', 'diff','z-score', 'p-val', 'binding_status', 'pbmname']]
+
+    if spec_ecutoff != -1 and nonspec_ecutoff != -1:
+        eshort_path = "%s/%s_escore.txt" % (app.config["ESCORE_DIR"],pbmname)
+        eshort = pd.read_csv(eshort_path, header=None, index_col=None, dtype=np.float32)[0] # pd.Series -- remove from utils
+        elong = np.array(eshort.iloc[emap]) #.to_numpy() # Moved out of isbound_escore_18mer()
+        container['binding_status'] = container['18mer'].apply(lambda x: utils.isbound_escore_18mer(x, elong, spec_ecutoff, nonspec_ecutoff))
+
+    container.drop(columns=['seqidx', '18mer'], inplace=True)
+
+    print("Total running time for {}: {:.2f}secs".format(pbmname,time.time()-start))
+
+    return container
 
 def read_gapfile(gapfile):
     df = pd.read_csv(gapfile)
     return dict(zip(df.upbm_filenames, df.gapmodel))
+#
+# def format2tbl(tbl,gene_names,filteropt=1):
+#     '''
+#     This function saves tbl as csvstring
+#
+#     Input:
+#       tbl is a dictionary of (rowidx,seq):[diff,zscore,tfname] or [diff,p-val,escore,tfname]
+#     '''
+#
+#     with open(app.config['PBM_HUGO_MAPPING']) as f:
+#         pbmtohugo = {}
+#         for line in f:
+#             linemap = line.strip().split(":")
+#             pbmtohugo[linemap[0]] = linemap[1].split(",")
+#
+#     #gapdata = read_gapfile(app.config['GAP_FILE'])
+#
+#     sorted_key = sorted(tbl.keys())
+#     datavalues = []
+#     for row_key in sorted_key:
+#         if not tbl[row_key]: # probably empty row
+#             continue
+#         row = row_key[0]
+#         seq = row_key[1]
+#         wild = seq[0:5] + seq[5] + seq[6:11]
+#         mut = seq[0:5] + seq[11] + seq[6:11]
+#         sorted_val = sorted(tbl[row_key],reverse=True,key=lambda x:abs(x[1]))
+#         for row_val in sorted_val: # [diff,zscore,pval,isbound,pbmname]
+#             rowdict = {'row':row,'wild':wild,'mutant':mut,'diff':row_val[0]}
+#             pbmname = row_val[4]
+#             rowdict['z_score'] =  row_val[1]
+#             rowdict['p_value'] =  row_val[2]
+#             rowdict['binding_status'] = row_val[3]
+#             if pbmname  == 'None':
+#                 rowdict['TF_gene'] = ""
+#                 rowdict['pbmname'] = "None"
+#                 #rowdict['gapmodel'] = "None" # vmartin: comment for now
+#             else:
+#                 rowdict['TF_gene'] = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
+#                 rowdict['pbmname'] = pbmname
+#                 #rowdict['gapmodel'] = gapdata[pbmname] # vmartin: comment for now
+#             datavalues.append(rowdict)
+#
+#     #colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"]
+#     colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
+#     return colnames,datavalues
+#
+# def postprocess(datalist,gene_names,filteropt=1,filterval=1):
+#     '''
+#     Aggregate the result from the different processes.
+#     '''
+#     maintbl = {}
+#     for ddict in datalist:
+#         if not maintbl:
+#             maintbl = ddict
+#         else:
+#             if filteropt == 1: # z-score
+#                 for row_key in ddict:
+#                     for row_val in ddict[row_key]:
+#                         least_idx = min(enumerate(maintbl[row_key]),key=lambda x:abs(x[1][1]))[0]
+#                         # row_val[1] is the t-value
+#                         if abs(row_val[1]) > abs(maintbl[row_key][least_idx][1]):
+#                             del maintbl[row_key][least_idx]
+#                             maintbl[row_key].append(row_val)
+#             else: # filteropt == 2 -- p-value
+#                 for row_key in ddict:
+#                     maintbl[row_key].extend(ddict[row_key])
+#     return format2tbl(maintbl,gene_names,filteropt)
 
-def format2tbl(tbl,gene_names,filteropt=1):
-    '''
-    This function saves tbl as csvstring
-
-    Input:
-      tbl is a dictionary of (rowidx,seq):[diff,zscore,tfname] or [diff,p-val,escore,tfname]
-    '''
-
-    with open(app.config['PBM_HUGO_MAPPING']) as f:
-        pbmtohugo = {}
-        for line in f:
-            linemap = line.strip().split(":")
-            pbmtohugo[linemap[0]] = linemap[1].split(",")
-
-    #gapdata = read_gapfile(app.config['GAP_FILE'])
-
-    sorted_key = sorted(tbl.keys())
-    datavalues = []
-    for row_key in sorted_key:
-        if not tbl[row_key]: # probably empty row
-            continue
-        row = row_key[0]
-        seq = row_key[1]
-        wild = seq[0:5] + seq[5] + seq[6:11]
-        mut = seq[0:5] + seq[11] + seq[6:11]
-        sorted_val = sorted(tbl[row_key],reverse=True,key=lambda x:abs(x[1]))
-        for row_val in sorted_val: # [diff,zscore,pval,isbound,pbmname]
-            rowdict = {'row':row,'wild':wild,'mutant':mut,'diff':row_val[0]}
-            pbmname = row_val[4]
-            rowdict['z_score'] =  row_val[1]
-            rowdict['p_value'] =  row_val[2]
-            rowdict['binding_status'] = row_val[3]
-            if pbmname  == 'None':
-                rowdict['TF_gene'] = ""
-                rowdict['pbmname'] = "None"
-                #rowdict['gapmodel'] = "None" # vmartin: comment for now
-            else:
-                rowdict['TF_gene'] = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
-                rowdict['pbmname'] = pbmname
-                #rowdict['gapmodel'] = gapdata[pbmname] # vmartin: comment for now
-            datavalues.append(rowdict)
-
-    #colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"]
-    colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
-    return colnames,datavalues
-
-def postprocess(datalist,gene_names,filteropt=1,filterval=1):
+def postprocess(datalist,predfiles,gene_names,filteropt=1,filterval=1):
     '''
     Aggregate the result from the different processes.
+
+    TODO -- z-score
     '''
-    maintbl = {}
-    for ddict in datalist:
-        if not maintbl:
-            maintbl = ddict
-        else:
-            if filteropt == 1: # z-score
-                for row_key in ddict:
-                    for row_val in ddict[row_key]:
-                        least_idx = min(enumerate(maintbl[row_key]),key=lambda x:abs(x[1][1]))[0]
-                        # row_val[1] is the t-value
-                        if abs(row_val[1]) > abs(maintbl[row_key][least_idx][1]):
-                            del maintbl[row_key][least_idx]
-                            maintbl[row_key].append(row_val)
-            else: # filteropt == 2 -- p-value
-                for row_key in ddict:
-                    maintbl[row_key].extend(ddict[row_key])
-    return format2tbl(maintbl,gene_names,filteropt)
+    datalist = pd.concat(datalist, ignore_index=True, axis=0)
+
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.max_rows', None)
+
+    if filteropt == "p-value":
+        datalist.sort_values(by = ['row_key', '12mer', 'p-val'], ascending=True, inplace=True)
+    else: # if z-score then we need to reduce here
+        datalist = datalist.iloc[(-datalist['z-score'].abs()).argsort()].groupby('row_key').head(filterval)
+        datalist.sort_values(by = ['row_key', '12mer'], ascending=True, inplace=True)
+
+    # read in pbm to hugo map and split
+    pbmtohugo = pd.read_csv(app.config["PBM_HUGO_MAPPING"], sep=':', index_col=0, header=None)[1].str.split(',')
+
+    # reconstruct wild type and mutant strings
+    datalist['wild'] = datalist['12mer'].str.slice(stop=11)
+    datalist['mutant'] = datalist['12mer'].str.slice(stop=5) + datalist['12mer'].str.get(11)+ datalist['12mer'].str.slice(start=6, stop=11)
+
+    gene_names_set = set(gene_names)
+    predfiles = ['.'.join(p.split(".")[1:-1]) for p in predfiles]
+    tf_gene_dict = {p: ",".join([gene for gene in pbmtohugo[p] if gene in gene_names_set]) for p in predfiles}
+    datalist['TF_gene'] = datalist['pbmname'].apply(lambda x: tf_gene_dict.get(x, x))
+
+    # reindex and rename the columns
+    datalist = datalist[['row_key', 'wild', 'mutant', 'diff', 'z-score', 'p-val', 'TF_gene', 'binding_status', 'pbmname']]
+    datalist.columns = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
+
+    return datalist
 
 #==========================================================
 @celery.task()
@@ -343,7 +385,7 @@ def do_prediction(self, intbl, selections, gene_names,
     # move the comment here for testing
     pool = mp.Pool(processes=app.config['PCOUNT'])
     predfiles = [app.config['PREDDIR'] + "/" + s for s in selections] # os.listdir(preddir)
-    preds = utils.chunkify(predfiles,app.config['PCOUNT']) # chunks the predfiles for each process
+    preds = [l for l in utils.chunkify(predfiles,app.config['PCOUNT']) if len(l) != 0] # chunks the predfiles for each process
 
     # need to use manager here
     shared_ready_sum = mp.Manager().Value('i', 0)
@@ -369,11 +411,11 @@ def do_prediction(self, intbl, selections, gene_names,
     print("Terminate all children process..")
     pool.terminate() # terminate to kill all child processes !!! Like.. super important,
                      # to avoid memory leak, seriously...
-    colnames,datavalues = postprocess(res,gene_names,filteropt,filterval)
+    datavalues = postprocess(res,predfiles,gene_names,filteropt,filterval)
 
     ''' SET the values in redis '''
     #print("marktesting",colnames,datavalues)
-    savetomongo(self.request.id,datavalues,app.config['USER_DATA_EXPIRY'])
+    savetomongo(self.request.id, datavalues.to_dict('records') ,app.config['USER_DATA_EXPIRY'])
     # significance_score can be z-score or p-value depending on the out_type
 
     #db.expire("%s:vals:*" % self.request.id, app.config['USER_DATA_EXPIRY'])
