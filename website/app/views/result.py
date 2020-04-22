@@ -134,9 +134,7 @@ def query_filter(search_filter):
     query_or = {}
     query = {}
     inseq_substr = ""
-    exact_cols = []
-    exclude_cols = []
-    print(search_filter)
+    ex_query = {} #exact, exclude
     for q in search_filter:
         if q["searchOpt"] == "in sequence":
             inseq_substr += "%s|" % q["searchKey"]
@@ -155,20 +153,12 @@ def query_filter(search_filter):
                 query["$expr"] =  {op: [ {"$abs": "$z_score"} , abs(thres) ] }
         #[{'searchOpt': 'exclude', 'searchKey': 'E2F', 'searchCol': 'TF_gene'}]
         elif q["searchOpt"] == "exact" or q["searchOpt"] == "exclude":
-            if q["searchCol"] not in query:
-                query[q["searchCol"]] = ""
-                if q["searchOpt"] == "exact":
-                    exact_cols.append(q["searchCol"])
-                elif q["searchOpt"] == "exclude":
-                    exclude_cols.append(q["searchCol"])
-            query[q["searchCol"]] += "%s|" % q["searchKey"]
-
-
-    # change all exact to regex
-    for col in exact_cols:
-        query[col] = {"$regex":re.compile(query[col][:-1], re.I)}
-    for col in exact_cols:
-        query[col] = {"$not":{"$regex":re.compile(query[col][:-1], re.I)}}
+            if q["searchCol"] not in ex_query:
+                ex_query[q["searchCol"]] = {"exact":[], "exclude":[]}
+            if q["searchOpt"] == "exact":
+                ex_query[q["searchCol"]]["exact"].append(q["searchKey"])
+            elif q["searchOpt"] == "exclude":
+                ex_query[q["searchCol"]]["exclude"].append(q["searchKey"])
 
     # make the query
     query_and = [{"$or":v} for k,v in query_or.items() if k != "z-score" and k != "p-value"]
@@ -179,6 +169,17 @@ def query_filter(search_filter):
         pat = re.compile(inseq_substr, re.I)
         query_str = {"$or":[{"wild":{"$regex":inseq_substr}}, {"mutant":{"$regex":inseq_substr}}]}
         query_and.append(query_str)
+
+    # change all exact and/or exclude to regex
+    ex_qformat = []
+    for col in ex_query:
+        if ex_query[col]["exact"]:
+            qexact = "|".join(ex_query[col]["exact"])
+            ex_qformat.append({col:{"$regex":re.compile(qexact, re.I)}})
+        if ex_query[col]["exclude"]:
+            qexclude = "|".join(ex_query[col]["exclude"])
+            ex_qformat.append({col:{"$not":{"$regex":re.compile(qexclude, re.I)}}})
+    query_and.extend(ex_qformat)
 
     if query_and:
         query["$and"] = query_and
