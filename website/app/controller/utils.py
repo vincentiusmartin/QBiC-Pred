@@ -61,19 +61,13 @@ def isbound_escore(seq,etable,kmer=8,bsite_cutoff=0.4,nbsite_cutoff=0.35):
 """
 return: "is bound wild > is bound mut"
 """
-def isbound_escore_18mer(seq18mer,pbm_name,escore_dir,spec_ecutoff=0.35,nonspec_ecutoff=0.4):
-    eshort_path = "%s/%s_escore.txt" % (escore_dir,pbm_name)
+def isbound_escore_18mer(seq18mer,elong,spec_ecutoff=0.35,nonspec_ecutoff=0.4):
+    #eshort_path = "%s/%s_escore.txt" % (escore_dir,pbm_name)
     # TODO: avoid IO, maybe using global var?
-    short2long_map = "%s/index_short_to_long.csv" % (escore_dir)
+    # <emap> = short2long_map = "%s/index_short_to_long.csv" % (escore_dir)
 
     #  -- this definitely needs to go to a database
-    with open(eshort_path) as f:
-        eshort = [float(line) for line in f]
-    with open(short2long_map) as f:
-        next(f)
-        emap = [int(line.split(",")[1])-1 for line in f]
-
-    elong = [eshort[idx] for idx in emap]
+    # elong = eshort.iloc[emap].to_numpy() # this is a permutated matrix of eshort, moved out of this function
 
     wild = seq18mer[:-1]
     mut = seq18mer[:8] + seq18mer[-1] + seq18mer[9:-1]

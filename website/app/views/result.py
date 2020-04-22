@@ -135,6 +135,7 @@ def query_filter(search_filter):
     query = {}
     inseq_substr = ""
     exact_cols = []
+    exclude_cols = []
     print(search_filter)
     for q in search_filter:
         if q["searchOpt"] == "in sequence":
@@ -152,15 +153,22 @@ def query_filter(search_filter):
                 # use absolute value if z-score, for now we only do this for z_score, so
                 # I think it's fine to use expr here
                 query["$expr"] =  {op: [ {"$abs": "$z_score"} , abs(thres) ] }
+        #[{'searchOpt': 'exclude', 'searchKey': 'E2F', 'searchCol': 'TF_gene'}]
         elif q["searchOpt"] == "exact" or q["searchOpt"] == "exclude":
             if q["searchCol"] not in query:
-                exact_cols.append(q["searchCol"])
                 query[q["searchCol"]] = ""
+                if q["searchOpt"] == "exact":
+                    exact_cols.append(q["searchCol"])
+                elif q["searchOpt"] == "exclude":
+                    exclude_cols.append(q["searchCol"])
             query[q["searchCol"]] += "%s|" % q["searchKey"]
+
 
     # change all exact to regex
     for col in exact_cols:
         query[col] = {"$regex":re.compile(query[col][:-1], re.I)}
+    for col in exact_cols:
+        query[col] = {"$not":{"$regex":re.compile(query[col][:-1], re.I)}}
 
     # make the query
     query_and = [{"$or":v} for k,v in query_or.items() if k != "z-score" and k != "p-value"]
@@ -174,6 +182,7 @@ def query_filter(search_filter):
 
     if query_and:
         query["$and"] = query_and
+    print(query)
     return query
 
 def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_asc=1):

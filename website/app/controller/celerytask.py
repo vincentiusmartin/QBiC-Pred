@@ -9,6 +9,7 @@ import pandas as pd
 import billiard as mp #multiprocessing substitute to enable daemon
 import scipy.stats
 import numpy as np
+import functools as ft
 
 import os
 
@@ -16,6 +17,8 @@ sys.path.insert(0, 'app')
 import controller.utils as utils
 
 from timeit import default_timer as timer
+
+import concurrent.futures as cc
 
 # input: table
 @celery.task(bind=True)
@@ -84,6 +87,11 @@ def inittbl(self,filename,cpath):
                 result.append([idx,seq,escore_seq,utils.seqtoi(seq),0,0,"None"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
             if error:
                 break
+        # cidx_list = [str(a) for a in range(1,23)] + ['X','Y']
+        # with cc.ThreadPoolExecutor(app.config["PCOUNT"]) as executor:
+        #     # vm: first parallel
+        #     result = executor.map(lambda x: chrom_cidx_helper(*x), [(cidx, dataset[cidx], cpath, kmer) for cidx in cidx_list if cidx in dataset])
+        # result = sorted(result,key=lambda result:result[0])
 
     # finish parsing the file, delete it
     if filename.startswith(app.config['UPLOAD_FOLDER']):
@@ -97,9 +105,32 @@ def inittbl(self,filename,cpath):
         print("Time to preprocess: {:.2f}secs".format(time.time()-start))
         return result
 
+# still doesn't work, TODO
+@celery.task(bind=True)
+def chrom_cidx_helper(self, cidx, cidx_dataset, chromosome_path, kmer):
+    self.update_state(state='PROGRESS',
+              meta={'current': 0, 'total': 1, 'status': 'Preprocessing input for chromosome {}...'.format(int(cidx))})
+    print("Iterating dataset for chromosome {}...".format(cidx))
+    chromosome = utils.get_chrom(chromosome_path + "/chr." + str(cidx) + '.fa.gz')
+    result = []
+    error = ""
+    for idx,row in cidx_dataset.iterrows():
+        pos = row['pos'] - 1
+        if row['mutated_from'] != chromosome[pos]:
+            cver = cpath.split("/")[-1]
+            error = "For the input mutation %s>%s at position %s in chromosome %s, the mutated_from nucleotide (%s) does not match the nucleotide in the %s reference genome (%s). Please check the input data and verify that the correct version of the reference human genome was used." % (row['mutated_from'], row['mutated_to'], row['pos'], row['chromosome'], row['mutated_from'], cver, chromosome[pos])
+        seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to'] #-5,+6
+        # for escore, just use 8?
+        escore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to']
+        result.append([idx,seq,escore_seq,utils.seqtoi(seq),0,0,"None"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
+    if error:
+        return error
+    else:
+        return result
+
 #==================================== Prediction Part ====================================
 
-def predict(predlist, dataset, ready_count,
+def predict(predlist, dataset, ready_count, emap,
             filteropt=1, filterval=1, spec_ecutoff=0.4, nonspec_ecutoff=0.35):
     '''
     for the container list, key is a tuple of: (rowidx,sequence,seqidx)
@@ -118,6 +149,7 @@ def predict(predlist, dataset, ready_count,
         container = {tuple(row[:4]):[] for row in dataset}
 
     test_total_time = 0
+
     # iterate for each transcription factor
     for i in range(0,len(predlist)):
         start = time.time()
@@ -160,7 +192,13 @@ def predict(predlist, dataset, ready_count,
                     # For 10k rows, total: 141.34secs, from e-score 128.56331secs
                     # For 50k rows, total: 771.42 secs, from e-score: 752.123secs
                     # another example: 2547.41secs, from e-score: 2523.96897secs
-                    isbound = utils.isbound_escore_18mer(row_key[2],pbmname,app.config['ESCORE_DIR'],spec_ecutoff,nonspec_ecutoff)
+
+                    # prepare escore table
+                    eshort_path = "%s/%s_escore.txt" % (app.config["ESCORE_DIR"],pbmname)
+                    eshort = pd.read_csv(eshort_path, header=None, index_col=None, dtype=np.float32)[0] # pd.Series -- remove from utils
+                    elong = np.array(eshort.iloc[emap]) #.to_numpy() # Moved out of isbound_escore_18mer()
+
+                    isbound = utils.isbound_escore_18mer(row_key[2],elong,spec_ecutoff,nonspec_ecutoff)
                     container[row_key].append([diff,zscore,pval,isbound,pbmname])
                     test_end = timer()
                     test_total_time += (test_end-test_start)
@@ -310,7 +348,13 @@ def do_prediction(self, intbl, selections, gene_names,
     # need to use manager here
     shared_ready_sum = mp.Manager().Value('i', 0)
 
-    async_pools = [pool.apply_async(predict, (preds[i], intbl, shared_ready_sum, filteropt, filterval, spec_ecutoff, nonspec_ecutoff)) for i in range(0,len(preds))]
+    # collect the short2long_map -- shared, so only one i/o
+    emap = pd.read_csv("%s/index_short_to_long.csv" % (app.config["ESCORE_DIR"]), header=0, index_col=0, sep=',', dtype='Int32') # pd.DataFrame
+    emap = np.array(emap[emap.columns[0]]) - 1 #emap[emap.columns[0]].to_numpy() - 1
+
+    predict_partial = ft.partial(predict, **{'dataset':intbl, 'ready_count':shared_ready_sum, 'emap':emap,
+            'filteropt':filteropt, 'filterval':filterval, 'spec_ecutoff':spec_ecutoff, 'nonspec_ecutoff':nonspec_ecutoff})
+    async_pools = [pool.apply_async(predict_partial, (preds[i], )) for i in range(0,len(preds))]
 
     # run the job, update progress bar
     total = len(predfiles)
