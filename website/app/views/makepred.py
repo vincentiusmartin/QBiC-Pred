@@ -129,7 +129,7 @@ def prepare_request(request):
 
 @app.route('/upload', methods=['POST'])
 def handle_upload():
-    MAX_LINES = 50000
+    MAX_LINES = 2000000
     tfpref = "prediction6mer." # for rapid, need to be empty for now
     tfext = ".txt"
     if request.method == 'POST':
