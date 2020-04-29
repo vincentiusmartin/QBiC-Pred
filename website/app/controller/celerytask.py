@@ -381,6 +381,8 @@ def do_prediction(self, intbl, selections, gene_names,
     #while not inittask.ready():
     #    time.sleep(1)
     #intbl = inittask.get()
+    predfiles = [app.config['PREDDIR'] + "/" + s for s in selections] # os.listdir(preddir)
+    preds = [l for l in utils.chunkify(predfiles,app.config['PCOUNT']) if len(l) != 0] # chunks the predfiles for each process
 
     # collect the short2long_map -- shared, so only one i/o
     emap = pd.read_csv("%s/index_short_to_long.csv" % (app.config["ESCORE_DIR"]), header=0, index_col=0, sep=',', dtype='Int32') # pd.DataFrame
@@ -388,9 +390,6 @@ def do_prediction(self, intbl, selections, gene_names,
 
     # ---- MULTIPROCESSING PART ----
     pool = mp.Pool(processes=app.config['PCOUNT'])
-    predfiles = [app.config['PREDDIR'] + "/" + s for s in selections] # os.listdir(preddir)
-    preds = [l for l in utils.chunkify(predfiles,app.config['PCOUNT']) if len(l) != 0] # chunks the predfiles for each process
-
     # need to use manager here
     shared_ready_sum = mp.Manager().Value('i', 0)
 

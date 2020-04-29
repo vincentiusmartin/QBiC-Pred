@@ -32,8 +32,8 @@ def process_request(job_id):
 @app.route('/files/<filetype>/<task_id>/<filters>')
 def get_file_fromtbl(filetype,task_id,filters): #taskid,filters
     #filtered_db = filter_fromdb(task_id,searchFilter,start,length,cols[order_col],order_asc)
-    search_filter = ast.literal_eval(filters); # [{"searchOpt":"in sequence","searchKey":"AAT","searchCol":"sequence"}
-    filtered = filter_fromdb(task_id,search_filter,start=0,length=-1)
+    search_filter = ast.literal_eval(filters) # [{"searchOpt":"in sequence","searchKey":"AAT","searchCol":"sequence"}
+    filtered = filter_fromdb(task_id, search_filter, start=0, length=-1, download=True)
 
     ftype = filetype.lower()
     if ftype == "tsv":
@@ -183,10 +183,9 @@ def query_filter(search_filter):
 
     if query_and:
         query["$and"] = query_and
-    print(query)
     return query
 
-def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_asc=1):
+def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_asc=1,download=False):
     '''
     task_id,
     search_filter,
@@ -198,7 +197,6 @@ def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_as
     collection = mongodb[task_id]
     result['recordsTotal'] = collection.count()
 
-    #manual = False # manually made because redisearch sucks
     if length == -1:
         length = result['recordsTotal'] - start
 
@@ -210,17 +208,15 @@ def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_as
         query = query_filter(search_filter) # count_documents()
         documents = collection.find(query, {'_id': False}) #.sort(order_col,order_asc)
         result['recordsFiltered'] = documents.count()
-        sorted_res = documents.sort(order_col,order_asc) \
-                               .skip(start) \
-                               .limit(length)
     else: # list(collection.find({}, {'_id': False}))
         # if there is no filter, get the paging
         result['recordsFiltered'] = result['recordsTotal']
-        sorted_res = collection.find({}, {'_id': False}) \
-                               .sort(order_col,order_asc) \
-                               .skip(start) \
-                               .limit(length)
-    result['data'] = list(sorted_res)
+        documents = collection.find({}, {'_id': False})
+    if not download:
+        documents = documents.sort(order_col,order_asc) \
+                   .skip(start) \
+                   .limit(length)
+    result['data'] = list(documents)
 
     #if searchtype == "exclude":
     #    #searchtext = searchquery.replace(">","\\>") -- @col:query
