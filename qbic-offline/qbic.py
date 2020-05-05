@@ -283,9 +283,6 @@ def do_prediction(intbl, pbms, gene_names,
     predfiles = [config.PREDDIR + "/" + pbm for pbm in pbms] # os.listdir(preddir)
     preds = utils.chunkify(predfiles,config.PCOUNT) # chunks the predfiles for each process
 
-    # need to use manager here
-    shared_ready_sum = mp.Manager().Value('i', 0)
-
     if filteropt == "p-value":
         filterval = float(filterval)
     else: #z-score
@@ -296,6 +293,9 @@ def do_prediction(intbl, pbms, gene_names,
     emap = np.array(emap[emap.columns[0]]) - 1 #emap[emap.columns[0]].to_numpy() - 1
 
 
+    # --- PARALLEL PART ---
+    # need to use manager here
+    shared_ready_sum = mp.Manager().Value('i', 0)
     # predlist, dataset, ready_count, emap,
     #            filteropt="p-value", filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35,
     #            q=None, num_threads=None)\

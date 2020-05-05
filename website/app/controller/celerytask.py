@@ -1,6 +1,6 @@
 
 from celery import Celery,chain
-from app import app,celery,mongodb,redisdb
+from app import app,celery,mongodb
 import pymongo
 
 import redisearch
@@ -343,7 +343,7 @@ def drop_collection(task_id):
     collection = mongodb[task_id]
     collection.drop()
 
-def savetomongo(req_id,datavalues,expired_time):
+def savetomongo(req_id, datavalues, expired_time):
     """
     datavalues: list of dictionary of values to be put in the database
     """

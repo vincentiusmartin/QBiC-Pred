@@ -31,6 +31,7 @@ def process_request(job_id):
 # /<taskid>/<filters>
 @app.route('/files/<filetype>/<task_id>/<filters>')
 def get_file_fromtbl(filetype,task_id,filters): #taskid,filters
+    print(filetype,task_id,filters)
     #filtered_db = filter_fromdb(task_id,searchFilter,start,length,cols[order_col],order_asc)
     search_filter = ast.literal_eval(filters) # [{"searchOpt":"in sequence","searchKey":"AAT","searchCol":"sequence"}
     filtered = filter_fromdb(task_id, search_filter, start=0, length=-1, download=True)
@@ -55,7 +56,7 @@ def get_file_fromtbl(filetype,task_id,filters): #taskid,filters
                     row.append(str(doc[col]))
             tblret += sep.join(row) + "\n"
         except Exception as e: #now: if not found, just return 404
-            print("Exception: " + str(e))
+            print("Exception:",e)
             abort(404)
     return Response(
         tblret[:-1],
@@ -213,6 +214,8 @@ def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_as
         result['recordsFiltered'] = result['recordsTotal']
         documents = collection.find({}, {'_id': False})
     if not download:
+        # if not dowload, we only show rows on the page and we sort it based on
+        # the sort column.
         documents = documents.sort(order_col,order_asc) \
                    .skip(start) \
                    .limit(length)
