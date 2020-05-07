@@ -62,7 +62,6 @@ def is_valid_cols(filepath):
         return True
     return False
 
-
 '''
 return empty string if there is no file, filename if there is file and it has been handled
 by the function

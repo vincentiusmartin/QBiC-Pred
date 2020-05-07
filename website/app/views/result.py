@@ -136,13 +136,17 @@ def query_filter(search_filter):
     query = {}
     inseq_substr = ""
     ex_query = {} #exact, exclude
+    gene_or = ""
     for q in search_filter:
         if q["searchOpt"] == "in sequence":
             inseq_substr += "%s|" % q["searchKey"]
         elif  q["searchOpt"] == "or":
-            if q["searchCol"] not in query_or:
-                query_or[q["searchCol"]] = []
-            query_or[q["searchCol"]].append({q["searchCol"]:q["searchKey"]})
+            if q["searchCol"] == "TF_gene":
+                gene_or += "%s|" % q["searchKey"]
+            else:
+                if q["searchCol"] not in query_or:
+                    query_or[q["searchCol"]] = []
+                query_or[q["searchCol"]].append({q["searchCol"]:q["searchKey"]})
         elif q["searchOpt"] == "at most" or q["searchOpt"] == "at least":
             op = "$lte" if  q["searchOpt"] == "at most" else "$gte"
             thres = float(q["searchKey"])
@@ -160,7 +164,10 @@ def query_filter(search_filter):
                 ex_query[q["searchCol"]]["exact"].append(q["searchKey"])
             elif q["searchOpt"] == "exclude":
                 ex_query[q["searchCol"]]["exclude"].append(q["searchKey"])
-
+    if gene_or: # if the query exist
+        gene_or = gene_or[:-1]
+        pat = re.compile(gene_or, re.I)
+        query_or["TF_gene"] = [{"TF_gene":{"$regex":pat}}]
     # make the query
     query_and = [{"$or":v} for k,v in query_or.items() if k != "z-score" and k != "p-value"]
 
@@ -168,15 +175,16 @@ def query_filter(search_filter):
     if inseq_substr: # if the query exist
         inseq_substr = inseq_substr[:-1]
         pat = re.compile(inseq_substr, re.I)
-        query_str = {"$or":[{"wild":{"$regex":inseq_substr}}, {"mutant":{"$regex":inseq_substr}}]}
+        query_str = {"$or":[{"wild":{"$regex":pat}}, {"mutant":{"$regex":pat}}]}
         query_and.append(query_str)
 
     # change all exact and/or exclude to regex
     ex_qformat = []
-    for col in ex_query:
+    for col in ex_query: # col is always either exact or exclude
         if ex_query[col]["exact"]:
-            qexact = "|".join(ex_query[col]["exact"])
-            ex_qformat.append({col:{"$regex":re.compile(qexact, re.I)}})
+            # using and for exact
+            qexact = {"$and": [{col:{"$regex":re.compile(qe, re.I)}} for qe in ex_query[col]["exact"]]}
+            ex_qformat.append(qexact)
         if ex_query[col]["exclude"]:
             qexclude = "|".join(ex_query[col]["exclude"])
             ex_qformat.append({col:{"$not":{"$regex":re.compile(qexclude, re.I)}}})
@@ -184,6 +192,7 @@ def query_filter(search_filter):
 
     if query_and:
         query["$and"] = query_and
+    print("query",query)
     return query
 
 def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_asc=1,download=False):
@@ -200,6 +209,7 @@ def filter_fromdb(task_id,search_filter,start,length=-1,order_col="row",order_as
 
     if length == -1:
         length = result['recordsTotal'] - start
+    print(search_filter)
 
     # if there is filter or length == -1 we return everything
     # hay que devolver todo porque necesitamos contar el número de filas

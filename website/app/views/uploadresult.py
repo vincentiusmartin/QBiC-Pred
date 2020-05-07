@@ -78,4 +78,9 @@ def submit_pred_upload():
     redisdb.expire(rand_id, app.config['UPLOAD_PRED_EXPIRY'])
 
     resp = make_response(jsonify({}), 202, {'Location': url_for('process_request',job_id=rand_id)})
+
+    # save the job in cookie
+    print("nananaa", request.cookies.keys())
+    # we can put this in cookie to let browser save the recent jobs
+    resp.set_cookie("qbic_recents:%s"%rand_id, rand_id, max_age=app.config['USER_DATA_EXPIRY'])
     return resp

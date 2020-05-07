@@ -296,36 +296,35 @@ def postprocess(datalist,predfiles,gene_names,filteropt=1,filterval=1):
     '''
     Aggregate the result from the different processes.
 
-    TODO -- z-score
+    filteropt=1: diff,z_score,tfname
+    filteropt=2: diff,z_score,p_val,escore,tfname
     '''
-    datalist = pd.concat(datalist, ignore_index=True, axis=0)
+    df = pd.concat(datalist, ignore_index=True, axis=0)
 
-    pd.set_option('display.max_columns', None)
-    pd.set_option('display.max_rows', None)
-
-    if filteropt == "p-value":
-        datalist.sort_values(by = ['row_key', '12mer', 'p-val'], ascending=True, inplace=True)
+    print("nanana",filteropt)
+    if filteropt == 2: # p-value
+        df = df.sort_values(by = ['row_key', '12mer', 'p-val'], ascending=True) # inplace = True
     else: # if z-score then we need to reduce here
-        datalist = datalist.iloc[(-datalist['z-score'].abs()).argsort()].groupby('row_key').head(filterval)
-        datalist.sort_values(by = ['row_key', '12mer'], ascending=True, inplace=True)
+        df = df.iloc[(-df['z-score'].abs()).argsort()].groupby('row_key').head(filterval)
+        df = df.sort_values(by = ['row_key', '12mer'], ascending=True)
 
     # read in pbm to hugo map and split
     pbmtohugo = pd.read_csv(app.config["PBM_HUGO_MAPPING"], sep=':', index_col=0, header=None)[1].str.split(',')
 
     # reconstruct wild type and mutant strings
-    datalist['wild'] = datalist['12mer'].str.slice(stop=11)
-    datalist['mutant'] = datalist['12mer'].str.slice(stop=5) + datalist['12mer'].str.get(11)+ datalist['12mer'].str.slice(start=6, stop=11)
+    df['wild'] = df['12mer'].str.slice(stop=11)
+    df['mutant'] = df['12mer'].str.slice(stop=5) + df['12mer'].str.get(11)+ df['12mer'].str.slice(start=6, stop=11)
 
     gene_names_set = set(gene_names)
     predfiles = ['.'.join(p.split(".")[1:-1]) for p in predfiles]
     tf_gene_dict = {p: ",".join([gene for gene in pbmtohugo[p] if gene in gene_names_set]) for p in predfiles}
-    datalist['TF_gene'] = datalist['pbmname'].apply(lambda x: tf_gene_dict.get(x, x))
+    df['TF_gene'] = df['pbmname'].apply(lambda x: tf_gene_dict.get(x, x))
 
     # reindex and rename the columns
-    datalist = datalist[['row_key', 'wild', 'mutant', 'diff', 'z-score', 'p-val', 'TF_gene', 'binding_status', 'pbmname']]
-    datalist.columns = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
+    df = df[['row_key', 'wild', 'mutant', 'diff', 'z-score', 'p-val', 'TF_gene', 'binding_status', 'pbmname']]
+    df.columns = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
 
-    return datalist
+    return df
 
 #==========================================================
 @celery.task()
@@ -405,6 +404,7 @@ def do_prediction(self, intbl, selections, gene_names,
                           meta={'current': shared_ready_sum.value, 'total': total, 'status': 'Processing input data...'})
 
     res = [p.get() for p in async_pools]
+
     self.update_state(state='PROGRESS',
                           meta={'current': shared_ready_sum.value, 'total': total, 'status': 'post-processing'})
     print("Terminate all children process..")
