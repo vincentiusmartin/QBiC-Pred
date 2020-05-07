@@ -301,7 +301,6 @@ def postprocess(datalist,predfiles,gene_names,filteropt=1,filterval=1):
     '''
     df = pd.concat(datalist, ignore_index=True, axis=0)
 
-    print("nanana",filteropt)
     if filteropt == 2: # p-value
         df = df.sort_values(by = ['row_key', '12mer', 'p-val'], ascending=True) # inplace = True
     else: # if z-score then we need to reduce here
