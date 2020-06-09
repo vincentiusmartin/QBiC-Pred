@@ -26,7 +26,11 @@ def dictfamily2genedict(dictlist):
     return result
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+if os.path.exists("config.ini"):
+    config.read('config.ini')
+else:
+    raise FileNotFoundError
+    sys.exit(1)
 
 if config["General Conf"]["PCOUNT"] == "cpu.count":
     PCOUNT = os.cpu_count()

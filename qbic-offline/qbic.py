@@ -355,6 +355,7 @@ def main():
                         default=None, help='Number of concurrent file I/O threads to use (per core)')
     args = parser.parse_args()
 
+    #python3 qbic.py -i human_chimp_difference_SNV.vcf -g allgenes.txt -c hg19 -o result.tsv 
     #python3 qbic.py -i testing_resources/input_mutation_test.vcf -g testing_resources/gene_input.txt -c hg19
     # input_mutation_test.vcf
     # -t mut
