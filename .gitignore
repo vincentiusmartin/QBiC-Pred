@@ -13,6 +13,7 @@ qbic-conf.ini
 
 # anything testfiles
 generate_prediction/test*
+testdir
 
 # Need to ignore this mac-specific file as well
 .DS_Store

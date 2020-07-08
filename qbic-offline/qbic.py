@@ -113,9 +113,9 @@ def chrom_cidx_helper(cidx, cidx_dataset, chromosome_version, kmer):
     for idx,row in cidx_dataset.iterrows():
         pos = row['pos'] - 1
         if row['mutated_from'] != chromosome[pos]:
-            cver = cpath.split("/")[-1]
-            error = "For the input mutation %s>%s at position %s in chromosome %s, the mutated_from nucleotide (%s) does not match the nucleotide in the %s reference genome (%s). Please check the input data and verify that the correct version of the reference human genome was used." % (row['mutated_from'], row['mutated_to'], row['pos'], row['chromosome'], row['mutated_from'], cver, chromosome[pos])
-            raise Exception(error)
+            error = "For the input mutation %s>%s at position %s in chromosome %s, the mutated_from nucleotide (%s) does not match the nucleotide in the %s reference genome (%s). Please check the input data and verify that the correct version of the reference human genome was used." % (row['mutated_from'], row['mutated_to'], row['pos'], row['chromosome'], row['mutated_from'], chromosome_version, chromosome[pos])
+            #raise Exception(error)
+            print(error)
         seq = chromosome[pos-kmer+1:pos+kmer] + row['mutated_to'] #-5,+6
         # for escore, just use 8?
         escore_seq = chromosome[pos-9+1:pos+9] + row['mutated_to']
@@ -127,7 +127,7 @@ def predict(predlist, dataset, ready_count, emap,
             q=None, num_threads=None):
     """
     for the container list, key is a tuple of: (rowidx,sequence,seqidx)
-    and each element in value is a list of: [diff,z-score,pbmname]
+    and each element in value is a list of: [diff,z-score,pbmname
     If spec_ecutoff and nonspec_ecutoff == -1 then no escore calculation is done
 
     filteropt = p-value, t-value, none
@@ -355,7 +355,7 @@ def main():
                         default=None, help='Number of concurrent file I/O threads to use (per core)')
     args = parser.parse_args()
 
-    #python3 qbic.py -i human_chimp_difference_SNV.vcf -g allgenes.txt -c hg19 -o result.tsv 
+    #python3 qbic.py -i blabala.vcf -g allgenes.txt -c hg19 -o result.tsv
     #python3 qbic.py -i testing_resources/input_mutation_test.vcf -g testing_resources/gene_input.txt -c hg19
     # input_mutation_test.vcf
     # -t mut
