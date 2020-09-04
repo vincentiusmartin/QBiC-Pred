@@ -1,7 +1,6 @@
 import pandas as pd
 import time
 import os
-import multiprocessing as mp
 import numpy as np
 import scipy.stats
 import argparse
@@ -122,7 +121,7 @@ def chrom_cidx_helper(cidx, cidx_dataset, chromosome_version, kmer):
         result.append([idx,seq,escore_seq,utils.seqtoi(seq),0,0,"None"]) #rowidx,seq,escore_seq,val,diff,t,pbmname
     return result
 
-def predict(predlist, dataset, ready_count, emap,
+def predict(predlist, dataset, emap,
             filteropt="p-value", filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35,
             q=None, num_threads=None):
     """
@@ -136,6 +135,9 @@ def predict(predlist, dataset, ready_count, emap,
     return:
      filteropt=1: diff,z_score,tfname
      filteropt=2: diff,z_score,p_val,escore,tfname
+
+    update:
+     delete ready_count
     """
     #[96, 'TCATGGTGGGTT', GCTTCATGGTGGGTGGAT, 13872815, 0, 0, '-'] -- 37, 'GCCCAGAAAGGA', 9773096
     '''
@@ -153,14 +155,14 @@ def predict(predlist, dataset, ready_count, emap,
         #iterate for each transcription factor
         for i in range(0,len(predlist)):
             res += [pph_partial(predlist[i])]
-            ready_count.value += 1
+            #ready_count.value += 1
     else:
         # concurrent execution for improved I/O,
         # after a partial function is created, mapping is easier
         # not necessarily give benefit but can be
         with cc.ThreadPoolExecutor(max_workers = num_threads) as executor:
             res = executor.map(pph_partial, predlist)
-            ready_count.value += len(predlist)
+            #ready_count.value += len(predlist)
 
     # concatenate the individual tf containers
     res = pd.concat(res, axis=0, ignore_index=True)
@@ -295,12 +297,9 @@ def do_prediction(intbl, pbms, gene_names,
 
     # --- PARALLEL PART ---
     # need to use manager here
-    shared_ready_sum = mp.Manager().Value('i', 0)
-    # predlist, dataset, ready_count, emap,
-    #            filteropt="p-value", filterval=0.001, spec_ecutoff=0.4, nonspec_ecutoff=0.35,
-    #            q=None, num_threads=None)\
+    #shared_ready_sum = mp.Manager().Value('i', 0)
     # prepare all parameters but predlist
-    predict_partial = ft.partial(predict, **{'dataset':intbl, 'ready_count':shared_ready_sum, 'emap':emap,
+    predict_partial = ft.partial(predict, **{'dataset':intbl, 'emap':emap,
             'filteropt':filteropt, 'filterval':filterval, 'spec_ecutoff':spec_ecutoff, 'nonspec_ecutoff':nonspec_ecutoff, 'num_threads':num_threads})
 
     with cc.ProcessPoolExecutor(config.PCOUNT) as executor:
@@ -355,11 +354,7 @@ def main():
                         default=None, help='Number of concurrent file I/O threads to use (per core)')
     args = parser.parse_args()
 
-    #python3 qbic.py -i blabala.vcf -g allgenes.txt -c hg19 -o result.tsv
     #python3 qbic.py -i testing_resources/input_mutation_test.vcf -g testing_resources/gene_input.txt -c hg19
-    # input_mutation_test.vcf
-    # -t mut
-    #TfX E2F
 
     # vm: added checking
     if not args.inputfile or not args.genesfile:
