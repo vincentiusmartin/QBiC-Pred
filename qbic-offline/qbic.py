@@ -305,10 +305,6 @@ def do_prediction(intbl, pbms, gene_names,
     with cc.ProcessPoolExecutor(config.PCOUNT) as executor:
         res = executor.map(predict_partial, preds)
 
-    #pd.set_option('display.max_columns', None)
-    #print([r for r in res])
-
-
     return postprocess(res,predfiles,gene_names,filteropt,filterval)
 
 def main():
