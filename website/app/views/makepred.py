@@ -77,7 +77,16 @@ def prepare_request(request):
         return {"status":'error',"message":'specific binding threshold should be between 0.3 and 0.5'}
     if nonspecbind_thres >= specbind_thres:
         return {"status":'error',"message":'nonspecific binding threshold should be less than specific binding threshold'}
-    # First, check if the input file is valid, this depends on the input-mode
+    # No TFs selected
+    if not request.form.getlist('pred-select'):
+        return {"status":'error',"message":'please select transcription factors'}
+    # Check if p-value is in the valid range
+    filteropt = int(request.form.get('optradio'))
+    if filteropt == 2:
+        pval = float(request.form.get('output-selection-opt'))
+        if pval > 1 or pval < 0:
+            return {"status":'error',"message":'p-value should be between 0 and 1'}
+    # Check if the input file is valid, this depends on the input-mode
     if request.form.get('input-mode') == "1": # not example
         if 'input-file' not in request.files:
             return {"status":'error',"message":'no input file part'}
@@ -109,15 +118,6 @@ def prepare_request(request):
         returnstatus = "example"
         egkey = request.form.get('examplelist')
         filename = app.config['INPUT_EXAMPLE_DICT'][egkey]['inputfile']
-    # No TFs selected
-    if not request.form.getlist('pred-select'):
-        return {"status":'error',"message":'please select transcription factors'}
-    # Check if p-value is in the valid range
-    filteropt = int(request.form.get('optradio'))
-    if filteropt == 2:
-        pval = float(request.form.get('output-selection-opt'))
-        if pval > 1 or pval < 0:
-            return {"status":'error',"message":'p-value should be between 0 and 1'}
     # Finally, everything is okay
     retdict = {"status":returnstatus,"filename":filename}
     if request.form.get('input-mode') == "1":
@@ -128,7 +128,6 @@ def prepare_request(request):
 
 @app.route('/upload', methods=['POST'])
 def handle_upload():
-    MAX_LINES = 2000000
     tfpref = "prediction6mer." # for rapid, need to be empty for now
     tfext = ".txt"
     if request.method == 'POST':
@@ -154,7 +153,7 @@ def handle_upload():
             else:
                 filterval = float(request.form.get('output-selection-opt'))
 
-            if req["linecount"] > MAX_LINES or request.form.get("escore-toggle") == "off":
+            if req["linecount"] > app.config['MAX_INPUT_ROWS'] or request.form.get("escore-toggle") == "off":
                 spec_escore_thres = -1
                 nonspec_escore_thres = -1
             else:
@@ -186,8 +185,8 @@ def handle_upload():
             task.forget() # not sure if needed???
 
             warning = ""
-            if req["linecount"] > MAX_LINES:
-                warning = "Notice: We turned off PBM E-score binding prediction since the number of lines is larger than %d. Please contact qbic-pred@duke.edu if you really need the E-score binding prediction." % MAX_LINES
+            if req["linecount"] > app.config['MAX_INPUT_ROWS']:
+                warning = "Notice: We turned off PBM E-score binding prediction since the number of lines is larger than %d. Please contact qbic-pred@duke.edu if you really need the E-score binding prediction." % app.config['MAX_INPUT_ROWS']
             resp = make_response(jsonify({"warning":warning}), 202, {'Location': url_for('process_request',job_id=task.id)})
 
             job_name = request.form.get("job-name") if request.form.get("job-name") else task.id

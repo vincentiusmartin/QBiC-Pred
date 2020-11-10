@@ -321,12 +321,12 @@ function uploadFile(){
         processData: false,  // tell jQuery not to process the data
         contentType: false,   // tell jQuery not to set contentType
         success: function(data, status, request) { // jsonified return from handle_upload in views.py
+            $('#upload-msg').html(""); // empty error message
             var parsed = JSON.parse(JSON.stringify(data));
             if(parsed["warning"].length > 0){
                 alert(parsed["warning"]);
             }
             // upload is successful
-            $('#upload-msg').html(""); // empty error message
             status_url = request.getResponseHeader('Location');
             window.location.replace(status_url); // go to the result page, pass the url
         },

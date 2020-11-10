@@ -223,74 +223,6 @@ def pred_helper(pred, dataset, emap, filterval=0.001, filteropt="p-value",spec_e
 def read_gapfile(gapfile):
     df = pd.read_csv(gapfile)
     return dict(zip(df.upbm_filenames, df.gapmodel))
-#
-# def format2tbl(tbl,gene_names,filteropt=1):
-#     '''
-#     This function saves tbl as csvstring
-#
-#     Input:
-#       tbl is a dictionary of (rowidx,seq):[diff,zscore,tfname] or [diff,p-val,escore,tfname]
-#     '''
-#
-#     with open(app.config['PBM_HUGO_MAPPING']) as f:
-#         pbmtohugo = {}
-#         for line in f:
-#             linemap = line.strip().split(":")
-#             pbmtohugo[linemap[0]] = linemap[1].split(",")
-#
-#     #gapdata = read_gapfile(app.config['GAP_FILE'])
-#
-#     sorted_key = sorted(tbl.keys())
-#     datavalues = []
-#     for row_key in sorted_key:
-#         if not tbl[row_key]: # probably empty row
-#             continue
-#         row = row_key[0]
-#         seq = row_key[1]
-#         wild = seq[0:5] + seq[5] + seq[6:11]
-#         mut = seq[0:5] + seq[11] + seq[6:11]
-#         sorted_val = sorted(tbl[row_key],reverse=True,key=lambda x:abs(x[1]))
-#         for row_val in sorted_val: # [diff,zscore,pval,isbound,pbmname]
-#             rowdict = {'row':row,'wild':wild,'mutant':mut,'diff':row_val[0]}
-#             pbmname = row_val[4]
-#             rowdict['z_score'] =  row_val[1]
-#             rowdict['p_value'] =  row_val[2]
-#             rowdict['binding_status'] = row_val[3]
-#             if pbmname  == 'None':
-#                 rowdict['TF_gene'] = ""
-#                 rowdict['pbmname'] = "None"
-#                 #rowdict['gapmodel'] = "None" # vmartin: comment for now
-#             else:
-#                 rowdict['TF_gene'] = ",".join([gene for gene in pbmtohugo[pbmname] if gene in gene_names])
-#                 rowdict['pbmname'] = pbmname
-#                 #rowdict['gapmodel'] = gapdata[pbmname] # vmartin: comment for now
-#             datavalues.append(rowdict)
-#
-#     #colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","gapmodel","pbmname"]
-#     colnames = ["row","wild","mutant","diff","z_score","p_value","TF_gene","binding_status","pbmname"]
-#     return colnames,datavalues
-#
-# def postprocess(datalist,gene_names,filteropt=1,filterval=1):
-#     '''
-#     Aggregate the result from the different processes.
-#     '''
-#     maintbl = {}
-#     for ddict in datalist:
-#         if not maintbl:
-#             maintbl = ddict
-#         else:
-#             if filteropt == 1: # z-score
-#                 for row_key in ddict:
-#                     for row_val in ddict[row_key]:
-#                         least_idx = min(enumerate(maintbl[row_key]),key=lambda x:abs(x[1][1]))[0]
-#                         # row_val[1] is the t-value
-#                         if abs(row_val[1]) > abs(maintbl[row_key][least_idx][1]):
-#                             del maintbl[row_key][least_idx]
-#                             maintbl[row_key].append(row_val)
-#             else: # filteropt == 2 -- p-value
-#                 for row_key in ddict:
-#                     maintbl[row_key].extend(ddict[row_key])
-#     return format2tbl(maintbl,gene_names,filteropt)
 
 def postprocess(datalist,predfiles,gene_names,filteropt=1,filterval=1):
     '''
@@ -300,6 +232,8 @@ def postprocess(datalist,predfiles,gene_names,filteropt=1,filterval=1):
     filteropt=2: diff,z_score,p_val,escore,tfname
     '''
     df = pd.concat(datalist, ignore_index=True, axis=0)
+    if df.shape[0] > app.config["MAX_RESULT_ROWS"]
+        df = df.reindex(df['z-score'].abs().sort_values(ascending = False).index).groupby('row_key').head(5)
 
     if filteropt == 2: # p-value
         df = df.sort_values(by = ['row_key', '12mer', 'p-val'], ascending=True) # inplace = True
@@ -407,8 +341,7 @@ def do_prediction(self, intbl, selections, gene_names,
     self.update_state(state='PROGRESS',
                           meta={'current': shared_ready_sum.value, 'total': total, 'status': 'post-processing'})
     print("Terminate all children process..")
-    pool.terminate() # terminate to kill all child processes !!! Like.. super important,
-                     # to avoid memory leak, seriously...
+    pool.terminate() # terminate to kill all child processes, to avoid memory leak
     datavalues = postprocess(res,predfiles,gene_names,filteropt,filterval)
 
     ''' SET the values in redis '''
