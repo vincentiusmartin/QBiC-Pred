@@ -232,7 +232,7 @@ def postprocess(datalist,predfiles,gene_names,filteropt=1,filterval=1):
     filteropt=2: diff,z_score,p_val,escore,tfname
     '''
     df = pd.concat(datalist, ignore_index=True, axis=0)
-    if df.shape[0] > app.config["MAX_RESULT_ROWS"]
+    if df.shape[0] > app.config["MAX_RESULT_ROWS"]:
         df = df.reindex(df['z-score'].abs().sort_values(ascending = False).index).groupby('row_key').head(5)
 
     if filteropt == 2: # p-value

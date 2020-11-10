@@ -11,5 +11,5 @@ numpy
 scipy
 redisearch
 configparser
-pymongo
+pymongo[srv]
 dnspython
